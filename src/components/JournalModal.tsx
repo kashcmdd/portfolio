@@ -1,7 +1,102 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { JournalEntry } from '../types';
+import { JournalEntry, JournalBlock } from '../types';
 import { X, Calendar, Clock, Tag } from 'lucide-react';
+
+const renderBlock = (block: JournalBlock, key: number) => {
+  switch (block.type) {
+    case 'heading':
+      return (
+        <h3
+          key={key}
+          className="text-lg sm:text-xl font-body font-semibold text-white mt-8 first:mt-0 mb-1 tracking-tight"
+        >
+          {block.text}
+        </h3>
+      );
+
+    case 'code':
+      return (
+        <figure key={key} className="my-5">
+          <div className="rounded-2xl border border-white/10 bg-black/50 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-white/10 bg-white/[0.02]">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-500">
+                {block.language}
+              </span>
+            </div>
+            <pre className="p-4 overflow-x-auto">
+              <code className="font-mono text-xs sm:text-[13px] leading-relaxed text-neutral-200 whitespace-pre">
+                {block.code}
+              </code>
+            </pre>
+          </div>
+          {block.caption && (
+            <figcaption className="mt-2 text-[11px] font-mono text-neutral-500">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case 'list': {
+      const ListTag = block.ordered ? 'ol' : 'ul';
+      return (
+        <ListTag
+          key={key}
+          className={`my-4 space-y-2 pl-5 text-neutral-200 marker:text-[#89AACC] ${
+            block.ordered ? 'list-decimal' : 'list-disc'
+          }`}
+        >
+          {block.items.map((item) => (
+            <li key={item} className="pl-1">
+              {item}
+            </li>
+          ))}
+        </ListTag>
+      );
+    }
+
+    case 'quote':
+      return (
+        <blockquote
+          key={key}
+          className="my-6 pl-4 border-l-2 border-[#89AACC]/60 italic text-neutral-300"
+        >
+          <p>{block.text}</p>
+          {block.attribution && (
+            <footer className="mt-2 text-xs not-italic font-mono text-neutral-500">
+              — {block.attribution}
+            </footer>
+          )}
+        </blockquote>
+      );
+
+    case 'image':
+      return (
+        <figure key={key} className="my-6">
+          <img
+            src={block.src}
+            alt={block.alt}
+            className="w-full rounded-2xl border border-white/10"
+            loading="lazy"
+          />
+          {block.caption && (
+            <figcaption className="mt-2 text-[11px] font-mono text-neutral-500">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case 'paragraph':
+    default:
+      return (
+        <p key={key} className="text-sm sm:text-base text-neutral-200 leading-relaxed mb-4 last:mb-0">
+          {block.text}
+        </p>
+      );
+  }
+};
 
 interface JournalModalProps {
   entry: JournalEntry | null;
@@ -60,11 +155,9 @@ export const JournalModal: React.FC<JournalModalProps> = ({ entry, onClose }) =>
             />
           </div>
 
-          {/* Article Paragraphs */}
-          <div className="space-y-4 font-body font-light text-sm sm:text-base text-neutral-200 leading-relaxed mb-8">
-            {entry.content.map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+          {/* Article Body */}
+          <div className="font-body font-light mb-8">
+            {entry.content.map(renderBlock)}
           </div>
 
           <div className="pt-4 border-t border-white/10 flex justify-end">

@@ -14,6 +14,14 @@ export interface Project {
   highlights?: string[]; // case study bullets; falls back to generic highlights
 }
 
+export type JournalBlock =
+  | { type: 'paragraph'; text: string }
+  | { type: 'heading'; text: string }
+  | { type: 'code'; language: string; code: string; caption?: string }
+  | { type: 'list'; ordered?: boolean; items: string[] }
+  | { type: 'quote'; text: string; attribution?: string }
+  | { type: 'image'; src: string; alt: string; caption?: string };
+
 export interface JournalEntry {
   id: string;
   title: string;
@@ -22,7 +30,7 @@ export interface JournalEntry {
   readTime: string;
   category: string;
   image: string;
-  content: string[];
+  content: JournalBlock[];
 }
 
 export interface TechSkill {

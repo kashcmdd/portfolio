@@ -124,44 +124,258 @@ export const techSkillsData: TechSkill[] = [
 
 export const journalEntriesData: JournalEntry[] = [
   {
-    id: "journal-placeholder-1",
-    title: "Journal Entry — Coming Soon",
-    subtitle: "A future post about building, learning, and shipping.",
-    date: "COMING SOON",
-    readTime: "—",
-    category: "DRAFT",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+    id: "elo-decay",
+    title: "Your Ladder Needs to Forget",
+    subtitle: "Rating decay is the least interesting part of a ranked system to build, and the easiest thing to get wrong.",
+    date: "SEP 18, 2026",
+    readTime: "7 MIN READ",
+    category: "ALGORITHMS",
+    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80",
     content: [
-      "This space is reserved for a future journal entry. It will cover lessons learned, projects in progress, and notes from the journey so far.",
-      "Check back soon."
-    ]
+      {
+        type: "paragraph",
+        text: "Every ranked ladder eventually develops a aristocracy. A handful of players grind the ladder for a season, hit the top rank, and then log off for a year. They are still at the top of the board, not because they are the best players on the server right now, but because nobody has taken their place. Newcomers are measured against a benchmark that stopped being true months ago.",
+      },
+      {
+        type: "paragraph",
+        text: "The fix is decay: a background job that quietly reduces the rating of anyone who has not played within a cutoff window. It is about forty lines of code. Almost every interesting decision in it is about how much to remove and where to stop.",
+      },
+      { type: "heading", text: "Decaying to zero is the wrong answer" },
+      {
+        type: "paragraph",
+        text: "The naive implementation subtracts a fixed amount per day of inactivity until the player hits the bottom of the scale. It works, and it is too harsh. A Diamond who has not logged in for two months should not wake up to Bronze, because the punishment massively exceeds the offence and almost every affected player quits rather than grinding their way back.",
+      },
+      {
+        type: "paragraph",
+        text: "So the decay has a floor, and the floor is not zero. It is the rating at the bottom of whatever rank the player currently holds. They slide down through the tiers of their own band and stop, keeping the rank they earned. You only lose ground to people who are actually showing up.",
+      },
+      {
+        type: "code",
+        language: "python",
+        caption: "app/elo.py — decay floors at the current rank threshold, never at zero",
+        code: `min_elo = 0
+for name, threshold, _ in reversed(RANKS):
+    if r.elo >= threshold:
+        min_elo = threshold
+        break
+
+new_elo = max(r.elo - decay, min_elo)`,
+      },
+      { type: "heading", text: "Linear, and capped" },
+      {
+        type: "paragraph",
+        text: "Decay is linear in days inactive, not exponential. A player away for a year should not be punished as if they had been away for three, so the total removed is clamped by a max_decay setting.",
+      },
+      {
+        type: "code",
+        language: "python",
+        caption: "main.py — linear decay, clamped",
+        code: `days_inactive = (datetime.now(timezone.utc) - r.last_active).days
+decay = min(days_inactive * settings.decay_per_day, settings.max_decay)`,
+      },
+      {
+        type: "paragraph",
+        text: "The query also filters on player_id being non-null. Ratings that are not linked to an actual player never decay, because a team-only or unattributed rating drifting downward on a timer is a bug that looks like a feature until someone notices their team rating fell for no reason.",
+      },
+      { type: "heading", text: "Auditing the machine" },
+      {
+        type: "paragraph",
+        text: "The part I care about most: decay writes an audit log entry attributed to a system actor, exactly as if an administrator had made the change by hand. A rating that moves without a human touching it should be as traceable as one that did, and when a player disputes their rank six months later, that log row is the answer.",
+      },
+      {
+        type: "code",
+        language: "python",
+        code: `db.add(AuditLog(
+    admin_id="system",
+    admin_name="System",
+    action="elo_decay",
+    target_id=str(r.player_id) if r.player_id else None,
+    details=f"Decayed {actual_decay} ELO after {days_inactive} days inactive",
+))`,
+      },
+      { type: "heading", text: "Scheduling it without shooting yourself" },
+      {
+        type: "paragraph",
+        text: "APScheduler runs the job once a day inside the FastAPI lifespan. Two of its options are doing real work here and are easy to miss:",
+      },
+      {
+        type: "list",
+        items: [
+          "max_instances=1 stops a slow run from overlapping the next one. Decay touches every stale rating in a single transaction, and two concurrent runs will fight over the same rows.",
+          "misfire_grace_time=3600 lets the job still run after a deploy or a crash, as long as it is within the hour. Otherwise every restart silently skips a day of decay.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "The whole job body is wrapped in a bare except that logs and swallows. A decay run that throws should not take the web app down with it, and it should leave a trace that says exactly which run failed.",
+      },
+      { type: "heading", text: "The part that is easy to forget" },
+      {
+        type: "paragraph",
+        text: "Top positions on the leaderboard are exclusive: there is a first, a second, a third. Decay reshuffles the top of the table, which means the position numbers are now wrong for everyone above the highest decayed player. The job finishes by recalculating top positions and committing again. Without that step the board shows stale placements, and it will look like a data integrity bug rather than a missing recalculation.",
+      },
+    ],
   },
   {
-    id: "journal-placeholder-2",
-    title: "Notes From the Journey — Coming Soon",
-    subtitle: "Thoughts on design, Discord bots, and web development.",
-    date: "COMING SOON",
-    readTime: "—",
-    category: "DRAFT",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+    id: "bundle-splitting",
+    title: "Cutting 56% Off My Portfolio's JavaScript",
+    subtitle: "One static import was costing more than React, the router and every icon combined.",
+    date: "SEP 25, 2026",
+    readTime: "6 MIN READ",
+    category: "PERFORMANCE",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
     content: [
-      "This space is reserved for a future journal entry. It will cover lessons learned, projects in progress, and notes from the journey so far.",
-      "Check back soon."
-    ]
+      {
+        type: "paragraph",
+        text: "The build was telling me something I had been ignoring: a single chunk over 500 kB, and a warning that nobody was going to read but me. The bundle was 1,076 kB raw, 340 kB gzipped, shipped as one file to every visitor. I went looking for what was actually in there instead of guessing.",
+      },
+      {
+        type: "paragraph",
+        text: "The answer was hls.js. One dependency, 594 kB raw and 185 kB gzipped, imported at the top of a component that draws video backgrounds. It was the single largest thing on the site by a wide margin, and it was never needed for most of the page.",
+      },
+      { type: "heading", text: "It was already behind an IntersectionObserver" },
+      {
+        type: "paragraph",
+        text: "The video background component only initialises playback once its container comes within 200px of the viewport. The lazy behaviour was already written. What was missing was that the parser itself was being downloaded up front, before any of that logic got a chance to run.",
+      },
+      {
+        type: "code",
+        language: "tsx",
+        caption: "A type-only import costs nothing at build time; the dynamic import defers the payload",
+        code: `import type HlsType from 'hls.js';
+
+// ...inside the effect, which only runs once the container is visible
+const { default: Hls } = await import('hls.js');`,
+      },
+      {
+        type: "paragraph",
+        text: "Because the observer gate already existed, the change was small: turn the static import into a dynamic one inside the effect, keep a type-only import for the variable so TypeScript still knows what hls is, and guard against the component unmounting while the chunk is in flight. The 594 kB now arrives when a video background actually scrolls into view, and not before.",
+      },
+      { type: "heading", text: "Safari does not need the parser at all" },
+      {
+        type: "paragraph",
+        text: "HLS is a format Safari plays natively. Loading 594 kB of JavaScript to hand the browser a URL it can already handle is pure waste, so the native check happens before the dynamic import, not after it.",
+      },
+      {
+        type: "code",
+        language: "tsx",
+        code: `if (video.canPlayType('application/vnd.apple.mpegurl') && hlsSource) {
+  video.src = hlsSource;
+  video.play().catch(() => {});
+  return;
+}`,
+      },
+      { type: "heading", text: "Splitting the rest" },
+      {
+        type: "paragraph",
+        text: "With hls out of the way, the remainder was still a single 470 kB file. Splitting the vendors into named chunks does not reduce the total number of bytes anyone downloads, but it means React, the animation library and the icon set are cached independently of your app code. Shipping a one-line copy change no longer invalidates a megabyte of vendor JavaScript in everyone's browser.",
+      },
+      {
+        type: "code",
+        language: "ts",
+        caption: "vite.config.ts",
+        code: `build: {
+  rollupOptions: {
+    output: {
+      manualChunks(id) {
+        if (!id.includes('node_modules')) return;
+        if (id.includes('hls.js')) return 'hls';
+        if (id.includes('gsap')) return 'gsap';
+        if (id.includes('framer-motion') || id.includes('node_modules/motion'))
+          return 'motion';
+        if (id.includes('lucide-react')) return 'icons';
+        if (
+          id.includes('node_modules/react/') ||
+          id.includes('node_modules/react-dom/') ||
+          id.includes('node_modules/scheduler/')
+        )
+          return 'react';
+      },
+    },
+  },
+}`,
+      },
+      { type: "heading", text: "Verifying it actually happened" },
+      {
+        type: "paragraph",
+        text: "A bundle size table is easy to fool yourself with, so the check is in the built HTML. If the lazy chunk is still listed as a modulepreload, the browser is fetching it eagerly regardless of what the code says, and none of this mattered.",
+      },
+      {
+        type: "code",
+        language: "html",
+        caption: "hls is absent from this list, which is the entire point",
+        code: `<link rel="modulepreload" href="/portfolio/assets/react-DGj8QgOs.js">
+<link rel="modulepreload" href="/portfolio/assets/motion-BA6OqAxL.js">
+<link rel="modulepreload" href="/portfolio/assets/icons-SHsSCZuo.js">
+<link rel="modulepreload" href="/portfolio/assets/gsap-CzGW6FVa.js">
+<!-- no hls -->`,
+      },
+      {
+        type: "quote",
+        text: "Initial JavaScript went from 1,076 kB to 470 kB. The hls chunk is still 581 kB, it just is not your problem until you scroll to it.",
+      },
+    ],
   },
   {
-    id: "journal-placeholder-3",
-    title: "Placeholder Entry",
-    subtitle: "Room to grow.",
-    date: "COMING SOON",
-    readTime: "—",
-    category: "DRAFT",
-    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80",
+    id: "sqlite-postgres",
+    title: "SQLite Is Fine Until It Isn't",
+    subtitle: "Two of my projects use the same data, in two completely different databases, for two completely different reasons.",
+    date: "SEP 08, 2026",
+    readTime: "5 MIN READ",
+    category: "ARCHITECTURE",
+    image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80",
     content: [
-      "This space is reserved for a future journal entry. It will cover lessons learned, projects in progress, and notes from the journey so far.",
-      "Check back soon."
-    ]
-  }
+      {
+        type: "paragraph",
+        text: "ScriptForge stores its users, scripts and version history in a single SQLite file through better-sqlite3. Rainbow Leaderboard runs Postgres 16 through an async driver. Same person, same week, opposite decisions, and neither one is wrong.",
+      },
+      { type: "heading", text: "What ScriptForge gets from a file" },
+      {
+        type: "paragraph",
+        text: "ScriptForge is a single Node process serving one deployment. Its entire dataset is a file on a disk. There is no replication to configure, no connection pool to size, nothing to administer at three in the morning, and the whole database can be backed up by copying one file. For a single-node deployment that is not a compromise, it is the correct choice.",
+      },
+      {
+        type: "code",
+        language: "bash",
+        caption: "The environment variable that decides where the file lives",
+        code: `DATABASE_PATH=./data.sqlite`,
+      },
+      {
+        type: "paragraph",
+        text: "better-sqlite3 is also synchronous, which in a Next.js route handler is simply convenient. There is no connection pool to leak and no await on the query path.",
+      },
+      { type: "heading", text: "Where the ceiling is" },
+      {
+        type: "paragraph",
+        text: "SQLite serialises writes. That is the whole trade. It is invisible until you have concurrent writers, and then it appears as lock contention rather than as a database error, which makes it harder to diagnose. My own note in that repository says it plainly:",
+      },
+      {
+        type: "quote",
+        text: "SQLite is fine for a single-node hobby deployment; move lib/db.ts queries to Postgres before you expect concurrency.",
+        attribution: "ScriptForge README",
+      },
+      { type: "heading", text: "What forced Postgres" },
+      {
+        type: "paragraph",
+        text: "Rainbow Leaderboard has scheduled work. A daily decay job walks every stale rating, writes an audit row for each one, recalculates exclusive top positions, and commits twice. Meanwhile the leaderboard, player profile and stats endpoints are all being read. That is concurrent writers against readers, and it is the exact workload SQLite is worst at.",
+      },
+      {
+        type: "code",
+        language: "python",
+        caption: "Async SQLAlchemy session over asyncpg",
+        code: `DATABASE_URL=postgresql+asyncpg://rainbow:rainbow@db:5432/rainbow`,
+      },
+      {
+        type: "paragraph",
+        text: "Postgres also gives the schema changes a home. Alembic versions every migration, so a scheduled job and a running server can never disagree about what the rating table looks like. SQLite would have needed that discipline maintained by hand.",
+      },
+      { type: "heading", text: "The actual lesson" },
+      {
+        type: "paragraph",
+        text: "The mistake is treating this as a preference. A file-backed database and a client-server database are different tools, and the honest version of the README line above is the one I would write if I were starting again: pick SQLite while you have exactly one writer and no scheduled jobs, and migrate before you add either. Both of these projects are the same person, and the difference between them is the workload, not taste.",
+      },
+    ],
+  },
 ];
 
 export const explorationItemsData: ExplorationItem[] = [
