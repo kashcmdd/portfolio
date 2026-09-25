@@ -2,19 +2,33 @@ import { Project, JournalEntry, TechSkill, ExplorationItem } from '../types';
 
 export const warriorDetails = {
   name: "KashhCMD",
-  title: "Started Web Designer",
-  location: "",
-  avatarUrl: "https://github.com/WarriorOGZz.png",
+  title: "Web Designer & Discord Bot Developer",
+  avatarUrl: "https://github.com/kashcmdd.png",
   bio: "I'm KashhCMD, a web designer and Discord bot developer who enjoys building modern digital experiences. My journey into programming started with curiosity and has grown into a passion for creating websites, applications, and tools that are both visually appealing and highly functional.",
   philosophy: "I believe that every line of code should have a purpose. I aim to write clean, maintainable, and scalable code while focusing on performance, accessibility, and user experience. Rather than simply making something work, I strive to create products that feel polished, intuitive, and enjoyable to use.",
   roles: ["Web Dev", "Discord Bot Dev"],
-  email: "",
-  github: "",
   discord: "",
-  twitter: "",
 };
 
 export const projectsData: Project[] = [
+  {
+    id: "rainbow-leaderboard",
+    title: "Rainbow Leaderboard",
+    category: "Competitive Ladder Platform",
+    subtitle: "ELO-Ranked Rainbow Six Siege Ladder with Tournaments, Seasons & Discord Auth",
+    description: "A self-hosted competitive ranking platform for Rainbow Six Siege communities. Runs a Glicko-style ELO engine with provisional ratings, margin-of-victory weighting and inactivity decay across 1v1 through 5v5 formats, wrapped in a season and tournament system with visual bracket generation. Players authenticate through Discord OAuth2 with granular admin roles, and 41 hand-built SVG rank icons carry the leaderboard from Bronze through Champion. Ships with an admin panel (CSV bulk import, match editing, audit log), one-click CSV/JSON export, and a pytest suite.",
+    image: "/portfolio/rainbow-leaderboard.png",
+    tags: ["Python 3.12", "FastAPI", "PostgreSQL", "SQLAlchemy", "Alembic", "Jinja2", "Tailwind CSS", "Discord OAuth2", "APScheduler", "Docker"],
+    githubUrl: "https://github.com/kashcmdd/rainbow-leaderboard",
+    featured: true,
+    colSpanDesktop: 12,
+    aspectRatio: "aspect-[16/9]",
+    highlights: [
+      "Glicko-style ELO engine with provisional ratings, margin-of-victory weighting and inactivity decay",
+      "Async SQLAlchemy 2.0 data layer on PostgreSQL 16, schema-versioned with Alembic migrations",
+      "Docker Compose stack with APScheduler-driven rating decay and Discord OAuth2 admin roles",
+    ],
+  },
   {
     id: "scriptforge",
     title: "ScriptForge",
@@ -73,26 +87,34 @@ export const projectsData: Project[] = [
 export const techSkillsData: TechSkill[] = [
   // Frontend
   { name: "React & React 19", category: "Frontend", icon: "Code2", level: "Advanced", description: "Hooks, Context, State Management, Custom Reusable UI Architectures" },
-  { name: "Next.js", category: "Frontend", icon: "Globe", level: "Proficient", description: "Server Side Rendering, App Router, Dynamic API Proxy Routes" },
+  { name: "Next.js", category: "Frontend", icon: "Globe", level: "Proficient", description: "App Router, Server-Side Rendering, Dynamic API Proxy Routes" },
   { name: "TypeScript", category: "Frontend", icon: "FileCode", level: "Advanced", description: "Strict Typing, Generic Interfaces, Modular Codebases" },
   { name: "Tailwind CSS v4", category: "Frontend", icon: "Palette", level: "Expert", description: "Custom Theme Tokens, Responsive Liquid Layouts, Utility Design" },
+  { name: "GSAP & Motion", category: "Frontend", icon: "Sparkles", level: "Advanced", description: "Scroll-Triggered Sequences, Layout Transitions, Spring Physics" },
   { name: "HTML5 & CSS3", category: "Frontend", icon: "Layout", level: "Expert", description: "Semantic Markup, Modern Flexbox/Grid, Glassmorphism FX" },
 
   // Backend
   { name: "Node.js", category: "Backend", icon: "Server", level: "Advanced", description: "Asynchronous I/O, Event Loop Optimization, Middleware Design" },
   { name: "Express.js", category: "Backend", icon: "Cpu", level: "Advanced", description: "RESTful Endpoint Architecture, Authentication, Middleware Pipeline" },
-  { name: "Discord.js", category: "Backend", icon: "Bot", level: "Expert", description: "Custom Bot Bots, Slash Commands, Sharding & WebSocket Events" },
-  { name: "REST APIs", category: "Backend", icon: "Network", level: "Expert", description: "API Gateways, Rate Limiting, JSON Payload Serialization" },
+  { name: "Python & FastAPI", category: "Backend", icon: "Braces", level: "Advanced", description: "Async Route Handlers, Dependency Injection, Pydantic Schemas" },
+  { name: "Discord.js", category: "Backend", icon: "Bot", level: "Expert", description: "Slash Commands, Premium Tier Gating, Sharding & Gateway Events" },
+  { name: "REST & Async APIs", category: "Backend", icon: "Network", level: "Expert", description: "API Gateways, Rate Limiting, JSON Payload Serialization" },
+  { name: "Jinja2 Templating", category: "Backend", icon: "Braces", level: "Proficient", description: "Server-Rendered Views, Template Inheritance, Escaped Output" },
 
   // Databases
-  { name: "MongoDB", category: "Databases", icon: "Database", level: "Proficient", description: "NoSQL Document Modeling, Mongoose Schemas, Aggregations" },
-  { name: "MySQL", category: "Databases", icon: "Table", level: "Proficient", description: "Relational Queries, Foreign Keys, Indexing & Performance" },
+  { name: "PostgreSQL 16", category: "Databases", icon: "Database", level: "Advanced", description: "Async Drivers, Relational Modelling, Indexing & Query Tuning" },
   { name: "SQLite", category: "Databases", icon: "HardDrive", level: "Advanced", description: "Lightweight Embedded Storage, Fast Local Query Execution" },
+  { name: "Redis", category: "Databases", icon: "Activity", level: "Proficient", description: "Session Caching, Pub/Sub, Rate-Limit Backoff" },
+
+  // DevOps
+  { name: "Docker & Compose", category: "DevOps", icon: "Container", level: "Advanced", description: "Multi-Service Stacks, Image Layering, One-Command Deployment" },
+  { name: "GitHub Actions", category: "DevOps", icon: "Workflow", level: "Advanced", description: "Push-Triggered Builds, Automated Pages Deployment, Matrix Jobs" },
+  { name: "Linux & Process Ops", category: "DevOps", icon: "Terminal", level: "Proficient", description: "Service Supervision, Log Tailing, Shell Scripting" },
 
   // Tools
   { name: "Git & GitHub", category: "Tools", icon: "GitBranch", level: "Expert", description: "Version Control, Pull Requests, Automated Workflows" },
-  { name: "VS Code & Postman", category: "Tools", icon: "Terminal", level: "Expert", description: "Environment Workflows, API Inspection & Debugging" },
-  { name: "Vercel & Pterodactyl", category: "Tools", icon: "Cloud", level: "Advanced", description: "Serverless Deployments, Container Management, Process Monitoring" },
+  { name: "VS Code & Postman", category: "Tools", icon: "SquareTerminal", level: "Expert", description: "Environment Workflows, API Inspection & Debugging" },
+  { name: "Pterodactyl & Vercel", category: "Tools", icon: "Cloud", level: "Advanced", description: "Game Server Panels, Serverless Deployments, Custom Domains" },
 ];
 
 export const journalEntriesData: JournalEntry[] = [

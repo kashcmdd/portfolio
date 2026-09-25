@@ -47,11 +47,15 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Bento Grid (7 / 5 / 5 / 7) */}
+        {/* Bento Grid (12 / 7 / 5 / 5 / 7) */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
           {projectsData.map((project, idx) => {
-            const colClass =
-              project.colSpanDesktop === 7 ? 'md:col-span-7' : 'md:col-span-5';
+            const isHero = project.colSpanDesktop === 12;
+            const colClass = isHero
+              ? 'md:col-span-12'
+              : project.colSpanDesktop === 7
+                ? 'md:col-span-7'
+                : 'md:col-span-5';
 
             return (
               <motion.div
@@ -89,7 +93,11 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                     <span className="text-[11px] font-body text-neutral-400 uppercase tracking-widest block mb-1">
                       {project.category}
                     </span>
-                    <h3 className="text-2xl sm:text-3xl font-body font-semibold text-white tracking-tight">
+                    <h3
+                      className={`font-body font-semibold text-white tracking-tight ${
+                        isHero ? 'text-3xl sm:text-4xl md:text-5xl' : 'text-2xl sm:text-3xl'
+                      }`}
+                    >
                       {project.title}
                     </h3>
                   </div>

@@ -35,9 +35,9 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'cloud-db',
       icon: Database,
-      tags: ['MongoDB', 'MySQL', 'SQLite', 'Pterodactyl Panel'],
+      tags: ['PostgreSQL', 'Redis', 'SQLite', 'Docker'],
       title: 'Databases & Cloud Ops',
-      body: 'Configuring structured relational & NoSQL databases, automated Vercel deployments, container process management, and live server health telemetry.',
+      body: 'Configuring relational and caching layers, containerized deployments, automated CI pipelines, and live server health telemetry.',
     },
   ];
 

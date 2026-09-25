@@ -85,18 +85,16 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               Key Architecture Highlights
             </div>
             <ul className="space-y-1.5 text-xs font-body text-neutral-300">
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#89AACC]" />
-                <span>Asynchronous event loops & high-speed REST endpoints</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#89AACC]" />
-                <span>Zero-downtime containerized deployments & state persistence</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#89AACC]" />
-                <span>Responsive, fluid UI with liquid glass visual tokens</span>
-              </li>
+              {(project.highlights ?? [
+                'Asynchronous event loops & high-speed REST endpoints',
+                'Zero-downtime containerized deployments & state persistence',
+                'Responsive, fluid UI with liquid glass visual tokens',
+              ]).map((highlight) => (
+                <li key={highlight} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#89AACC] shrink-0" />
+                  <span>{highlight}</span>
+                </li>
+              ))}
             </ul>
           </div>
 

@@ -9,8 +9,9 @@ export interface Project {
   githubUrl?: string;
   liveUrl?: string;
   featured: boolean;
-  colSpanDesktop: number; // 5 or 7 for bento grid
+  colSpanDesktop: number; // 5, 7 or 12 for bento grid
   aspectRatio: string;
+  highlights?: string[]; // case study bullets; falls back to generic highlights
 }
 
 export interface JournalEntry {
@@ -26,7 +27,7 @@ export interface JournalEntry {
 
 export interface TechSkill {
   name: string;
-  category: 'Frontend' | 'Backend' | 'Databases' | 'Tools';
+  category: 'Frontend' | 'Backend' | 'Databases' | 'DevOps' | 'Tools';
   icon: string;
   level: string;
   description: string;

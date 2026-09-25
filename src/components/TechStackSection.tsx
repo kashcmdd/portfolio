@@ -17,6 +17,12 @@ import {
   GitBranch,
   Terminal,
   Cloud,
+  Sparkles,
+  Braces,
+  Activity,
+  Container,
+  Workflow,
+  SquareTerminal,
   Check,
   Copy,
 } from 'lucide-react';
@@ -37,13 +43,19 @@ const iconMap: Record<string, React.ElementType> = {
   GitBranch,
   Terminal,
   Cloud,
+  Sparkles,
+  Braces,
+  Activity,
+  Container,
+  Workflow,
+  SquareTerminal,
 };
 
 export const TechStackSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [copied, setCopied] = useState(false);
 
-  const categories = ['All', 'Frontend', 'Backend', 'Databases', 'Tools'];
+  const categories = ['All', 'Frontend', 'Backend', 'Databases', 'DevOps', 'Tools'];
 
   const filteredSkills =
     activeCategory === 'All'
