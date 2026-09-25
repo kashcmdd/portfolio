@@ -74,7 +74,7 @@ export const projectsData: Project[] = [
     category: "Web Design & Frontend",
     subtitle: "Liquid Glass Landing Page, Deployed on GitHub Pages",
     description: "This site — a cinematic dark portfolio with liquid glass visuals, GSAP animations and HLS video backgrounds, personalized and continuously deployed to GitHub Pages through a push-triggered Actions workflow.",
-    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80",
+    image: "/portfolio/portfolio-site.jpg",
     tags: ["React 19", "Vite", "TypeScript", "Tailwind CSS v4", "GSAP", "GitHub Pages"],
     githubUrl: "https://github.com/kashcmdd/portfolio",
     liveUrl: "https://kashcmdd.github.io/portfolio/",
