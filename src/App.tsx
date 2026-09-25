@@ -121,7 +121,6 @@ export default function App() {
           <ProjectModal
             project={selectedProject}
             onClose={() => setSelectedProject(null)}
-            onOpenContactModal={() => setContactModalOpen(true)}
           />
 
           <JournalModal

@@ -1,18 +1,16 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../types';
-import { X, ExternalLink, Github, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Github, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface ProjectModalProps {
   project: Project | null;
   onClose: () => void;
-  onOpenContactModal: () => void;
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({
   project,
   onClose,
-  onOpenContactModal,
 }) => {
   if (!project) return null;
 
@@ -100,15 +98,17 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 pt-2">
-            <button
-              onClick={() => {
-                onClose();
-                onOpenContactModal();
-              }}
-              className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center"
-            >
-              Discuss Similar Project
-            </button>
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
+              >
+                <Github className="w-4 h-4" />
+                View Repository
+              </a>
+            )}
             <button
               onClick={onClose}
               className="liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer"
