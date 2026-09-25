@@ -75,12 +75,17 @@ export const projectsData: Project[] = [
     subtitle: "Liquid Glass Landing Page, Deployed on GitHub Pages",
     description: "This site — a cinematic dark portfolio with liquid glass visuals, GSAP animations and HLS video backgrounds, personalized and continuously deployed to GitHub Pages through a push-triggered Actions workflow.",
     image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80",
-    tags: ["React", "Vite", "TypeScript", "Tailwind CSS", "GSAP", "GitHub Pages"],
+    tags: ["React 19", "Vite", "TypeScript", "Tailwind CSS v4", "GSAP", "GitHub Pages"],
     githubUrl: "https://github.com/kashcmdd/portfolio",
     liveUrl: "https://kashcmdd.github.io/portfolio/",
     featured: true,
     colSpanDesktop: 7,
     aspectRatio: "aspect-[16/10]",
+    highlights: [
+      "Liquid glass design tokens in Tailwind v4, composed over a responsive 12-column bento grid",
+      "HLS video backgrounds gated by IntersectionObserver, with the 594 kB parser lazy-loaded and skipped entirely on native-HLS browsers",
+      "Push-to-deploy Pages workflow with vendor code-splitting holding initial JS to 470 kB",
+    ],
   },
 ];
 
