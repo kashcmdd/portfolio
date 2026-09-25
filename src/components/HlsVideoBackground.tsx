@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Hls from 'hls.js';
+import type HlsType from 'hls.js';
 
 interface HlsVideoBackgroundProps {
   hlsSource?: string;
@@ -42,36 +42,56 @@ export const HlsVideoBackground: React.FC<HlsVideoBackgroundProps> = ({
     const video = videoRef.current;
     if (!video) return;
 
-    let hls: Hls | null = null;
+    let hls: HlsType | null = null;
+    let cancelled = false;
 
-    if (hlsSource && Hls.isSupported()) {
-      hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-      });
-
-      hls.loadSource(hlsSource);
-      hls.attachMedia(video);
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
-      });
-
-      hls.on(Hls.Events.ERROR, (_event, data) => {
-        if (data.fatal && fallbackSource && video) {
-          video.src = fallbackSource;
-          video.play().catch(() => {});
-        }
-      });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl') && hlsSource) {
-      video.src = hlsSource;
-      video.play().catch(() => {});
-    } else if (fallbackSource) {
+    const playFallback = () => {
+      if (!fallbackSource) return;
       video.src = fallbackSource;
       video.play().catch(() => {});
+    };
+
+    // Safari plays HLS natively, so there is no reason to pull in the parser.
+    if (video.canPlayType('application/vnd.apple.mpegurl') && hlsSource) {
+      video.src = hlsSource;
+      video.play().catch(() => {});
+      return;
     }
 
+    void (async () => {
+      try {
+        const { default: Hls } = await import('hls.js');
+        if (cancelled) return;
+
+        if (!hlsSource || !Hls.isSupported()) {
+          playFallback();
+          return;
+        }
+
+        hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+        });
+
+        hls.loadSource(hlsSource);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(() => {});
+        });
+
+        hls.on(Hls.Events.ERROR, (_event, data) => {
+          if (data.fatal) {
+            playFallback();
+          }
+        });
+      } catch {
+        if (!cancelled) playFallback();
+      }
+    })();
+
     return () => {
+      cancelled = true;
       if (hls) {
         hls.destroy();
       }
