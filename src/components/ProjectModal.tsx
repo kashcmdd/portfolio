@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../types';
-import { X, Github, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Github, Sparkles, CheckCircle2, ExternalLink } from 'lucide-react';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -98,12 +98,27 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 pt-2">
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Visit Live Site
+              </a>
+            )}
             {project.githubUrl && (
               <a
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
+                className={
+                  project.liveUrl
+                    ? 'liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2'
+                    : 'flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2'
+                }
               >
                 <Github className="w-4 h-4" />
                 View Repository

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 @layer base {
   :root {
@@ -13,7 +14,7 @@
   html, body {
     background-color: #0a0a0a;
     color: hsl(var(--text));
-    font-family: 'Inter', 'Barlow', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
     width: 100%;
     -webkit-tap-highlight-color: transparent;
@@ -31,7 +32,7 @@
     font-style: italic;
   }
   .font-body {
-    font-family: 'Inter', 'Barlow', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   .accent-gradient {
