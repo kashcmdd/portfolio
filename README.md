@@ -6,6 +6,8 @@ A cinematic dark portfolio landing page with liquid glass visuals, GSAP animatio
 
 **[View live](https://kashcmdd.github.io/portfolio/)**
 
+<img src="public/portfolio-site.webp" alt="The portfolio landing page" width="820" />
+
 </div>
 
 ## Stack
