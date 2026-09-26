@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { JournalEntry, JournalBlock } from '../types';
 import { X, Calendar, Clock, Tag, Link2, Check } from 'lucide-react';
@@ -105,10 +105,27 @@ interface JournalModalProps {
 
 export const JournalModal: React.FC<JournalModalProps> = ({ entry, onClose }) => {
   const [copied, setCopied] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setCopied(false);
+    bodyRef.current?.scrollTo({ top: 0 });
   }, [entry?.id]);
+
+  // The panel scrolls internally, so the page behind it has to stop moving.
+  useEffect(() => {
+    if (!entry) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [entry, onClose]);
 
   if (!entry) return null;
 
@@ -128,77 +145,89 @@ export const JournalModal: React.FC<JournalModalProps> = ({ entry, onClose }) =>
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.97, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="liquid-glass-strong w-full max-w-2xl rounded-3xl p-6 sm:p-8 text-white relative shadow-2xl border border-white/20 overflow-hidden my-8"
+          exit={{ opacity: 0, scale: 0.97, y: 16 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={entry.title}
+          className="liquid-glass-strong w-full max-w-3xl my-auto max-h-[calc(100dvh_-_1.5rem)] sm:max-h-[calc(100dvh_-_3rem)] rounded-3xl border border-white/20 text-white shadow-2xl flex flex-col overflow-hidden"
         >
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-5 right-5 p-2 rounded-full liquid-glass hover:bg-white/20 transition-colors cursor-pointer text-white/80 hover:text-white z-10"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
-
-          {/* Category & Meta */}
-          <div className="flex flex-wrap items-center gap-3 text-xs font-body text-neutral-400 mb-3">
-            <span className="liquid-glass px-3 py-1 rounded-full text-white font-medium flex items-center gap-1.5">
-              <Tag className="w-3 h-3 text-[#89AACC]" /> {entry.category}
-            </span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" /> {entry.date}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" /> {entry.readTime}
-            </span>
+          {/* Header: stays put while the article scrolls underneath it */}
+          <div className="shrink-0 px-6 pt-6 pb-4 sm:px-8 sm:pt-7 border-b border-white/10">
+            {/* Close Button */}
             <button
-              type="button"
-              onClick={handleCopyLink}
-              className="ml-auto flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1 hover:bg-white/20 transition-colors cursor-pointer text-white"
-              aria-label="Copy a link to this post"
+              onClick={onClose}
+              className="absolute top-5 right-5 sm:top-6 sm:right-6 p-2 rounded-full liquid-glass hover:bg-white/20 transition-colors cursor-pointer text-white/80 hover:text-white z-10"
+              aria-label="Close modal"
             >
-              {copied ? (
-                <>
-                  <Check className="w-3 h-3 text-emerald-400" />
-                  Copied
-                </>
-              ) : (
-                <>
-                  <Link2 className="w-3 h-3 text-[#89AACC]" />
-                  Copy link
-                </>
-              )}
+              <X className="w-5 h-5" />
             </button>
+
+            {/* Category & Meta */}
+            <div className="flex flex-wrap items-center gap-3 text-xs font-body text-neutral-400 mb-3">
+              <span className="liquid-glass px-3 py-1 rounded-full text-white font-medium flex items-center gap-1.5">
+                <Tag className="w-3 h-3 text-[#89AACC]" /> {entry.category}
+              </span>
+              <span className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" /> {entry.date}
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3" /> {entry.readTime}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                className="ml-auto flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1 hover:bg-white/20 transition-colors cursor-pointer text-white"
+                aria-label="Copy a link to this post"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-400" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Link2 className="w-3 h-3 text-[#89AACC]" />
+                    Copy link
+                  </>
+                )}
+              </button>
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-display italic text-white tracking-tight pr-12">
+              {entry.title}
+            </h2>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-display italic text-white tracking-tight mb-3">
-            {entry.title}
-          </h2>
+          {/* Article Body: the only part that scrolls */}
+          <div
+            ref={bodyRef}
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-6 sm:px-8 scroll-smooth"
+          >
+            <p className="text-sm font-body text-neutral-300 font-light mb-6 border-b border-white/10 pb-4 italic">
+              {entry.subtitle}
+            </p>
 
-          <p className="text-sm font-body text-neutral-300 font-light mb-6 border-b border-white/10 pb-4 italic">
-            {entry.subtitle}
-          </p>
+            {/* Banner Image */}
+            <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden mb-6 border border-white/10">
+              <img
+                src={entry.image}
+                alt={entry.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
 
-          {/* Banner Image */}
-          <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden mb-6 border border-white/10">
-            <img
-              src={entry.image}
-              alt={entry.title}
-              className="w-full h-full object-cover"
-            />
+            <div className="font-body font-light">
+              {entry.content.map(renderBlock)}
+            </div>
           </div>
 
-          {/* Article Body */}
-          <div className="font-body font-light mb-8">
-            {entry.content.map(renderBlock)}
-          </div>
-
-          <div className="pt-4 border-t border-white/10 flex justify-end">
+          {/* Footer: the second way out stays reachable too */}
+          <div className="shrink-0 px-6 py-4 sm:px-8 border-t border-white/10 flex justify-end">
             <button
               onClick={onClose}
               className="liquid-glass-strong rounded-full py-2.5 px-6 text-xs font-semibold text-white hover:bg-white/20 transition-colors cursor-pointer"
