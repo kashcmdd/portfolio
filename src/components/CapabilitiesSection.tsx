@@ -94,9 +94,9 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
       <div className="absolute inset-0 bg-black/40 z-[1] pointer-events-none" />
 
       {/* Content Layer (z-10) */}
-      <div className="relative z-10 px-6 md:px-12 lg:px-20 flex flex-col justify-between min-h-screen max-w-7xl mx-auto w-full">
-        {/* Header */}
-        <div className="mb-auto">
+        <div className="relative z-10 px-6 md:px-12 lg:px-20 flex flex-col min-h-screen max-w-7xl mx-auto w-full">
+          {/* Header */}
+          <div>
           {/* Kicker */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -124,7 +124,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
         </div>
 
         {/* Capability Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mb-6">
           {capabilities.map((item, idx) => {
             const IconComp = item.icon;
             return (
@@ -177,7 +177,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
         </div>
 
         {/* Footer info line */}
-        <div className="flex flex-col sm:flex-row items-center justify-between pt-6 border-t border-white/10 text-xs font-body text-neutral-400 gap-4">
+        <div className="mt-auto flex flex-col sm:flex-row items-center justify-between pt-6 border-t border-white/10 text-xs font-body text-neutral-400 gap-4">
           <div>
             {warriorDetails.name.toUpperCase()} · FULL-STACK & DISCORD BOT ARCHITECTURE
           </div>
