@@ -86,7 +86,7 @@ export const projectsData: Project[] = [
     highlights: [
       "Liquid glass design tokens in Tailwind v4, composed over a responsive 12-column bento grid",
       "HLS video backgrounds gated by IntersectionObserver, with the 594 kB parser lazy-loaded and skipped entirely on native-HLS browsers",
-      "Push-to-deploy Pages workflow with vendor code-splitting holding initial JS to 470 kB",
+      "Push-to-deploy Pages workflow with vendor code-splitting holding initial JS to 442 kB",
     ],
   },
 ];
@@ -220,7 +220,7 @@ decay = min(days_inactive * settings.decay_per_day, settings.max_decay)`,
   },
   {
     id: "bundle-splitting",
-    title: "Cutting 56% Off My Portfolio's JavaScript",
+    title: "Cutting 59% Off My Portfolio's JavaScript",
     subtitle: "One static import was costing more than React, the router and every icon combined.",
     date: "SEP 25, 2026",
     readTime: "6 MIN READ",
@@ -308,13 +308,13 @@ const { default: Hls } = await import('hls.js');`,
         caption: "hls is absent from this list, which is the entire point",
         code: `<link rel="modulepreload" href="/portfolio/assets/react-DGj8QgOs.js">
 <link rel="modulepreload" href="/portfolio/assets/motion-BA6OqAxL.js">
-<link rel="modulepreload" href="/portfolio/assets/icons-SHsSCZuo.js">
+<link rel="modulepreload" href="/portfolio/assets/icons-C8CewcuE.js">
 <link rel="modulepreload" href="/portfolio/assets/gsap-CzGW6FVa.js">
 <!-- no hls -->`,
       },
       {
         type: "quote",
-        text: "Initial JavaScript went from 1,076 kB to 470 kB. The hls chunk is still 581 kB, it just is not your problem until you scroll to it.",
+        text: "Initial JavaScript went from 1,076 kB to 442 kB. The hls chunk is still 595 kB, it just is not your problem until you scroll to it.",
       },
     ],
   },
