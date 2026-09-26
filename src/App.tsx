@@ -138,9 +138,7 @@ export default function App() {
             <AboutSection />
 
             {/* Skills Section */}
-            <SkillsSection
-              onSelectSkill={() => setContactModalOpen(true)}
-            />
+            <SkillsSection />
 
             {/* Selected Works (Bento Grid) */}
             <SelectedWorksSection

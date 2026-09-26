@@ -11,16 +11,9 @@ import {
   CalendarClock,
   TestTube,
   Film,
-  ArrowRight,
 } from 'lucide-react';
 
-interface SkillsSectionProps {
-  onSelectSkill?: (title: string) => void;
-}
-
-export const SkillsSection: React.FC<SkillsSectionProps> = ({
-  onSelectSkill,
-}) => {
+export const SkillsSection: React.FC = () => {
   const skills = [
     {
       id: 'fullstack-web',
@@ -134,8 +127,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
                 whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.2 + idx * 0.12 }}
-                onClick={() => onSelectSkill?.(item.title)}
-                className="liquid-glass rounded-[1.25rem] p-6 min-h-[350px] flex flex-col justify-between hover:bg-white/10 transition-all duration-300 group cursor-pointer border border-white/10 hover:border-white/25 shadow-2xl"
+                className="liquid-glass rounded-[1.25rem] p-6 min-h-[350px] flex flex-col justify-between hover:bg-white/10 transition-all duration-300 group border border-white/10 hover:border-white/25 shadow-2xl"
               >
                 {/* Top row */}
                 <div className="flex items-start justify-between gap-3">
@@ -162,9 +154,8 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
 
                 {/* Bottom section */}
                 <div className="mt-6">
-                  <h3 className="font-display italic text-white text-2xl sm:text-3xl tracking-tight leading-tight flex items-center justify-between mb-2">
-                    <span>{item.title}</span>
-                    <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                  <h3 className="font-display italic text-white text-2xl sm:text-3xl tracking-tight leading-tight mb-2">
+                    {item.title}
                   </h3>
 
                   <p className="text-xs sm:text-sm text-neutral-300 font-body font-light leading-relaxed">

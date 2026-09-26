@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { warriorDetails } from '../data/portfolioData';
-import { X, Sparkles } from 'lucide-react';
+import { X, Sparkles, Github } from 'lucide-react';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -49,33 +49,41 @@ export const ContactModal: React.FC<ContactModalProps> = ({
                 Let's build something <span className="accent-text-gradient">exceptional</span>
               </h2>
               <p className="text-xs sm:text-sm font-body font-light text-neutral-300 mt-1">
-                Web projects, Discord bots, or just a question — my inbox is open.
+                Web projects, Discord bots, or just a question — GitHub is where I'm quickest to reach.
               </p>
             </div>
           </div>
 
           <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10 text-center flex flex-col items-center gap-3">
             <div className="w-12 h-12 rounded-full accent-gradient flex items-center justify-center text-black font-bold shadow-lg">
-              <Sparkles className="w-6 h-6" />
+              <Github className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-display italic text-white">Contact details coming soon</h3>
+            <h3 className="text-xl font-display italic text-white">@{warriorDetails.githubHandle}</h3>
             <p className="text-xs text-neutral-300 font-body max-w-sm leading-relaxed">
-              I'm setting up my public contact links. Check back shortly — or say hi wherever
-              you already know how to reach me.
+              Open an issue, send a message, or point me at a repo you want built on.
             </p>
-            {warriorDetails.discord && (
+            <div className="mt-1 flex flex-wrap items-center justify-center gap-4">
+              <a
+                href={warriorDetails.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="liquid-glass-strong rounded-full py-2.5 px-5 text-xs font-semibold text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+              >
+                <Github className="w-3.5 h-3.5" />
+                Open profile
+              </a>
               <button
                 type="button"
                 onClick={() => {
-                  navigator.clipboard.writeText(warriorDetails.discord);
+                  navigator.clipboard.writeText(warriorDetails.githubHandle);
                   setCopied(true);
                   setTimeout(() => setCopied(false), 2000);
                 }}
-                className="mt-2 text-xs font-mono text-[#89AACC] hover:underline cursor-pointer flex items-center gap-1.5"
+                className="text-xs font-mono text-[#89AACC] hover:underline cursor-pointer flex items-center gap-1.5"
               >
-                {copied ? <span>Copied!</span> : <span>Copy Discord</span>}
+                {copied ? <span>Copied!</span> : <span>Copy handle</span>}
               </button>
-            )}
+            </div>
           </div>
         </motion.div>
       </div>

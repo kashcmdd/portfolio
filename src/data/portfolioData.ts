@@ -4,6 +4,8 @@ export const warriorDetails = {
   name: "KashhCMD",
   title: "Web Designer & Discord Bot Developer",
   avatarUrl: "https://github.com/kashcmdd.png",
+  githubUrl: "https://github.com/kashcmdd",
+  githubHandle: "kashcmdd",
   bio: "I'm KashhCMD, a web designer and Discord bot developer who enjoys building modern digital experiences. My journey into programming started with curiosity and has grown into a passion for creating websites, applications, and tools that are both visually appealing and highly functional.",
   philosophy: "I believe that every line of code should have a purpose. I aim to write clean, maintainable, and scalable code while focusing on performance, accessibility, and user experience. Rather than simply making something work, I strive to create products that feel polished, intuitive, and enjoyable to use.",
   roles: ["Web Dev", "Discord Bot Dev"],
