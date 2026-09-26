@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { LoadingScreen } from './components/LoadingScreen';
 import { Navbar } from './components/Navbar';
@@ -15,6 +15,15 @@ import { StatsSection } from './components/StatsSection';
 import { ContactFooter } from './components/ContactFooter';
 import { ContactModal } from './components/ContactModal';
 import { Project, JournalEntry } from './types';
+import { journalEntriesData } from './data/portfolioData';
+
+const entryIdFromHash = (): string | null => {
+  const match = window.location.hash.match(/^#journal\/([a-z0-9-]+)$/);
+  return match ? match[1] : null;
+};
+
+const entryForId = (id: string | null): JournalEntry | null =>
+  (id && journalEntriesData.find((entry) => entry.id === id)) || null;
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,6 +31,48 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedJournal, setSelectedJournal] = useState<JournalEntry | null>(null);
   const [contactModalOpen, setContactModalOpen] = useState(false);
+
+  // True only while a journal hash was pushed by this app, so that closing the
+  // modal can go back instead of leaving a stale entry in the history stack.
+  const pushedJournalHash = useRef(false);
+
+  // Deep link on first load: #journal/<id> opens the post once the app is up.
+  useEffect(() => {
+    if (isLoading) return;
+    const entry = entryForId(entryIdFromHash());
+    if (entry && !selectedJournal) {
+      setSelectedJournal(entry);
+      requestAnimationFrame(() => {
+        document.getElementById('journal')?.scrollIntoView({ behavior: 'auto' });
+      });
+    }
+  }, [isLoading]);
+
+  // Back, forward and manual URL edits all arrive as hashchange.
+  useEffect(() => {
+    const onHashChange = () => {
+      pushedJournalHash.current = false;
+      setSelectedJournal(entryForId(entryIdFromHash()));
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  const openJournal = (entry: JournalEntry) => {
+    setSelectedJournal(entry);
+    history.pushState(null, '', `#journal/${entry.id}`);
+    pushedJournalHash.current = true;
+  };
+
+  const closeJournal = () => {
+    if (pushedJournalHash.current) {
+      pushedJournalHash.current = false;
+      history.back(); // hashchange clears the entry
+      return;
+    }
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    setSelectedJournal(null);
+  };
 
   // Active section tracking on scroll
   useEffect(() => {
@@ -101,7 +152,7 @@ export default function App() {
 
             {/* Journal & Thoughts */}
             <JournalSection
-              onSelectJournal={(entry) => setSelectedJournal(entry)}
+              onSelectJournal={openJournal}
             />
 
             {/* Explorations Gallery */}
@@ -125,7 +176,7 @@ export default function App() {
 
           <JournalModal
             entry={selectedJournal}
-            onClose={() => setSelectedJournal(null)}
+            onClose={closeJournal}
           />
 
           <ContactModal
