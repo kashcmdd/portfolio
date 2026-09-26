@@ -63,7 +63,7 @@ export const projectsData: Project[] = [
     category: "Discord Moderation",
     subtitle: "Maintained Fork of an All-in-One Multipurpose Bot",
     description: "A maintained fork of the Melon multipurpose bot — antinuke protection, automod, AI chat, tickets, giveaways, join-to-create voice, autopost and more, on hybrid prefix + slash commands with Sequelize-backed Postgres state.",
-    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80",
+    image: "/portfolio/melon.webp",
     tags: ["Discord.js", "Node.js", "PostgreSQL", "Sequelize"],
     githubUrl: "https://github.com/kashcmdd/Melon-All-In-One-Discord-Bot",
     featured: true,
