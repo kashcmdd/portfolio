@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { JournalEntry, JournalBlock } from '../types';
-import { X, Calendar, Clock, Tag, Link2, Check } from 'lucide-react';
+import { X, Calendar, Clock, Tag, ExternalLink } from 'lucide-react';
 
 const renderBlock = (block: JournalBlock, key: number) => {
   switch (block.type) {
@@ -104,11 +104,9 @@ interface JournalModalProps {
 }
 
 export const JournalModal: React.FC<JournalModalProps> = ({ entry, onClose }) => {
-  const [copied, setCopied] = useState(false);
   const bodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setCopied(false);
     bodyRef.current?.scrollTo({ top: 0 });
   }, [entry?.id]);
 
@@ -128,20 +126,6 @@ export const JournalModal: React.FC<JournalModalProps> = ({ entry, onClose }) =>
   }, [entry, onClose]);
 
   if (!entry) return null;
-
-  // The static article page is the canonical, shareable URL: it carries its
-  // own title and image, so a link preview shows the post and not the site.
-  const permalink = `${window.location.origin}${window.location.pathname}journal/${entry.id}/`;
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(permalink);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard blocked; the address bar still shows the in-app route.
-    }
-  };
 
   return (
     <AnimatePresence>
@@ -178,24 +162,16 @@ export const JournalModal: React.FC<JournalModalProps> = ({ entry, onClose }) =>
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" /> {entry.readTime}
               </span>
-              <button
-                type="button"
-                onClick={handleCopyLink}
-                className="ml-auto flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1 hover:bg-white/20 transition-colors cursor-pointer text-white"
-                aria-label="Copy a link to this post"
+              <a
+                href={`journal/${entry.id}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1 hover:bg-white/20 transition-colors text-white"
+                aria-label="Open this post as a full page in a new tab"
               >
-                {copied ? (
-                  <>
-                    <Check className="w-3 h-3 text-emerald-400" />
-                    Copied
-                  </>
-                ) : (
-                  <>
-                    <Link2 className="w-3 h-3 text-[#89AACC]" />
-                    Copy link
-                  </>
-                )}
-              </button>
+                <ExternalLink className="w-3 h-3 text-[#89AACC]" />
+                Read full page
+              </a>
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-display italic text-white tracking-tight pr-12">
