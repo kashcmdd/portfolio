@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
-import { ArrowUpRight, MessageSquare, Heart } from 'lucide-react';
+import { ArrowUpRight, MessageSquare, Heart, BookOpen } from 'lucide-react';
 
 interface ContactFooterProps {
   onOpenContactModal: () => void;
@@ -107,6 +107,13 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
 
           {/* Social Links */}
           <div className="flex items-center gap-6">
+            <a
+              href={`${import.meta.env.BASE_URL}journal/`}
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Journal</span>
+            </a>
             <button
               onClick={onOpenContactModal}
               className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"

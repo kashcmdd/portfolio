@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Project } from '../types';
 import { projectsData } from '../data/portfolioData';
-import { ArrowUpRight, Github, ExternalLink, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { activateOnKey } from '../utils/keyboard';
 
 interface SelectedWorksSectionProps {
   onSelectProject: (project: Project) => void;
@@ -65,7 +66,11 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.8, delay: idx * 0.1, ease: 'easeOut' }}
                 onClick={() => onSelectProject(project)}
-                className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 ${project.aspectRatio}`}
+                onKeyDown={activateOnKey(() => onSelectProject(project))}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open case study: ${project.title}`}
+                className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] ${project.aspectRatio}`}
               >
                 {/* Background Image */}
                 <img

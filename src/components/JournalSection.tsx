@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { JournalEntry } from '../types';
 import { journalEntriesData } from '../data/portfolioData';
 import { ArrowUpRight, BookOpen } from 'lucide-react';
+import { activateOnKey } from '../utils/keyboard';
 
 interface JournalSectionProps {
   onSelectJournal: (entry: JournalEntry) => void;
@@ -35,15 +36,27 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
             </p>
           </div>
 
-          <div className="hidden md:inline-flex relative group">
-            <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
-            <button
-              onClick={() => onSelectJournal(journalEntriesData[0])}
-              className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            {/* A real href, so the static article pages are reachable without
+                JavaScript and therefore visible to crawlers. */}
+            <a
+              href={`${import.meta.env.BASE_URL}journal/`}
+              className="inline-flex items-center justify-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 border border-white/10 text-neutral-300 hover:text-white hover:border-white/20 transition-colors font-body"
             >
-              <span>Read Latest Entry</span>
-              <BookOpen className="w-3.5 h-3.5 text-neutral-300" />
-            </button>
+              <span>All Articles</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+
+            <div className="hidden md:inline-flex relative group">
+              <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
+              <button
+                onClick={() => onSelectJournal(journalEntriesData[0])}
+                className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
+              >
+                <span>Read Latest Entry</span>
+                <BookOpen className="w-3.5 h-3.5 text-neutral-300" />
+              </button>
+            </div>
           </div>
         </motion.div>
 
@@ -57,7 +70,11 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               onClick={() => onSelectJournal(entry)}
-              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-4 md:p-5 rounded-[28px] sm:rounded-full bg-[#141414]/50 hover:bg-[#141414] border border-neutral-800 hover:border-neutral-700 transition-all duration-300 cursor-pointer shadow-lg"
+              onKeyDown={activateOnKey(() => onSelectJournal(entry))}
+              role="button"
+              tabIndex={0}
+              aria-label={`Read journal entry: ${entry.title}`}
+              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-4 md:p-5 rounded-[28px] sm:rounded-full bg-[#141414]/50 hover:bg-[#141414] border border-neutral-800 hover:border-neutral-700 transition-all duration-300 cursor-pointer shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
             >
               {/* Image + Info */}
               <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">

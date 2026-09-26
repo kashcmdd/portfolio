@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { explorationItemsData } from '../data/portfolioData';
 import { ExplorationItem } from '../types';
 import { Sparkles, X, Maximize2 } from 'lucide-react';
+import { activateOnKey } from '../utils/keyboard';
 
 export const ExplorationsSection: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<ExplorationItem | null>(null);
@@ -41,7 +42,11 @@ export const ExplorationsSection: React.FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.08 }}
               onClick={() => setSelectedItem(item)}
-              className="group relative aspect-square rounded-3xl bg-[#141414] border border-neutral-800/80 overflow-hidden cursor-pointer shadow-xl hover:border-neutral-700 transition-all duration-300"
+              onKeyDown={activateOnKey(() => setSelectedItem(item))}
+              role="button"
+              tabIndex={0}
+              aria-label={`View ${item.title}`}
+              className="group relative aspect-square rounded-3xl bg-[#141414] border border-neutral-800/80 overflow-hidden cursor-pointer shadow-xl hover:border-neutral-700 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
             >
               <img
                 src={item.image}

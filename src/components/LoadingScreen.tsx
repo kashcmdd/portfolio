@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { activateOnKey } from '../utils/keyboard';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -54,7 +55,11 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.4, ease: 'easeInOut' } }}
       onClick={onComplete}
-      className="fixed inset-0 z-[9999] bg-[#0a0a0a] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer"
+      onKeyDown={activateOnKey(onComplete)}
+      role="button"
+      tabIndex={0}
+      aria-label="Enter the portfolio"
+      className="fixed inset-0 z-[9999] bg-[#0a0a0a] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#89AACC]"
     >
       <div className="flex items-center justify-between">
         <motion.div

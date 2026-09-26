@@ -266,6 +266,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <meta name="twitter:title" content="${esc(title)}" />
     <meta name="twitter:description" content="${esc(description)}" />
     <meta name="twitter:image" content="${esc(image)}" />
+    <meta name="twitter:image:alt" content="${esc(imageAlt)}" />
     <link rel="preload" href="${prefix}fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="${prefix}fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin />`;
 
@@ -373,6 +374,41 @@ function indexPage(all, base) {
 `;
 }
 
+// Written here rather than kept as a static file in public/ so the URLs cannot
+// drift from `base` or from the list of entries above.
+function sitemapXml(base, entries) {
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = [
+    { loc: `${SITE_ORIGIN}${base}`, lastmod: today, priority: '1.0' },
+    { loc: `${SITE_ORIGIN}${base}journal/`, lastmod: today, priority: '0.8' },
+    ...entries.map((entry) => ({
+      loc: `${SITE_ORIGIN}${base}journal/${entry.id}/`,
+      lastmod: toIso(entry.date) || today,
+      priority: '0.7',
+    })),
+  ];
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    (url) => `  <url>
+    <loc>${esc(url.loc)}</loc>
+    <lastmod>${url.lastmod}</lastmod>
+    <priority>${url.priority}</priority>
+  </url>`
+  )
+  .join('\n')}
+</urlset>
+`;
+}
+
+const robotsTxt = (base) => `User-agent: *
+Allow: /
+
+Sitemap: ${SITE_ORIGIN}${base}sitemap.xml
+`;
+
 const server = await createServer({
   root,
   configFile: path.join(root, 'vite.config.ts'),
@@ -400,8 +436,11 @@ try {
 
   await mkdir(path.join(dist, 'journal'), { recursive: true });
   await writeFile(path.join(dist, 'journal', 'index.html'), indexPage(journalEntriesData, base));
+  await writeFile(path.join(dist, 'sitemap.xml'), sitemapXml(base, journalEntriesData));
+  await writeFile(path.join(dist, 'robots.txt'), robotsTxt(base));
 
   console.log(`\n${journalEntriesData.length} article pages + journal index -> dist/journal/`);
+  console.log(`sitemap.xml + robots.txt -> dist/`);
 } finally {
   await server.close();
 }

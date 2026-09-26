@@ -86,7 +86,7 @@ export const projectsData: Project[] = [
     highlights: [
       "Liquid glass design tokens in Tailwind v4, composed over a responsive 12-column bento grid",
       "HLS video backgrounds gated by IntersectionObserver, with the 594 kB parser lazy-loaded and skipped entirely on native-HLS browsers",
-      "Push-to-deploy Pages workflow with vendor code-splitting holding initial JS to 442 kB",
+      "Push-to-deploy Pages workflow with vendor code-splitting holding initial JS to 444 kB",
     ],
   },
 ];
@@ -314,7 +314,7 @@ const { default: Hls } = await import('hls.js');`,
       },
       {
         type: "quote",
-        text: "Initial JavaScript went from 1,076 kB to 442 kB. The hls chunk is still 595 kB, it just is not your problem until you scroll to it.",
+        text: "Initial JavaScript went from 1,076 kB to 444 kB. The hls chunk is still 595 kB, it just is not your problem until you scroll to it.",
       },
     ],
   },

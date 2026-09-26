@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { warriorDetails } from '../data/portfolioData';
-import { Sparkles, Terminal, Code, Cpu, Target, Compass } from 'lucide-react';
+import { Sparkles, Target, Compass } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
   return (
@@ -35,13 +35,12 @@ export const AboutSection: React.FC = () => {
             className="lg:col-span-7 liquid-glass rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 shadow-2xl relative overflow-hidden"
           >
             <div className="flex items-center gap-3.5 mb-6">
-              <div className="relative shrink-0">
+              <div className="shrink-0">
                 <img
                   src={warriorDetails.avatarUrl}
                   alt={`${warriorDetails.name} Avatar`}
                   className="w-12 h-12 rounded-2xl object-cover border border-white/20 shadow-lg"
                 />
-                <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-black" />
               </div>
               <div>
                 <h3 className="text-xl font-body font-semibold text-white flex items-center gap-2">
@@ -61,21 +60,21 @@ export const AboutSection: React.FC = () => {
                 Development Philosophy
               </div>
               <p className="text-sm font-body font-light text-neutral-300 italic">
-                "{warriorDetails.philosophy}"
+                “{warriorDetails.philosophy}”
               </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-center">
               <div className="liquid-glass rounded-2xl p-3 border border-white/10">
-                <div className="text-2xl font-display italic text-white font-bold">Self-Taught</div>
+                <div className="text-lg sm:text-2xl font-display italic text-white font-bold">Self-Taught</div>
                 <div className="text-[11px] font-body text-neutral-400 mt-0.5">Continuous Learning</div>
               </div>
               <div className="liquid-glass rounded-2xl p-3 border border-white/10">
-                <div className="text-2xl font-display italic text-white font-bold">Web & Bots</div>
+                <div className="text-lg sm:text-2xl font-display italic text-white font-bold">Web & Bots</div>
                 <div className="text-[11px] font-body text-neutral-400 mt-0.5">Two Fronts</div>
               </div>
               <div className="liquid-glass rounded-2xl p-3 border border-white/10 col-span-2 sm:col-span-1">
-                <div className="text-2xl font-display italic text-white font-bold">Design-Focused</div>
+                <div className="text-lg sm:text-2xl font-display italic text-white font-bold">Design-Focused</div>
                 <div className="text-[11px] font-body text-neutral-400 mt-0.5">UI & Polish</div>
               </div>
             </div>
