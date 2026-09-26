@@ -108,14 +108,6 @@ export default function App() {
     }
   };
 
-  const handleCapabilitySelect = (articleId: string | null) => {
-    if (articleId) {
-      window.location.href = `journal/${articleId}/`;
-      return;
-    }
-    handleNavigate('journal');
-  };
-
   return (
     <div className="bg-[#0a0a0a] text-white font-body selection:bg-[#89AACC]/30 selection:text-white relative min-h-screen">
       {/* 1. Loading Screen */}
@@ -147,7 +139,7 @@ export default function App() {
 
             {/* Capabilities Section */}
             <CapabilitiesSection
-              onSelectCapability={handleCapabilitySelect}
+              onSelectCapability={() => setContactModalOpen(true)}
             />
 
             {/* Selected Works (Bento Grid) */}
