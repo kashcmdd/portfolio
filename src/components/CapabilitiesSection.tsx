@@ -1,7 +1,18 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { HlsVideoBackground } from './HlsVideoBackground';
-import { Code2, Bot, Server, Database, ArrowRight } from 'lucide-react';
+import { warriorDetails } from '../data/portfolioData';
+import {
+  Code2,
+  Bot,
+  Server,
+  Database,
+  Gauge,
+  CalendarClock,
+  TestTube,
+  Film,
+  ArrowRight,
+} from 'lucide-react';
 
 interface CapabilitiesSectionProps {
   onSelectCapability?: (title: string) => void;
@@ -38,6 +49,34 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
       tags: ['PostgreSQL', 'Redis', 'SQLite', 'Docker'],
       title: 'Databases & Cloud Ops',
       body: 'Configuring relational and caching layers, containerized deployments, automated CI pipelines, and live server health telemetry.',
+    },
+    {
+      id: 'performance',
+      icon: Gauge,
+      tags: ['Vite', 'Code Splitting', 'WebP', 'Lazy Loading'],
+      title: 'Web Performance',
+      body: 'Trimming what ships before anyone is asked to look at it: vendor chunking, heavy libraries loaded on demand, modern image formats, and fonts that never block first paint.',
+    },
+    {
+      id: 'python-jobs',
+      icon: CalendarClock,
+      tags: ['Python', 'FastAPI', 'APScheduler', 'Alembic'],
+      title: 'Python & Background Jobs',
+      body: 'Services that keep running unattended: concurrency-locked schedulers, versioned schema migrations, and system-attributed writes that stay auditable months later.',
+    },
+    {
+      id: 'testing',
+      icon: TestTube,
+      tags: ['pytest', 'pytest-asyncio', 'Fixture Design', 'Regression Tests'],
+      title: 'Automated Testing',
+      body: 'Proof before trust: async test suites around API routes and the scheduled job, shared fixtures instead of copy-pasted setup, and failures that name the assertion first.',
+    },
+    {
+      id: 'motion-media',
+      icon: Film,
+      tags: ['GSAP', 'Motion', 'HLS Streaming', 'Scroll Animation'],
+      title: 'Motion & Media',
+      body: 'Interfaces that move without stalling: once-only scroll reveals, transforms kept on the GPU, and video backgrounds streamed in segments instead of loading whole files.',
     },
   ];
 
@@ -84,7 +123,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
           </motion.h2>
         </div>
 
-        {/* 4 Cards Grid */}
+        {/* Capability Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 mb-6">
           {capabilities.map((item, idx) => {
             const IconComp = item.icon;
@@ -140,7 +179,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
         {/* Footer info line */}
         <div className="flex flex-col sm:flex-row items-center justify-between pt-6 border-t border-white/10 text-xs font-body text-neutral-400 gap-4">
           <div>
-            WARRIOROG · FULL-STACK & DISCORD BOT ARCHITECTURE
+            {warriorDetails.name.toUpperCase()} · FULL-STACK & DISCORD BOT ARCHITECTURE
           </div>
           <div className="flex items-center gap-6">
             <span className="hover:text-white cursor-pointer transition-colors">Clean Code</span>
