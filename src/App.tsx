@@ -4,7 +4,7 @@ import { LoadingScreen } from './components/LoadingScreen';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { AboutSection } from './components/AboutSection';
-import { CapabilitiesSection } from './components/CapabilitiesSection';
+import { SkillsSection } from './components/SkillsSection';
 import { SelectedWorksSection } from './components/SelectedWorksSection';
 import { ProjectModal } from './components/ProjectModal';
 import { TechStackSection } from './components/TechStackSection';
@@ -78,7 +78,7 @@ export default function App() {
   useEffect(() => {
     if (isLoading) return;
 
-    const sectionIds = ['hero', 'about', 'capabilities', 'work', 'journal', 'stack', 'explorations', 'contact'];
+    const sectionIds = ['hero', 'about', 'skills', 'work', 'journal', 'stack', 'explorations', 'contact'];
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;
@@ -137,9 +137,9 @@ export default function App() {
             {/* About Developer Section */}
             <AboutSection />
 
-            {/* Capabilities Section */}
-            <CapabilitiesSection
-              onSelectCapability={() => setContactModalOpen(true)}
+            {/* Skills Section */}
+            <SkillsSection
+              onSelectSkill={() => setContactModalOpen(true)}
             />
 
             {/* Selected Works (Bento Grid) */}

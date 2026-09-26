@@ -31,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'hero', label: 'Home' },
     { id: 'about', label: 'About' },
-    { id: 'capabilities', label: 'Capabilities' },
+    { id: 'skills', label: 'Skills' },
     { id: 'work', label: 'Work' },
     { id: 'journal', label: 'Journal' },
     { id: 'stack', label: 'Stack' },

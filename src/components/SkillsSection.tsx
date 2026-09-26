@@ -14,14 +14,14 @@ import {
   ArrowRight,
 } from 'lucide-react';
 
-interface CapabilitiesSectionProps {
-  onSelectCapability?: (title: string) => void;
+interface SkillsSectionProps {
+  onSelectSkill?: (title: string) => void;
 }
 
-export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
-  onSelectCapability,
+export const SkillsSection: React.FC<SkillsSectionProps> = ({
+  onSelectSkill,
 }) => {
-  const capabilities = [
+  const skills = [
     {
       id: 'fullstack-web',
       icon: Code2,
@@ -82,7 +82,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
 
   return (
     <section
-      id="capabilities"
+      id="skills"
       className="relative w-full min-h-screen bg-[#0a0a0a] text-white overflow-hidden flex flex-col justify-between py-24"
     >
       {/* Background Video */}
@@ -106,7 +106,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
             className="text-xs font-body text-neutral-400 mb-6 uppercase tracking-[0.3em] font-medium flex items-center gap-2"
           >
             <span className="w-8 h-px bg-neutral-700" />
-            // CAPABILITIES & WHAT I DO
+            // SKILLS & WHAT I DO
           </motion.div>
 
           {/* Heading */}
@@ -123,9 +123,9 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
           </motion.h2>
         </div>
 
-        {/* Capability Cards */}
+        {/* Skill Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mb-6">
-          {capabilities.map((item, idx) => {
+          {skills.map((item, idx) => {
             const IconComp = item.icon;
             return (
               <motion.div
@@ -134,7 +134,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
                 whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.2 + idx * 0.12 }}
-                onClick={() => onSelectCapability?.(item.title)}
+                onClick={() => onSelectSkill?.(item.title)}
                 className="liquid-glass rounded-[1.25rem] p-6 min-h-[350px] flex flex-col justify-between hover:bg-white/10 transition-all duration-300 group cursor-pointer border border-white/10 hover:border-white/25 shadow-2xl"
               >
                 {/* Top row */}
