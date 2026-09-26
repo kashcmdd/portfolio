@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 interface CapabilitiesSectionProps {
-  onSelectCapability?: (title: string) => void;
+  onSelectCapability?: (articleId: string | null) => void;
 }
 
 export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
@@ -25,6 +25,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'fullstack-web',
       icon: Code2,
+      articleId: 'content-model',
       tags: ['React 19', 'Next.js', 'TypeScript', 'Tailwind CSS'],
       title: 'Full-Stack Web Dev',
       body: 'Building fast, responsive single-page and server-rendered web applications with clean component structure, state management, and pixel-perfect UI execution.',
@@ -32,6 +33,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'discord-bots',
       icon: Bot,
+      articleId: null,
       tags: ['Discord.js v14', 'Custom Bots', 'Slash Commands', 'Automation'],
       title: 'Discord Bot Dev',
       body: 'Architecting high-uptime Discord bots with modular event handlers, database synchronization, interactive buttons, select menus, and real-time dashboard integrations.',
@@ -39,6 +41,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'rest-apis',
       icon: Server,
+      articleId: null,
       tags: ['Node.js', 'Express.js', 'REST APIs', 'JWT Auth'],
       title: 'REST API & Backend',
       body: 'Designing scalable backend microservices, secure REST endpoints, middleware auth pipelines, rate limiting, and seamless data payload formatting.',
@@ -46,6 +49,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'cloud-db',
       icon: Database,
+      articleId: 'sqlite-postgres',
       tags: ['PostgreSQL', 'Redis', 'SQLite', 'Docker'],
       title: 'Databases & Cloud Ops',
       body: 'Configuring relational and caching layers, containerized deployments, automated CI pipelines, and live server health telemetry.',
@@ -53,6 +57,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'performance',
       icon: Gauge,
+      articleId: 'bundle-splitting',
       tags: ['Vite', 'Code Splitting', 'WebP', 'Lazy Loading'],
       title: 'Web Performance',
       body: 'Trimming what ships before anyone is asked to look at it: vendor chunking, heavy libraries loaded on demand, modern image formats, and fonts that never block first paint.',
@@ -60,6 +65,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'python-jobs',
       icon: CalendarClock,
+      articleId: null,
       tags: ['Python', 'FastAPI', 'APScheduler', 'Alembic'],
       title: 'Python & Background Jobs',
       body: 'Services that keep running unattended: concurrency-locked schedulers, versioned schema migrations, and system-attributed writes that stay auditable months later.',
@@ -67,6 +73,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'testing',
       icon: TestTube,
+      articleId: null,
       tags: ['pytest', 'pytest-asyncio', 'Fixture Design', 'Regression Tests'],
       title: 'Automated Testing',
       body: 'Proof before trust: async test suites around API routes and the scheduled job, shared fixtures instead of copy-pasted setup, and failures that name the assertion first.',
@@ -74,6 +81,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
     {
       id: 'motion-media',
       icon: Film,
+      articleId: null,
       tags: ['GSAP', 'Motion', 'HLS Streaming', 'Scroll Animation'],
       title: 'Motion & Media',
       body: 'Interfaces that move without stalling: once-only scroll reveals, transforms kept on the GPU, and video backgrounds streamed in segments instead of loading whole files.',
@@ -134,7 +142,7 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
                 whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.2 + idx * 0.12 }}
-                onClick={() => onSelectCapability?.(item.title)}
+                onClick={() => onSelectCapability?.(item.articleId)}
                 className="liquid-glass rounded-[1.25rem] p-6 min-h-[350px] flex flex-col justify-between hover:bg-white/10 transition-all duration-300 group cursor-pointer border border-white/10 hover:border-white/25 shadow-2xl"
               >
                 {/* Top row */}
