@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Search, Clock } from 'lucide-react';
 import {
@@ -6,9 +6,12 @@ import {
   journalEntriesData,
   techSkillsData,
   explorationItemsData,
+  warriorDetails,
 } from '../data/portfolioData';
+import { entryPlainText } from '../utils/journalText';
+import { useMotionPref } from './MotionPrefProvider';
 
-type ResultType = 'project' | 'journal' | 'skill' | 'exploration';
+type ResultType = 'project' | 'journal' | 'skill' | 'exploration' | 'action' | 'nav' | 'external';
 
 interface SearchResult {
   type: ResultType;
@@ -18,6 +21,10 @@ interface SearchResult {
   tags?: string[];
   category?: string;
   date?: string;
+  /** Words the query may match, when they are not already in title/description. */
+  keywords?: string;
+  /** Present on actions that do something rather than navigate somewhere. */
+  run?: () => void;
 }
 
 const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
@@ -34,7 +41,29 @@ const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
     letter: 'E',
     className: 'bg-neutral-700/60 border border-neutral-500/40 text-neutral-200',
   },
+  action: {
+    letter: 'A',
+    className: 'bg-[#e0af68]/15 border border-[#e0af68]/30 text-[#e0af68]',
+  },
+  nav: {
+    letter: 'â†’',
+    className: 'bg-white/10 border border-white/20 text-neutral-300',
+  },
+  external: {
+    letter: 'G',
+    className: 'bg-white/10 border border-white/20 text-neutral-300',
+  },
 };
+
+const SECTION_LINKS: { id: string; label: string }[] = [
+  { id: 'about', label: 'Go to About' },
+  { id: 'skills', label: 'Go to Skills' },
+  { id: 'work', label: 'Go to Projects' },
+  { id: 'journal', label: 'Go to Journal' },
+  { id: 'stack', label: 'Go to Stack' },
+  { id: 'explorations', label: 'Go to Explorations' },
+  { id: 'contact', label: 'Go to Contact' },
+];
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -46,6 +75,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { pref, toggle } = useMotionPref();
+
+  // Article bodies are indexed once. Doing it per keystroke would re-walk every
+  // code sample in the journal on every character typed.
+  const articleBodies = useMemo(
+    () => new Map(journalEntriesData.map((entry) => [entry.id, entryPlainText(entry)])),
+    []
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -55,6 +92,20 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       setSelectedIndex(0);
     }
   }, [isOpen]);
+
+  const activate = (result: SearchResult) => {
+    if (result.run) {
+      result.run();
+      onClose();
+      return;
+    }
+    if (result.url.startsWith('#')) {
+      window.location.hash = result.url;
+    } else {
+      window.location.href = result.url;
+    }
+    onClose();
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -75,7 +126,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         case 'Enter':
           event.preventDefault();
           if (results[selectedIndex]) {
-            window.location.href = results[selectedIndex].url;
+            activate(results[selectedIndex]);
           }
           break;
       }
@@ -86,20 +137,78 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
   }, [isOpen, results, selectedIndex, onClose]);
 
   useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const matches = (haystack: string) => terms.every((term) => haystack.includes(term));
+
+    // Actions are always available, including with an empty query, because a
+    // palette that can do things is more useful than one that can only find
+    // things. With no query they are the entire list.
+    const commands: SearchResult[] = [
+      {
+        type: 'action',
+        title: 'Copy GitHub profile link',
+        description: warriorDetails.githubUrl,
+        url: '',
+        keywords: `copy github profile link url ${warriorDetails.githubUrl}`,
+        run: () => navigator.clipboard.writeText(warriorDetails.githubUrl),
+      },
+      {
+        type: 'action',
+        title: 'Copy GitHub handle',
+        description: `@${warriorDetails.githubHandle}`,
+        url: '',
+        keywords: `copy github handle username @${warriorDetails.githubHandle}`,
+        run: () => navigator.clipboard.writeText(warriorDetails.githubHandle),
+      },
+      {
+        type: 'action',
+        title: pref === 'reduced' ? 'Enable animations' : 'Reduce motion',
+        description:
+          pref === 'reduced'
+            ? 'Turn scrolling and entrance animations back on'
+            : 'Turn off scrolling and entrance animations',
+        url: '',
+        keywords: 'motion animation accessibility reduce toggle quiet still',
+        run: toggle,
+      },
+      {
+        type: 'action',
+        title: 'Open the journal as static pages',
+        description: 'Full articles, no app required',
+        url: 'journal/',
+        keywords: 'journal article static page full no app rss feed',
+      },
+      {
+        type: 'external',
+        title: 'Open GitHub',
+        description: warriorDetails.githubUrl,
+        url: warriorDetails.githubUrl,
+        keywords: 'github profile repository source code external',
+      },
+      ...SECTION_LINKS.map<SearchResult>((section) => ({
+        type: 'nav',
+        title: section.label,
+        description: `Jump to #${section.id}`,
+        url: `#${section.id}`,
+        keywords: `go jump to ${section.id} section navigate`,
+      })),
+    ];
+
+    if (terms.length === 0) {
+      setResults(commands);
+      setSelectedIndex(0);
       return;
     }
 
-    const searchQuery = query.toLowerCase();
-    const searchResults: SearchResult[] = [];
+    const searchResults: SearchResult[] = commands.filter((command) =>
+      matches(
+        `${command.title} ${command.description} ${command.keywords || ''}`.toLowerCase()
+      )
+    );
+
     // Every whitespace-separated term has to appear somewhere in the haystack.
     // A single `includes` over a joined string would also match "type react",
     // which no field contains.
-    const terms = searchQuery.split(/\s+/).filter(Boolean);
-    const matches = (haystack: string) =>
-      terms.every((term) => haystack.includes(term));
-
     projectsData.forEach((project) => {
       const titleMatch = matches(project.title.toLowerCase());
       const descMatch = matches(project.description.toLowerCase());
@@ -122,12 +231,18 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       const titleMatch = matches(entry.title.toLowerCase());
       const descMatch = matches(entry.subtitle.toLowerCase());
       const categoryMatch = matches(entry.category.toLowerCase());
+      // The body is what makes a specific word findable, and it is a much
+      // larger haystack, so it is checked on its own and reported separately
+      // rather than folded into the title match.
+      const bodyMatch = matches(articleBodies.get(entry.id) || '');
 
-      if (titleMatch || descMatch || categoryMatch) {
+      if (titleMatch || descMatch || categoryMatch || bodyMatch) {
         searchResults.push({
           type: 'journal',
           title: entry.title,
-          description: entry.subtitle,
+          description: bodyMatch && !titleMatch && !descMatch && !categoryMatch
+            ? 'Mentioned in the article body'
+            : entry.subtitle,
           url: `#journal/${entry.id}`,
           category: entry.category,
           date: entry.date,
@@ -180,7 +295,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
     setResults(searchResults);
     setSelectedIndex(0);
-  }, [query]);
+  }, [query, articleBodies, pref, toggle]);
 
   if (!isOpen) return null;
 
@@ -202,7 +317,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search projects, journal, skills..."
+              placeholder="Search everything, or run a command..."
               className="flex-1 bg-transparent border-none outline-none text-white placeholder-neutral-500 font-body text-lg"
             />
             <div className="text-xs text-neutral-500 font-body hidden sm:block">
@@ -220,21 +335,46 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
           {/* Search Results */}
           <div className="max-h-[60vh] overflow-y-auto">
             {query.trim() === '' ? (
-              <div className="p-8 text-center">
-                <Search className="w-12 h-12 text-neutral-600 mx-auto mb-4" />
-                <p className="text-neutral-400 font-body">
-                  Search projects, journal, skills and explorations
+              <div className="p-2">
+                <p className="px-4 pt-3 pb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-600">
+                  Commands
                 </p>
-                <div className="mt-6 flex flex-wrap justify-center gap-2">
-                  {['React', 'TypeScript', 'Discord', 'Performance', 'Database'].map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      onClick={() => setQuery(suggestion)}
-                      className="px-3 py-1.5 rounded-full liquid-glass text-sm text-neutral-300 hover:text-white hover:bg-white/20 transition-colors cursor-pointer font-body"
+                {results.map((result, index) => (
+                  <button
+                    key={`${result.type}-${result.title}`}
+                    onClick={() => activate(result)}
+                    className={`flex w-full items-center gap-3 rounded-xl p-3 text-left transition-colors cursor-pointer ${
+                      index === selectedIndex ? 'bg-white/15' : 'hover:bg-white/10'
+                    }`}
+                  >
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 font-bold text-[10px] ${TYPE_BADGES[result.type].className}`}
                     >
-                      {suggestion}
-                    </button>
-                  ))}
+                      {TYPE_BADGES[result.type].letter}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm text-white font-body">{result.title}</p>
+                      <p className="truncate text-xs text-neutral-500 font-body">
+                        {result.description}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+                <div className="p-4">
+                  <p className="mb-2 text-center text-neutral-400 font-body text-sm">
+                    Or search projects, journal, skills and explorations
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {['React', 'TypeScript', 'Discord', 'Performance', 'Database'].map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        onClick={() => setQuery(suggestion)}
+                        className="px-3 py-1.5 rounded-full liquid-glass text-sm text-neutral-300 hover:text-white hover:bg-white/20 transition-colors cursor-pointer font-body"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : results.length === 0 ? (
@@ -246,14 +386,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                 {results.map((result, index) => (
                   <button
                     key={`${result.type}-${result.title}`}
-                    onClick={() => {
-                      if (result.url.startsWith('#')) {
-                        window.location.hash = result.url;
-                      } else {
-                        window.location.href = result.url;
-                      }
-                      onClose();
-                    }}
+                    onClick={() => activate(result)}
                     className={`w-full text-left p-4 rounded-xl transition-colors cursor-pointer ${
                       index === selectedIndex
                         ? 'bg-white/20 border border-[#89AACC]'
@@ -310,10 +443,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
           <div className="px-6 py-3 border-t border-white/10 flex items-center justify-between text-xs text-neutral-500 font-body">
             <div className="flex items-center gap-4">
               <span>{results.length} results</span>
-              <span className="hidden sm:inline">Use ↑↓ to navigate, Enter to select</span>
+              <span className="hidden sm:inline">Use â†‘â†“ to navigate, Enter to select</span>
             </div>
             <div className="flex items-center gap-2">
-              <kbd className="px-2 py-1 rounded bg-white/10">↑↓</kbd>
+              <kbd className="px-2 py-1 rounded bg-white/10">â†‘â†“</kbd>
               <kbd className="px-2 py-1 rounded bg-white/10">Enter</kbd>
             </div>
           </div>

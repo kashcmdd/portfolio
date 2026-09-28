@@ -1,4 +1,10 @@
-import { Project, JournalEntry, TechSkill, ExplorationItem } from '../types';
+import {
+  Project,
+  JournalEntry,
+  TechSkill,
+  ExplorationItem,
+  CurrentlyBuilding,
+} from '../types';
 
 // Files in public/ are served from the Vite base, not the domain root, and a
 // string in this module is a runtime <img src> that the bundler never rewrites.
@@ -635,3 +641,17 @@ export const explorationItemsData: ExplorationItem[] = [
     description: "Interactive shell environment in the browser with custom command parsing and ASCII art."
   },
 ];
+
+/**
+ * The one line of work in progress shown under the hero. This is the only field
+ * on the site that is expected to change often, which is the point: it answers
+ * "is any of this still alive?" without writing a post.
+ *
+ * PLACEHOLDER - replace with something real, or set the whole thing to null to
+ * hide the strip.
+ */
+export const currentlyBuildingData: CurrentlyBuilding = {
+  name: 'Your next project',
+  description: 'One line on what you are working on right now.',
+  status: 'In progress',
+};

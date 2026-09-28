@@ -53,3 +53,14 @@ export interface ExplorationItem {
   image: string;
   description: string;
 }
+
+/**
+ * The one piece of work in progress worth naming on the page. Set it to null to
+ * hide the strip entirely rather than leaving a stale line on the site.
+ */
+export interface CurrentlyBuilding {
+  name: string;
+  description: string;
+  status?: string;
+  url?: string;
+}

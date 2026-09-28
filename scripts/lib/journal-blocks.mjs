@@ -16,6 +16,9 @@
  *     <figure> wrappers for code and images; the feed ships bare tags because
  *     no stylesheet travels with it.
  */
+import { highlightCode } from './prism.mjs';
+import { outlineSlugs, articleOutline } from './journal-outline.mjs';
+
 export const MONTHS = {
   JAN: '01', FEB: '02', MAR: '03', APR: '04', MAY: '05', JUN: '06',
   JUL: '07', AUG: '08', SEP: '09', OCT: '10', NOV: '11', DEC: '12',
@@ -41,18 +44,36 @@ export const toPubDate = (date) => {
   return new Date(`${iso}T00:00:00Z`).toUTCString();
 };
 
-export function renderBlock(block, { headingLevel = 2, rich = false } = {}) {
+/**
+ * Headings of an article in document order, with the same ids renderBlocks
+ * will emit. A table of contents built from this is guaranteed to link to
+ * headings that exist, because both walk the content with the same slugger.
+ */
+export { articleOutline };
+
+/** renderBlock for a whole article, threading heading ids through the document. */
+export function renderBlocks(blocks = [], opts = {}) {
+  const slugs = outlineSlugs(blocks);
+  return blocks.map((block, i) => renderBlock(block, { ...opts, slug: slugs[i] || '' }));
+}
+
+export function renderBlock(block, { headingLevel = 2, rich = false, slug = '' } = {}) {
   switch (block.type) {
     case 'heading': {
       const tag = `h${headingLevel}`;
-      return `<${tag}>${esc(block.text)}</${tag}>`;
+      return `<${tag}${slug ? ` id="${esc(slug)}"` : ''}>${esc(block.text)}</${tag}>`;
     }
     case 'code':
       return rich
         ? [
             '<figure class="code">',
-            `<div class="codebar"><span>${esc(block.language)}</span></div>`,
-            `<pre><code>${esc(block.code)}</code></pre>`,
+            `<div class="codebar"><span>${esc(block.language)}</span>`,
+            // The raw source never has to be embedded: the highlighted <code>
+            // element's textContent is the original text, since token spans
+            // add only markup. The article page script copies from there.
+            '<button type="button" class="copy" data-copy>Copy</button>',
+            '</div>',
+            `<pre class="prism-code"><code>${highlightCode(block.code, block.language)}</code></pre>`,
             block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '',
             '</figure>',
           ].join('')

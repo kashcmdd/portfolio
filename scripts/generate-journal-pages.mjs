@@ -12,7 +12,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
-import { esc, toIso, renderBlock, requireBase } from './lib/journal-blocks.mjs';
+import { esc, toIso, renderBlocks, articleOutline, requireBase } from './lib/journal-blocks.mjs';
+import { PRISM_TOKEN_CSS } from './lib/prism.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_ORIGIN = 'https://kashcmdd.github.io';
@@ -129,6 +130,76 @@ const cssFor = (prefix) => `
     overflow: hidden;
     background: rgba(0, 0, 0, .5);
   }
+  .toc { margin: 32px 0; }
+  .toc details {
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .02);
+  }
+  .toc summary {
+    padding: 12px 18px;
+    cursor: pointer;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    list-style: none;
+  }
+  .toc summary::-webkit-details-marker { display: none; }
+  .toc summary::after { content: '+'; float: right; color: #89AACC; }
+  .toc details[open] summary::after { content: '\u2013'; }
+  .toc summary:hover { color: #fff; }
+  .toc summary:focus-visible { outline: 2px solid #89AACC; outline-offset: -2px; }
+  .toc ol {
+    margin: 0;
+    padding: 0 18px 16px 34px;
+    counter-reset: toc;
+    list-style: none;
+  }
+  .toc li { margin: 6px 0; }
+  .toc a { color: #b4b4b4; text-decoration: none; font-size: 14px; }
+  .toc a:hover { color: #fff; }
+  /* Anchored headings must clear the sticky top bar, or #link jumps the
+     heading underneath it. */
+  article h2 { scroll-margin-top: 72px; }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 28px;
+    padding: 0;
+    list-style: none;
+  }
+  .tags li {
+    margin: 0;
+    padding: 4px 11px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .03);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    color: #b4b4b4;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 34px;
+  }
+  .links a {
+    display: inline-block;
+    padding: 9px 18px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .03);
+    color: #f5f5f5;
+    font-size: 13px;
+    text-decoration: none;
+    transition: background .15s, border-color .15s;
+  }
+  .links a:hover { background: rgba(255, 255, 255, .09); border-color: rgba(255, 255, 255, .28); }
+  .links a:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
   .codebar {
     padding: 8px 16px;
     border-bottom: 1px solid rgba(255, 255, 255, .1);
@@ -138,7 +209,24 @@ const cssFor = (prefix) => `
     letter-spacing: .18em;
     text-transform: uppercase;
     color: #8a8a8a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
+  .codebar .copy {
+    font: inherit;
+    letter-spacing: .12em;
+    color: #8a8a8a;
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 999px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: color .15s, background .15s;
+  }
+  .codebar .copy:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+  .codebar .copy:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .codebar .copy[data-copied] { color: #9ece6a; border-color: rgba(158, 206, 106, .4); }
   figure.code pre { margin: 0; padding: 16px; overflow-x: auto; }
   figure.code code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -238,10 +326,144 @@ const jsonLd = (entry, canonical, published) =>
     publisher: { '@type': 'Person', name: 'KashhCMD' },
   }).replace(/</g, '\\u003c');
 
+function projectsIndexPage(all, base) {
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Projects - KashhCMD</title>
+    <meta name="description" content="Selected work: web apps, Discord bots and frontend experiments by KashhCMD." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href="${SITE_ORIGIN}${base}projects/" />
+    <style>${cssFor('../')}</style>
+  </head>
+  <body>
+    <div class="top"><a href="../">KashhCMD</a> / Projects</div>
+    <main>
+      <h1>Projects</h1>
+      <p class="sub">Web apps, Discord bots and frontend work. Each one has its own page.</p>
+      <nav class="more">
+        ${all
+          .map(
+            (p) =>
+              `<a href="./${esc(p.id)}/"><img src="${esc(p.image)}" alt="${esc(p.title)}" /><strong>${esc(p.title)}</strong><span>${esc(p.category)}</span></a>`
+          )
+          .join('\n        ')}
+      </nav>
+    </main>
+    <div class="end">
+      <a href="../">← Back to the portfolio</a>
+      A · Plain HTML. No JavaScript, no server.
+    </div>
+  </body>
+</html>
+`;
+}
+
+const projectJsonLd = (project, canonical) =>
+  JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: project.subtitle,
+    image: socialImage(project.image),
+    url: canonical,
+    author: { '@type': 'Person', name: 'KashhCMD' },
+    keywords: (project.tags || []).join(', '),
+  }).replace(/</g, '\\u003c');
+
+// The project pages exist because a portfolio that only describes work inside a
+// modal is not linkable, not quotable and not readable by anything that is not a
+// browser. Same reasoning as the article pages: one URL per project, plain HTML,
+// no JavaScript, so a recruiter can paste a link and it just works.
+function projectPage(project, base, all) {
+  const canonical = `${SITE_ORIGIN}${base}projects/${project.id}/`;
+  const others = all.filter((p) => p.id !== project.id);
+  const highlights = project.highlights || [
+    'Asynchronous event loops & high-speed REST endpoints',
+    'Zero-downtime containerized deployments & state persistence',
+    'Responsive, fluid UI with liquid glass visual tokens',
+  ];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${esc(project.title)} - KashhCMD</title>
+    <meta name="description" content="${esc(project.subtitle)}" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href="${esc(canonical)}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${esc(project.title)}" />
+    <meta property="og:description" content="${esc(project.subtitle)}" />
+    <meta property="og:url" content="${esc(canonical)}" />
+    <meta property="og:image" content="${socialImage(project.image)}" />
+    <style>${cssFor('../../')}</style>
+    <script type="application/ld+json">${projectJsonLd(project, canonical)}</script>
+  </head>
+  <body>
+    <div class="top"><a href="../../">KashhCMD</a> / Projects</div>
+    <main>
+      <article>
+        <div class="meta">
+          <span class="cat">${esc(project.category)}</span>
+        </div>
+        <h1>${esc(project.title)}</h1>
+        <p class="sub">${esc(project.subtitle)}</p>
+        <img class="banner" src="${esc(project.image)}" alt="${esc(project.title)}" />
+        <p>${esc(project.description)}</p>
+
+        <h2>What it does</h2>
+        <ul>
+          ${highlights.map((h) => `<li>${esc(h)}</li>`).join('\n          ')}
+        </ul>
+
+        ${
+          project.tags?.length
+            ? `<h2>Built with</h2>
+        <ul class="tags">
+          ${project.tags.map((t) => `<li>${esc(t)}</li>`).join('\n          ')}
+        </ul>`
+            : ''
+        }
+
+        ${
+          project.githubUrl || project.liveUrl
+            ? `<div class="links">
+          ${project.githubUrl ? `<a href="${esc(project.githubUrl)}" rel="noopener noreferrer">Source code</a>` : ''}
+          ${project.liveUrl ? `<a href="${esc(project.liveUrl)}" rel="noopener noreferrer">Live site</a>` : ''}
+        </div>`
+            : ''
+        }
+      </article>
+
+      ${
+        others.length
+          ? `<nav class="more">
+        <h3>More projects</h3>
+        ${others
+          .map((p) => `<a href="../${p.id}/">${esc(p.title)}<span>${esc(p.category)}</span></a>`)
+          .join('\n        ')}
+      </nav>`
+          : ''
+      }
+    </main>
+    <div class="end">
+      <a href="../../">← Back to the portfolio</a>
+      A · Every project page is static: no JavaScript, no server.
+    </div>
+  </body>
+</html>
+`;
+}
+
 function articlePage(entry, base, all) {
   const canonical = `${SITE_ORIGIN}${base}journal/${entry.id}/`;
   const published = toIso(entry.date);
   const others = all.filter((e) => e.id !== entry.id);
+  const outline = articleOutline(entry.content);
 
   return `<!doctype html>
 <html lang="en">
@@ -254,6 +476,7 @@ function articlePage(entry, base, all) {
     prefix: '../../',
   })}
     <style>${cssFor('../../')}</style>
+    <style>${PRISM_TOKEN_CSS}</style>
     <script type="application/ld+json">${jsonLd(entry, canonical, published)}</script>
   </head>
   <body>
@@ -268,7 +491,19 @@ function articlePage(entry, base, all) {
         <h1>${esc(entry.title)}</h1>
         <p class="sub">${esc(entry.subtitle)}</p>
         <img class="banner" src="${esc(entry.image)}" alt="${esc(entry.title)}" />
-        ${entry.content.map((block) => renderBlock(block, { headingLevel: 2, rich: true })).join('\n        ')}
+        ${
+          outline.length >= 3
+            ? `<nav class="toc" aria-label="Contents">
+        <details>
+          <summary>Contents</summary>
+          <ol>
+            ${outline.map((h) => `<li><a href="#${esc(h.id)}">${esc(h.text)}</a></li>`).join('\n            ')}
+          </ol>
+        </details>
+      </nav>`
+            : ''
+        }
+        ${renderBlocks(entry.content, { headingLevel: 2, rich: true }).join('\n        ')}
       </article>
       
       <div class="comments-section">
@@ -291,8 +526,37 @@ function articlePage(entry, base, all) {
     </main>
     <div class="end">
       <a href="../../">← Back to the portfolio</a>
-      · All articles are static pages: no JavaScript, no server.
+      A · All articles are static pages: no JavaScript, no server.
     </div>
+    <script>
+      // One delegated listener for every copy button on the page. The code to
+      // copy is read back out of the highlighted <code> element rather than
+      // embedded separately, so there is no second copy of the source to keep
+      // in sync and no raw text to escape into a data attribute.
+      (function () {
+        var reset;
+        document.addEventListener('click', function (event) {
+          var button = event.target.closest('[data-copy]');
+          if (!button) return;
+          var code = button.closest('figure.code') && button.closest('figure.code').querySelector('code');
+          if (!code || !navigator.clipboard) return;
+          navigator.clipboard.writeText(code.textContent || '').then(
+            function () {
+              button.textContent = 'Copied';
+              button.setAttribute('data-copied', '');
+              clearTimeout(reset);
+              reset = setTimeout(function () {
+                button.textContent = 'Copy';
+                button.removeAttribute('data-copied');
+              }, 1600);
+            },
+            function () {
+              button.textContent = 'Press Ctrl+C';
+            }
+          );
+        });
+      })();
+    </script>
   </body>
 </html>
 `;
@@ -336,7 +600,7 @@ function indexPage(all, base) {
 
 // Written here rather than kept as a static file in public/ so the URLs cannot
 // drift from `base` or from the list of entries above.
-function sitemapXml(base, entries) {
+function sitemapXml(base, entries, projects = []) {
   const today = new Date().toISOString().slice(0, 10);
   const urls = [
     { loc: `${SITE_ORIGIN}${base}`, lastmod: today, priority: '1.0' },
@@ -344,6 +608,12 @@ function sitemapXml(base, entries) {
     ...entries.map((entry) => ({
       loc: `${SITE_ORIGIN}${base}journal/${entry.id}/`,
       lastmod: toIso(entry.date) || today,
+      priority: '0.7',
+    })),
+    { loc: `${SITE_ORIGIN}${base}projects/`, lastmod: today, priority: '0.8' },
+    ...projects.map((project) => ({
+      loc: `${SITE_ORIGIN}${base}projects/${project.id}/`,
+      lastmod: today,
       priority: '0.7',
     })),
   ];
@@ -385,7 +655,9 @@ const server = await createServer({
 });
 
 try {
-  const { journalEntriesData } = await server.ssrLoadModule('/src/data/portfolioData.ts');
+  const { journalEntriesData, projectsData } = await server.ssrLoadModule(
+    '/src/data/portfolioData.ts'
+  );
   const base = requireBase(server.config, 'generate-journal-pages');
   const dist = path.join(root, 'dist');
 
@@ -398,10 +670,31 @@ try {
     console.log(`  journal/${entry.id}/  ${entry.title}`);
   }
 
+  if (projectsData?.length) {
+    for (const project of projectsData) {
+      const dir = path.join(dist, 'projects', project.id);
+      await mkdir(dir, { recursive: true });
+      await writeFile(
+        path.join(dir, 'index.html'),
+        projectPage(project, base, projectsData)
+      );
+      console.log(`  projects/${project.id}/  ${project.title}`);
+    }
+    await mkdir(path.join(dist, 'projects'), { recursive: true });
+    await writeFile(
+      path.join(dist, 'projects', 'index.html'),
+      projectsIndexPage(projectsData, base)
+    );
+    console.log(`  projects/  index over ${projectsData.length} projects`);
+  }
+
   await mkdir(path.join(dist, 'journal'), { recursive: true });
   await writeFile(path.join(dist, 'journal', 'index.html'), indexPage(journalEntriesData, base));
   await writeFile(path.join(dist, 'robots.txt'), robotsTxt());
-  await writeFile(path.join(dist, 'sitemap.xml'), sitemapXml(base, journalEntriesData));
+  await writeFile(
+    path.join(dist, 'sitemap.xml'),
+    sitemapXml(base, journalEntriesData, projectsData)
+  );
 
   console.log(`\n${journalEntriesData.length} article pages + journal index -> dist/journal/`);
   console.log(`sitemap.xml + robots.txt (Disallow: /) -> dist/`);

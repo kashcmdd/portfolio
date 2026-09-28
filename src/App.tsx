@@ -10,6 +10,7 @@ import { ProjectModal } from './components/ProjectModal';
 import { TechStackSection } from './components/TechStackSection';
 import { JournalSection } from './components/JournalSection';
 import { JournalModal } from './components/JournalModal';
+import { NowBuildingStrip } from './components/NowBuildingStrip';
 import { ExplorationsSection } from './components/ExplorationsSection';
 import { StatsSection } from './components/StatsSection';
 import { ContactFooter } from './components/ContactFooter';
@@ -158,6 +159,8 @@ export default function App() {
               onOpenContactModal={() => setContactModalOpen(true)}
             />
 
+            <NowBuildingStrip />
+
             {/* About Developer Section */}
             <AboutSection />
 
@@ -197,8 +200,9 @@ export default function App() {
           />
 
           <JournalModal
-            entry={selectedJournal}
-            onClose={closeJournal}
+          entry={selectedJournal}
+          onClose={closeJournal}
+          onSelectEntry={openJournal}
           />
 
           <ContactModal
