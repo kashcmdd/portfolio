@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Search, ExternalLink, Clock, Tag } from 'lucide-react';
-import { Project, JournalEntry } from '../types';
-import { projectsData, journalEntriesData } from '../data/portfolioData';
+import { X, Search, Clock } from 'lucide-react';
+import {
+  projectsData,
+  journalEntriesData,
+  techSkillsData,
+  explorationItemsData,
+} from '../data/portfolioData';
+
+type ResultType = 'project' | 'journal' | 'skill' | 'exploration';
 
 interface SearchResult {
-  type: 'project' | 'journal';
+  type: ResultType;
   title: string;
   description: string;
   url: string;
@@ -13,6 +19,22 @@ interface SearchResult {
   category?: string;
   date?: string;
 }
+
+const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
+  project: { letter: 'P', className: 'accent-gradient text-black' },
+  journal: {
+    letter: 'J',
+    className: 'bg-[#89AACC]/20 border border-[#89AACC]/30 text-[#89AACC]',
+  },
+  skill: {
+    letter: 'S',
+    className: 'bg-white/10 border border-white/20 text-neutral-300',
+  },
+  exploration: {
+    letter: 'E',
+    className: 'bg-neutral-700/60 border border-neutral-500/40 text-neutral-200',
+  },
+};
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -71,13 +93,18 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
     const searchQuery = query.toLowerCase();
     const searchResults: SearchResult[] = [];
+    // Every whitespace-separated term has to appear somewhere in the haystack.
+    // A single `includes` over a joined string would also match "type react",
+    // which no field contains.
+    const terms = searchQuery.split(/\s+/).filter(Boolean);
+    const matches = (haystack: string) =>
+      terms.every((term) => haystack.includes(term));
 
-    // Search projects
     projectsData.forEach((project) => {
-      const titleMatch = project.title.toLowerCase().includes(searchQuery);
-      const descMatch = project.description.toLowerCase().includes(searchQuery);
-      const tagMatch = project.tags.some(tag => tag.toLowerCase().includes(searchQuery));
-      const categoryMatch = project.category.toLowerCase().includes(searchQuery);
+      const titleMatch = matches(project.title.toLowerCase());
+      const descMatch = matches(project.description.toLowerCase());
+      const tagMatch = project.tags.some((tag) => matches(tag.toLowerCase()));
+      const categoryMatch = matches(project.category.toLowerCase());
 
       if (titleMatch || descMatch || tagMatch || categoryMatch) {
         searchResults.push({
@@ -91,11 +118,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       }
     });
 
-    // Search journal entries
     journalEntriesData.forEach((entry) => {
-      const titleMatch = entry.title.toLowerCase().includes(searchQuery);
-      const descMatch = entry.subtitle.toLowerCase().includes(searchQuery);
-      const categoryMatch = entry.category.toLowerCase().includes(searchQuery);
+      const titleMatch = matches(entry.title.toLowerCase());
+      const descMatch = matches(entry.subtitle.toLowerCase());
+      const categoryMatch = matches(entry.category.toLowerCase());
 
       if (titleMatch || descMatch || categoryMatch) {
         searchResults.push({
@@ -109,15 +135,52 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       }
     });
 
+    // A bare level word ("expert") would otherwise sweep in the whole skill
+    // list, so it is only searchable alongside a real term. The set of level
+    // words is read off the data so a new level needs no second edit here.
+    const bareLevel =
+      terms.length === 1 &&
+      techSkillsData.some((skill) => skill.level.toLowerCase() === terms[0]);
+
+    techSkillsData.forEach((skill) => {
+      if (bareLevel) return;
+      if (
+        matches(skill.name.toLowerCase()) ||
+        matches(skill.category.toLowerCase()) ||
+        matches(skill.description.toLowerCase()) ||
+        matches(skill.level.toLowerCase())
+      ) {
+        searchResults.push({
+          type: 'skill',
+          title: skill.name,
+          description: skill.description,
+          // techSkillsData is rendered by TechStackSection, not SkillsSection.
+          url: `#stack`,
+          category: skill.category,
+          tags: [skill.level],
+        });
+      }
+    });
+
+    explorationItemsData.forEach((item) => {
+      if (
+        matches(item.title.toLowerCase()) ||
+        matches(item.description.toLowerCase()) ||
+        matches(item.category.toLowerCase())
+      ) {
+        searchResults.push({
+          type: 'exploration',
+          title: item.title,
+          description: item.description,
+          url: `#explorations`,
+          category: item.category,
+        });
+      }
+    });
+
     setResults(searchResults);
     setSelectedIndex(0);
   }, [query]);
-
-  const highlightMatch = (text: string, query: string) => {
-    if (!query.trim()) return text;
-    const regex = new RegExp(`(${query.split('').join('')})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
-  };
 
   if (!isOpen) return null;
 
@@ -159,7 +222,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
             {query.trim() === '' ? (
               <div className="p-8 text-center">
                 <Search className="w-12 h-12 text-neutral-600 mx-auto mb-4" />
-                <p className="text-neutral-400 font-body">Type to search projects and journal entries</p>
+                <p className="text-neutral-400 font-body">
+                  Search projects, journal, skills and explorations
+                </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
                   {['React', 'TypeScript', 'Discord', 'Performance', 'Database'].map((suggestion) => (
                     <button
@@ -196,16 +261,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                     }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
-                        {result.type === 'project' ? (
-                          <div className="w-8 h-8 rounded-full accent-gradient flex items-center justify-center">
-                            <span className="text-black text-xs font-bold">P</span>
-                          </div>
-                        ) : (
-                          <div className="w-8 h-8 rounded-full bg-[#89AACC]/20 border border-[#89AACC]/30 flex items-center justify-center">
-                            <span className="text-[#89AACC] text-xs font-bold">J</span>
-                          </div>
-                        )}
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${TYPE_BADGES[result.type].className}`}
+                      >
+                        <span className="text-xs font-bold">
+                          {TYPE_BADGES[result.type].letter}
+                        </span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { explorationItemsData } from '../data/portfolioData';
 import { ExplorationItem } from '../types';
-import { Sparkles, X, Maximize2 } from 'lucide-react';
+import { X, Maximize2 } from 'lucide-react';
 import { activateOnKey } from '../utils/keyboard';
 
 export const ExplorationsSection: React.FC = () => {

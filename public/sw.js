@@ -141,14 +141,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Background sync for offline actions (optional future enhancement)
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'sync-contact-form') {
-    event.waitUntil(syncContactForm());
-  }
-});
-
-// Push notifications (optional future enhancement)
+// Push notifications
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'New update available',
@@ -160,8 +153,3 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification('KashhCMD Portfolio', options)
   );
 });
-
-async function syncContactForm() {
-  // Future: Implement form data synchronization
-  console.log('Syncing contact form data...');
-}

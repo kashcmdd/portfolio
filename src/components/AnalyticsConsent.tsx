@@ -3,26 +3,20 @@ import { X, Info } from 'lucide-react';
 
 export const AnalyticsConsent: React.FC = () => {
   const [showBanner, setShowBanner] = useState(false);
-  const [hasConsent, setHasConsent] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem('analytics_consent');
-    if (consent === null) {
+    if (localStorage.getItem('analytics_consent') === null) {
       setShowBanner(true);
-    } else {
-      setHasConsent(consent === 'true');
     }
   }, []);
 
   const handleAccept = () => {
     localStorage.setItem('analytics_consent', 'true');
-    setHasConsent(true);
     setShowBanner(false);
   };
 
   const handleDecline = () => {
     localStorage.setItem('analytics_consent', 'false');
-    setHasConsent(false);
     setShowBanner(false);
   };
 

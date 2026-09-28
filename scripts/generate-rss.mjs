@@ -12,6 +12,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
+import { esc, toPubDate, renderBlock, requireBase } from './lib/journal-blocks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_ORIGIN = 'https://kashcmdd.github.io';
@@ -19,53 +20,6 @@ const AUTHOR_NAME = 'KashhCMD';
 // GitHub's no-reply address, so the feed declares a contact that cannot bounce
 // into a real inbox. A placeholder like contact@example.com is worse than none.
 const AUTHOR_EMAIL = 'kashcmdd@users.noreply.github.com';
-
-const MONTHS = { JAN: '01', FEB: '02', MAR: '03', APR: '04', MAY: '05', JUN: '06', JUL: '07', AUG: '08', SEP: '09', OCT: '10', NOV: '11', DEC: '12' };
-
-const esc = (value = '') =>
-  String(value).replace(
-    /[&<>"']/g,
-    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
-  );
-
-// "SEP 25, 2026" is not a format Date.parse accepts everywhere, so convert
-// before constructing. Feeding it straight in yields an Invalid Date and a
-// pubDate of "Invalid Date" in the output.
-const toIso = (date) => {
-  const m = String(date).match(/^([A-Z]{3})\s+(\d{1,2}),\s*(\d{4})$/);
-  if (!m || !MONTHS[m[1]]) return null;
-  return `${m[3]}-${MONTHS[m[1]]}-${m[2].padStart(2, '0')}`;
-};
-
-const toPubDate = (date) => {
-  const iso = toIso(date);
-  if (!iso) return new Date(0).toUTCString();
-  return new Date(`${iso}T00:00:00Z`).toUTCString();
-};
-
-function renderBlock(block) {
-  switch (block.type) {
-    case 'heading':
-      return `<h3>${esc(block.text)}</h3>`;
-    case 'code':
-      return `<pre><code class="language-${esc(block.language)}">${esc(block.code)}</code></pre>`;
-    case 'list': {
-      const tag = block.ordered ? 'ol' : 'ul';
-      return `<${tag}>${block.items.map((item) => `<li>${esc(item)}</li>`).join('')}</${tag}>`;
-    }
-    case 'quote':
-      return `<blockquote><p>${esc(block.text)}</p>${
-        block.attribution ? `<footer>— ${esc(block.attribution)}</footer>` : ''
-      }</blockquote>`;
-    case 'image':
-      return `<figure><img src="${esc(block.src)}" alt="${esc(block.alt)}" />${
-        block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : ''
-      }</figure>`;
-    case 'paragraph':
-    default:
-      return `<p>${esc(block.text)}</p>`;
-  }
-}
 
 // The body goes inside CDATA, where only the closing sequence needs care.
 const cdata = (html) => html.split(']]>').join(']]]]><![CDATA[>');
@@ -81,7 +35,7 @@ const server = await createServer({
 
 try {
   const { journalEntriesData } = await server.ssrLoadModule('/src/data/portfolioData.ts');
-  const base = server.config.base || '/';
+  const base = requireBase(server.config, 'generate-rss');
   const site = `${SITE_ORIGIN}${base}`;
 
   if (!journalEntriesData?.length) throw new Error('no journal entries loaded');
@@ -89,7 +43,11 @@ try {
   const items = journalEntriesData
     .map((entry) => {
       const url = `${site}journal/${entry.id}/`;
-      const content = entry.content.map(renderBlock).join('\n');
+      // Feed items carry no surrounding document, so blocks stay unstyled and
+      // headings drop to h3 to sit under the item title.
+      const content = entry.content
+        .map((block) => renderBlock(block, { headingLevel: 3, rich: false }))
+        .join('\n');
       return `    <item>
       <title>${esc(entry.title)}</title>
       <link>${url}</link>

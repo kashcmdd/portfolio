@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
-import { ArrowUpRight, MessageSquare, Heart, BookOpen } from 'lucide-react';
+import { ArrowUpRight, MessageSquare, BookOpen } from 'lucide-react';
 
 interface ContactFooterProps {
   onOpenContactModal: () => void;

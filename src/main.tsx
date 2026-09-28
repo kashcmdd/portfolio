@@ -12,10 +12,10 @@ createRoot(document.getElementById('root')!).render(
 
 // Register service worker for PWA support
 serviceWorkerRegistration.register({
-  onSuccess: (registration) => {
+  onSuccess: () => {
     console.log('Service worker registration successful');
   },
-  onUpdate: (registration) => {
+  onUpdate: () => {
     console.log('Service worker updated');
     // You could add a UI notification here to prompt user to refresh
   },

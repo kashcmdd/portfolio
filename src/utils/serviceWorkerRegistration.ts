@@ -6,15 +6,9 @@ const isLocalhost = Boolean(
   )
 );
 
-// Track if user has already installed the app
-let isAppInstalled = false;
-let promptAvailable = false;
-
 export function register(config?: {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
-  onInstallPrompt?: () => void;
-  onOfflineMode?: (isOffline: boolean) => void;
 }) {
   if (import.meta.env.PROD && 'serviceWorker' in navigator) {
     const publicUrl = new URL(import.meta.env.BASE_URL || '/', window.location.href);
@@ -103,16 +97,4 @@ function checkValidServiceWorker(swUrl: string, config?: {
     .catch(() => {
       console.log('No internet connection found. App is running in offline mode.');
     });
-}
-
-export function unregister() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready
-      .then((registration) => {
-        registration.unregister();
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  }
 }

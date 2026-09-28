@@ -12,61 +12,13 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
+import { esc, toIso, renderBlock, requireBase } from './lib/journal-blocks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_ORIGIN = 'https://kashcmdd.github.io';
-const MONTHS = { JAN: '01', FEB: '02', MAR: '03', APR: '04', MAY: '05', JUN: '06', JUL: '07', AUG: '08', SEP: '09', OCT: '10', NOV: '11', DEC: '12' };
-
-const esc = (value = '') =>
-  String(value).replace(
-    /[&<>"']/g,
-    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
-  );
-
-const toIso = (date) => {
-  const m = String(date).match(/^([A-Z]{3})\s+(\d{1,2}),\s*(\d{4})$/);
-  if (!m || !MONTHS[m[1]]) return null;
-  return `${m[3]}-${MONTHS[m[1]]}-${m[2].padStart(2, '0')}`;
-};
 
 // Unsplash URLs arrive at w=800; social cards want 1200x630.
 const socialImage = (image) => (image || '').replace('w=800', 'w=1200&h=630');
-
-function renderBlock(block) {
-  switch (block.type) {
-    case 'heading':
-      return `<h2>${esc(block.text)}</h2>`;
-    case 'code':
-      return [
-        '<figure class="code">',
-        `<div class="codebar"><span>${esc(block.language)}</span></div>`,
-        `<pre><code>${esc(block.code)}</code></pre>`,
-        block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '',
-        '</figure>',
-      ].join('');
-    case 'list': {
-      const tag = block.ordered ? 'ol' : 'ul';
-      return `<${tag}>${block.items.map((item) => `<li>${esc(item)}</li>`).join('')}</${tag}>`;
-    }
-    case 'quote':
-      return [
-        '<blockquote>',
-        `<p>${esc(block.text)}</p>`,
-        block.attribution ? `<footer>— ${esc(block.attribution)}</footer>` : '',
-        '</blockquote>',
-      ].join('');
-    case 'image':
-      return [
-        '<figure class="shot">',
-        `<img src="${esc(block.src)}" alt="${esc(block.alt)}" loading="lazy" />`,
-        block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '',
-        '</figure>',
-      ].join('');
-    case 'paragraph':
-    default:
-      return `<p>${esc(block.text)}</p>`;
-  }
-}
 
 // The article pages live at /journal/<id>/ and the index at /journal/, so each
 // needs a different prefix to reach the site root where fonts and icons live.
@@ -316,7 +268,7 @@ function articlePage(entry, base, all) {
         <h1>${esc(entry.title)}</h1>
         <p class="sub">${esc(entry.subtitle)}</p>
         <img class="banner" src="${esc(entry.image)}" alt="${esc(entry.title)}" />
-        ${entry.content.map(renderBlock).join('\n        ')}
+        ${entry.content.map((block) => renderBlock(block, { headingLevel: 2, rich: true })).join('\n        ')}
       </article>
       
       <div class="comments-section">
@@ -434,7 +386,7 @@ const server = await createServer({
 
 try {
   const { journalEntriesData } = await server.ssrLoadModule('/src/data/portfolioData.ts');
-  const base = server.config.base || '/portfolio/';
+  const base = requireBase(server.config, 'generate-journal-pages');
   const dist = path.join(root, 'dist');
 
   if (!journalEntriesData?.length) throw new Error('no journal entries loaded');

@@ -51,6 +51,22 @@ const iconMap: Record<string, React.ElementType> = {
   SquareTerminal,
 };
 
+const LEVELS = ['Expert', 'Advanced', 'Proficient'] as const;
+
+// Ordered strongest to weakest; the legend and the bar segments both read off
+// this list, so a new level only needs one entry here.
+const LEVEL_BAR: Record<(typeof LEVELS)[number], string> = {
+  Expert: 'bg-gradient-to-r from-[#89AACC] to-[#4E85BF]',
+  Advanced: 'bg-[#4E85BF]/70',
+  Proficient: 'bg-white/20',
+};
+
+const LEVEL_DOT: Record<(typeof LEVELS)[number], string> = {
+  Expert: 'bg-[#89AACC]',
+  Advanced: 'bg-[#4E85BF]',
+  Proficient: 'bg-neutral-500',
+};
+
 export const TechStackSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [copied, setCopied] = useState(false);
@@ -61,6 +77,24 @@ export const TechStackSection: React.FC = () => {
     activeCategory === 'All'
       ? techSkillsData
       : techSkillsData.filter((s) => s.category === activeCategory);
+
+  // Proficiency was previously only ever a text badge, so the grid could not
+  // answer "where am I strongest" without reading all 21 cards. Grouping the
+  // same data by category makes the shape of the stack readable at a glance,
+  // and each bar doubles as the category filter below.
+  const categoryBreakdown = Array.from(new Set(techSkillsData.map((s) => s.category))).map(
+    (category) => {
+      const inCategory = techSkillsData.filter((s) => s.category === category);
+      return {
+        category,
+        total: inCategory.length,
+        levels: LEVELS.map((level) => ({
+          level,
+          count: inCategory.filter((s) => s.level === level).length,
+        })),
+      };
+    }
+  );
 
   const handleCopyInstallCommand = () => {
     navigator.clipboard.writeText('npm install react express discord.js typescript tailwindcss');
@@ -108,6 +142,73 @@ export const TechStackSection: React.FC = () => {
               </div>
             </div>
           </button>
+        </motion.div>
+
+        {/* Proficiency breakdown: one stacked bar per category, click to filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          className="liquid-glass rounded-3xl border border-white/10 p-5 sm:p-6 mb-8"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <h3 className="text-xs font-body uppercase tracking-[0.25em] text-neutral-400">
+              Proficiency by category
+            </h3>
+            <div className="flex flex-wrap items-center gap-4">
+              {LEVELS.map((level) => (
+                <span
+                  key={level}
+                  className="flex items-center gap-1.5 text-[10px] font-body text-neutral-400"
+                >
+                  <span className={`w-2 h-2 rounded-full ${LEVEL_DOT[level]}`} />
+                  {level}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {categoryBreakdown.map((row) => {
+              const isActive = activeCategory === row.category;
+              return (
+                <button
+                  key={row.category}
+                  onClick={() => setActiveCategory(isActive ? 'All' : row.category)}
+                  aria-pressed={isActive}
+                  className="group grid grid-cols-[7.5rem_1fr_2.5rem] items-center gap-3 sm:gap-4 text-left cursor-pointer"
+                >
+                  <span
+                    className={`text-sm font-body transition-colors truncate ${
+                      isActive ? 'text-white' : 'text-neutral-400 group-hover:text-neutral-200'
+                    }`}
+                  >
+                    {row.category}
+                  </span>
+
+                  {/* flex-basis in % so each bar is directly comparable */}
+                  <span className="flex h-2.5 rounded-full overflow-hidden bg-white/5">
+                    {row.levels.map(({ level, count }) =>
+                      count === 0 ? null : (
+                        <span
+                          key={level}
+                          className={`h-full transition-opacity ${LEVEL_BAR[level]} ${
+                            isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-90'
+                          }`}
+                          style={{ flexBasis: `${(count / row.total) * 100}%` }}
+                        />
+                      )
+                    )}
+                  </span>
+
+                  <span className="text-xs font-body text-neutral-500 tabular-nums text-right">
+                    {row.total}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </motion.div>
 
         {/* Category Filter Tabs */}
