@@ -1,22 +1,22 @@
 {
-  "name": "KashhCMD Portfolio",
-  "short_name": "KashhCMD",
-  "description": "Web Designer & Discord Bot Developer Portfolio",
-  "start_url": "/portfolio/",
+  "name": "KashhCMD Portfolio (Dev)",
+  "short_name": "KashhCMD Dev",
+  "description": "Web Designer & Discord Bot Developer Portfolio — development build",
+  "start_url": "/portfolio-dev/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
   "orientation": "portrait-primary",
-  "scope": "/portfolio/",
+  "scope": "/portfolio-dev/",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/portfolio-dev/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/apple-touch-icon.png",
+      "src": "/portfolio-dev/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
@@ -29,22 +29,22 @@
       "name": "View Projects",
       "short_name": "Projects",
       "description": "View featured projects",
-      "url": "/portfolio/#work",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "url": "/portfolio-dev/#work",
+      "icons": [{ "src": "/portfolio-dev/favicon.svg", "sizes": "any" }]
     },
     {
       "name": "Read Journal",
       "short_name": "Journal",
       "description": "Read technical articles",
-      "url": "/portfolio/#journal",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "url": "/portfolio-dev/#journal",
+      "icons": [{ "src": "/portfolio-dev/favicon.svg", "sizes": "any" }]
     },
     {
       "name": "Contact",
       "short_name": "Contact",
       "description": "Get in touch",
-      "url": "/portfolio/#contact",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "url": "/portfolio-dev/#contact",
+      "icons": [{ "src": "/portfolio-dev/favicon.svg", "sizes": "any" }]
     }
   ]
 }

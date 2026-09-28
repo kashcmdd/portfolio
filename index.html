@@ -27,7 +27,10 @@
     <link rel="manifest" href="/manifest.json" />
 
     <!-- RSS Feed -->
-    <link rel="alternate" type="application/rss+xml" title="KashhCMD Journal RSS Feed" href="/rss.xml" />
+    <!-- rss.xml is generated into dist/ rather than committed to public/, so Vite
+         has no asset record for it and leaves a bare /rss.xml pointing at the
+         domain root. %BASE_URL% is textual substitution and does get rewritten. -->
+    <link rel="alternate" type="application/rss+xml" title="KashhCMD Journal RSS Feed" href="%BASE_URL%rss.xml" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

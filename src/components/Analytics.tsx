@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Privacy-focused analytics using Plausible
 // This component doesn't render anything visible - it just loads the analytics script

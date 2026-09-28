@@ -1,31 +1,67 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+/**
+ * Finishes the PWA assets after the bundle is written.
+ *
+ * Vite's publicDir copy already drops sw.js and manifest.json into dist/, so
+ * this script only exists to re-point the manifest at the base declared in
+ * vite.config.ts. A manifest still carrying the old prefix installs the wrong
+ * site: start_url and scope decide what the launcher opens and which requests
+ * the service worker is allowed to control, so a stale /portfolio/ value sends
+ * the dev install straight to production.
+ */
+import { readFile, writeFile, access } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { resolveConfig } from 'vite';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const distDir = path.join(root, 'dist');
 
-const sourceDir = path.join(__dirname, '..', 'public');
-const distDir = path.join(__dirname, '..', 'dist');
+const exists = async (file) => access(file).then(() => true, () => false);
 
-// Copy service worker to dist
-const swSource = path.join(sourceDir, 'sw.js');
-const swDest = path.join(distDir, 'sw.js');
+const config = await resolveConfig(
+  { root, configFile: path.join(root, 'vite.config.ts') },
+  'build'
+);
+const base = config.base || '/';
 
-if (fs.existsSync(swSource)) {
-  fs.copyFileSync(swSource, swDest);
-  console.log('✓ Service worker copied to dist/');
-} else {
-  console.warn('⚠ Service worker not found in public/');
+if (!(await exists(distDir))) {
+  throw new Error('dist/ not found — run this after `vite build`');
 }
 
-// Copy manifest to dist
-const manifestSource = path.join(sourceDir, 'manifest.json');
-const manifestDest = path.join(distDir, 'manifest.json');
+// The checked-in manifest is written against this prefix. Swapping it for the
+// resolved base is what makes the two unable to drift.
+const SOURCE_PREFIX = '/portfolio-dev/';
 
-if (fs.existsSync(manifestSource)) {
-  fs.copyFileSync(manifestSource, manifestDest);
-  console.log('✓ Manifest copied to dist/');
+const manifestPath = path.join(distDir, 'manifest.json');
+const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+const rewrite = (value) =>
+  typeof value === 'string' ? value.split(SOURCE_PREFIX).join(base) : value;
+
+const scoped = { ...manifest, start_url: rewrite(manifest.start_url), scope: rewrite(manifest.scope) };
+scoped.icons = manifest.icons.map((icon) => ({ ...icon, src: rewrite(icon.src) }));
+scoped.shortcuts = manifest.shortcuts.map((shortcut) => ({
+  ...shortcut,
+  url: rewrite(shortcut.url),
+  icons: (shortcut.icons || []).map((icon) => ({ ...icon, src: rewrite(icon.src) })),
+}));
+
+if (scoped.start_url !== base || scoped.scope !== base) {
+  throw new Error(
+    `manifest start_url/scope did not resolve to base "${base}" — ` +
+      `got "${scoped.start_url}" / "${scoped.scope}". ` +
+      `Check that public/manifest.json still starts those with "${SOURCE_PREFIX}".`
+  );
+}
+
+await writeFile(manifestPath, `${JSON.stringify(scoped, null, 2)}\n`, 'utf8');
+console.log(`  manifest.json  start_url + scope -> ${base}`);
+
+// sw.js derives its prefix from its own location at runtime, so it is a plain
+// copy and needs no rewriting.
+const swSource = path.join(root, 'public', 'sw.js');
+if (await exists(swSource)) {
+  await writeFile(path.join(distDir, 'sw.js'), await readFile(swSource));
+  console.log('  sw.js          base derived from scope at runtime');
 } else {
-  console.warn('⚠ Manifest not found in public/');
+  console.warn('  sw.js          not found in public/');
 }

@@ -1,15 +1,19 @@
-const CACHE_NAME = 'kashcmd-portfolio-v1';
-const STATIC_CACHE = 'kashcmd-static-v1';
-const DYNAMIC_CACHE = 'kashcmd-dynamic-v1';
+const CACHE_NAME = 'kashcmd-portfolio-dev-v1';
+const STATIC_CACHE = 'kashcmd-static-dev-v1';
+const DYNAMIC_CACHE = 'kashcmd-dynamic-dev-v1';
+
+// The worker is served from the Vite base, so its own location is the source of
+// truth for it. Deriving the prefix here keeps the site working on any base
+// without a build step rewriting this file.
+const BASE = new URL('./', self.location).pathname;
 
 // Assets to cache immediately
 const STATIC_ASSETS = [
-  '/',
-  '/portfolio/',
-  '/index.html',
-  '/manifest.json',
-  '/favicon.svg',
-  '/apple-touch-icon.png'
+  BASE,
+  `${BASE}index.html`,
+  `${BASE}manifest.json`,
+  `${BASE}favicon.svg`,
+  `${BASE}apple-touch-icon.png`
 ];
 
 // Install event - cache static assets
@@ -90,7 +94,7 @@ self.addEventListener('fetch', (event) => {
               return cachedResponse;
             }
             // Return offline fallback page
-            return caches.match('/portfolio/').then((cached) => {
+            return caches.match(BASE).then((cached) => {
               return cached || new Response('Offline - Please check your connection', {
                 status: 503,
                 statusText: 'Service Unavailable'
@@ -148,8 +152,8 @@ self.addEventListener('sync', (event) => {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'New update available',
-    icon: '/favicon.svg',
-    badge: '/favicon.svg'
+    icon: `${BASE}favicon.svg`,
+    badge: `${BASE}favicon.svg`
   };
 
   event.waitUntil(

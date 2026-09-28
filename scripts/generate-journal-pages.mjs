@@ -237,23 +237,8 @@ const cssFor = (prefix) => `
   .end { max-width: 760px; margin: 0 auto; padding: 0 24px 60px; color: #6a6a6a; font-size: .82rem; }
   .end a { color: #8a8a8a; }
   .comments-section { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, .1); }
-  .comments-header h3 { margin: 0 0 8px; font-size: 1.1rem; color: #fff; }
-  .comments-notice { margin: 0 0 24px; font-size: .82rem; color: #8a8a8a; font-style: italic; }
-  .comments-form { background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .1); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
-  .comment-input { width: 100%; background: rgba(0, 0, 0, .5); border: 1px solid rgba(255, 255, 255, .1); border-radius: 8px; padding: 12px 16px; color: #fff; font-size: .9rem; margin-bottom: 12px; }
-  .comment-input::placeholder { color: #8a8a8a; }
-  .comment-textarea { width: 100%; background: rgba(0, 0, 0, .5); border: 1px solid rgba(255, 255, 255, .1); border-radius: 8px; padding: 12px 16px; color: #fff; font-size: .9rem; resize: vertical; font-family: inherit; }
-  .comment-textarea::placeholder { color: #8a8a8a; }
-  .comment-submit { background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%); color: #000; border: none; border-radius: 20px; padding: 10px 20px; font-size: .9rem; font-weight: 600; cursor: pointer; margin-top: 8px; }
-  .comment-submit:hover { opacity: .9; }
-  .comment-submit:disabled { opacity: .5; cursor: not-allowed; }
-  .comments-list { display: flex; flex-direction: column; gap: 16px; }
-  .comment-item { background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .1); border-radius: 12px; padding: 16px; }
-  .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .comment-author { font-weight: 600; color: #fff; font-size: .9rem; }
-  .comment-time { font-size: .8rem; color: #8a8a8a; }
-  .comment-content { color: #d4d4d4; font-size: .95rem; line-height: 1.5; }
-  .no-comments { text-align: center; padding: 40px 20px; color: #8a8a8a; font-size: .9rem; }
+  .comments-section h3 { margin: 0 0 8px; font-size: 1.1rem; color: #fff; }
+  .comments-notice { margin: 0; font-size: .82rem; color: #8a8a8a; font-style: italic; }
   @media (max-width: 640px) {
     .more a { flex-direction: column; gap: 4px; }
   }
@@ -264,7 +249,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${esc(title)} — KashhCMD</title>
     <meta name="description" content="${esc(description)}" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="noindex, nofollow" />
     <meta name="author" content="KashhCMD" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0a0a0a" />
@@ -272,7 +257,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg" />
     <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png" />
     <meta property="og:type" content="${type}" />
-    <meta property="og:site_name" content="KashhCMD" />
+    <meta property="og:site_name" content="KashhCMD (Dev)" />
     <meta property="og:url" content="${canonical}" />
     <meta property="og:title" content="${esc(title)}" />
     <meta property="og:description" content="${esc(description)}" />
@@ -334,18 +319,9 @@ function articlePage(entry, base, all) {
         ${entry.content.map(renderBlock).join('\n        ')}
       </article>
       
-      <!-- Comments Section -->
       <div class="comments-section">
-        <div class="comments-header">
-          <h3>Discussion</h3>
-          <p class="comments-notice">Comments are stored locally in your browser. They won't be visible to other users.</p>
-        </div>
-        <div class="comments-form">
-          <input type="text" id="comment-author-${entry.id}" placeholder="Your name" class="comment-input" maxlength="50" />
-          <textarea id="comment-content-${entry.id}" placeholder="Share your thoughts..." class="comment-textarea" rows="3" maxlength="500"></textarea>
-          <button onclick="postComment('${entry.id}')" class="comment-submit">Post Comment</button>
-        </div>
-        <div id="comments-list-${entry.id}" class="comments-list"></div>
+        <h3>Discussion</h3>
+        <p class="comments-notice">This is a static page, so it carries no comment form. Discussion lives in the app, where it is stored locally in your browser and never sent anywhere.</p>
       </div>
       ${
         others.length
@@ -435,10 +411,14 @@ ${urls
 `;
 }
 
-const robotsTxt = (base) => `User-agent: *
-Allow: /
-
-Sitemap: ${SITE_ORIGIN}${base}sitemap.xml
+// This build is noindex (see index.html and the per-page robots meta), so
+// robots.txt is a second line of defence rather than a crawl invitation.
+// Pointing crawlers at a sitemap here would contradict both. Kept ASCII so the
+// file reads the same in every tool that touches it.
+const robotsTxt = () => `# Development build - not for indexing.
+# Mirrors the noindex, nofollow meta in index.html and on every generated page.
+User-agent: *
+Disallow: /
 `;
 
 const server = await createServer({
@@ -468,11 +448,11 @@ try {
 
   await mkdir(path.join(dist, 'journal'), { recursive: true });
   await writeFile(path.join(dist, 'journal', 'index.html'), indexPage(journalEntriesData, base));
+  await writeFile(path.join(dist, 'robots.txt'), robotsTxt());
   await writeFile(path.join(dist, 'sitemap.xml'), sitemapXml(base, journalEntriesData));
-  await writeFile(path.join(dist, 'robots.txt'), robotsTxt(base));
 
   console.log(`\n${journalEntriesData.length} article pages + journal index -> dist/journal/`);
-  console.log(`sitemap.xml + robots.txt -> dist/`);
+  console.log(`sitemap.xml + robots.txt (Disallow: /) -> dist/`);
 } finally {
   await server.close();
 }

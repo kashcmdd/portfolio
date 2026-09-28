@@ -1,5 +1,10 @@
 import { Project, JournalEntry, TechSkill, ExplorationItem } from '../types';
 
+// Files in public/ are served from the Vite base, not the domain root, and a
+// string in this module is a runtime <img src> that the bundler never rewrites.
+// BASE_URL already carries the trailing slash and follows base in vite.config.ts.
+const asset = (file: string) => `${import.meta.env.BASE_URL}${file}`;
+
 export const warriorDetails = {
   name: "KashhCMD",
   title: "Web Designer & Discord Bot Developer",
@@ -19,7 +24,7 @@ export const projectsData: Project[] = [
     category: "Competitive Ladder Platform",
     subtitle: "ELO-Ranked Rainbow Six Siege Ladder with Tournaments, Seasons & Discord Auth",
     description: "A self-hosted competitive ranking platform for Rainbow Six Siege communities. Runs a Glicko-style ELO engine with provisional ratings, margin-of-victory weighting and inactivity decay across 1v1 through 5v5 formats, wrapped in a season and tournament system with visual bracket generation. Players authenticate through Discord OAuth2 with granular admin roles, and 41 hand-built SVG rank icons carry the leaderboard from Bronze through Champion. Ships with an admin panel (CSV bulk import, match editing, audit log), one-click CSV/JSON export, and a pytest suite.",
-    image: "/portfolio/rainbow-leaderboard.webp",
+    image: asset("rainbow-leaderboard.webp"),
     tags: ["Python 3.12", "FastAPI", "PostgreSQL", "SQLAlchemy", "Alembic", "Jinja2", "Tailwind CSS", "Discord OAuth2", "APScheduler", "Docker"],
     githubUrl: "https://github.com/kashcmdd/rainbow-leaderboard",
     featured: true,
@@ -63,7 +68,7 @@ export const projectsData: Project[] = [
     category: "Discord Moderation",
     subtitle: "Maintained Fork of an All-in-One Multipurpose Bot",
     description: "A maintained fork of the Melon multipurpose bot — antinuke protection, automod, AI chat, tickets, giveaways, join-to-create voice, autopost and more, on hybrid prefix + slash commands with Sequelize-backed Postgres state.",
-    image: "/portfolio/melon.webp",
+    image: asset("melon.webp"),
     tags: ["Discord.js", "Node.js", "PostgreSQL", "Sequelize"],
     githubUrl: "https://github.com/kashcmdd/Melon-All-In-One-Discord-Bot",
     featured: true,
@@ -76,7 +81,7 @@ export const projectsData: Project[] = [
     category: "Web Design & Frontend",
     subtitle: "Liquid Glass Landing Page, Deployed on GitHub Pages",
     description: "This site — a cinematic dark portfolio with liquid glass visuals, GSAP animations and HLS video backgrounds, personalized and continuously deployed to GitHub Pages through a push-triggered Actions workflow.",
-    image: "/portfolio/portfolio-site.webp",
+    image: asset("portfolio-site.webp"),
     tags: ["React 19", "Vite", "TypeScript", "Tailwind CSS v4", "GSAP", "GitHub Pages"],
     githubUrl: "https://github.com/kashcmdd/portfolio",
     liveUrl: "https://kashcmdd.github.io/portfolio/",
