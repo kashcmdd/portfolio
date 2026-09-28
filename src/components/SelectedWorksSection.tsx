@@ -1,17 +1,73 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'motion/react';
-import { Project } from '../types';
+import { Project, ProjectKind } from '../types';
 import { projectsData } from '../data/portfolioData';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import { activateOnKey } from '../utils/keyboard';
+import { SmartImage } from './SmartImage';
+
+// The bento cards already pin their box with an aspect utility. Translating that
+// same Tailwind class into a plain "w / h" string is what lets the browser know
+// an image's ratio before it has the file, which is what stops the card from
+// resizing when the image lands. Read off the data so a new ratio needs no
+// second edit here.
+const RATIOS: Record<string, string> = {
+  'aspect-[16/9]': '16 / 9',
+  'aspect-[16/10]': '16 / 10',
+  'aspect-[4/3]': '4 / 3',
+};
 
 interface SelectedWorksSectionProps {
   onSelectProject: (project: Project) => void;
 }
 
+const SORTS = [
+  { id: 'featured', label: 'Featured' },
+  { id: 'az', label: 'A–Z' },
+  { id: 'za', label: 'Z–A' },
+  { id: 'tech', label: 'Primary tech' },
+] as const;
+
+type SortId = (typeof SORTS)[number]['id'];
+
 export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
   onSelectProject,
 }) => {
+  const [kind, setKind] = useState<ProjectKind | 'All'>('All');
+  const [sort, setSort] = useState<SortId>('featured');
+
+  const kinds = useMemo<ProjectKind[]>(
+    () => Array.from(new Set(projectsData.map((p) => p.kind))),
+    []
+  );
+
+  const visible = useMemo(() => {
+    const filtered = kind === 'All' ? projectsData : projectsData.filter((p) => p.kind === kind);
+    // "Featured" deliberately keeps the hand-tuned bento order rather than
+    // sorting, because the column spans and the 7/5 rhythm were chosen to pair
+    // up in the current sequence.
+    if (sort === 'featured') return filtered;
+    const sorted = [...filtered];
+    if (sort === 'az') sorted.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === 'za') sorted.sort((a, b) => b.title.localeCompare(a.title));
+    if (sort === 'tech') sorted.sort((a, b) => (a.tags[0] ?? '').localeCompare(b.tags[0] ?? ''));
+    return sorted;
+  }, [kind, sort]);
+
+  // The bento column spans were hand-picked for the full curated set, where the
+  // 12/7/5/5/7 rhythm lines up. Once a filter or a sort reorders the list those
+  // spans stop composing and leave holes, so anything that is not the untouched
+  // featured set falls back to uniform full-width rows.
+  const bentoMode = visible.length === projectsData.length && sort === 'featured';
+
+  const colClassFor = (project: Project) => {
+    if (!bentoMode) return 'md:col-span-6';
+    return project.colSpanDesktop === 12
+      ? 'md:col-span-12'
+      : project.colSpanDesktop === 7
+        ? 'md:col-span-7'
+        : 'md:col-span-5';
+  };
   return (
     <section id="work" className="relative w-full bg-[#0a0a0a] text-white py-20 md:py-28 px-6 md:px-10 lg:px-16 overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
@@ -48,15 +104,80 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Bento Grid (12 / 7 / 5 / 5 / 7) */}
+        {/* Filter + Sort controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div
+            role="group"
+            aria-label="Filter projects by type"
+            className="flex flex-wrap items-center gap-2"
+          >
+            {(['All', ...kinds] as const).map((option) => {
+              const active = kind === option;
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setKind(option)}
+                  aria-pressed={active}
+                  className={`rounded-full px-4 py-2 text-xs font-body font-medium border transition-colors cursor-pointer ${
+                    active
+                      ? 'bg-white text-black border-white'
+                      : 'bg-[#141414] text-neutral-300 border-white/10 hover:bg-[#1f1f1f] hover:border-white/20'
+                  }`}
+                >
+                  {option}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="project-sort"
+              className="text-xs font-body text-neutral-400 uppercase tracking-widest"
+            >
+              Sort
+            </label>
+            <div className="relative">
+              <select
+                id="project-sort"
+                value={sort}
+                onChange={(event) => setSort(event.target.value as SortId)}
+                className="appearance-none rounded-full bg-[#141414] border border-white/10 text-neutral-200 text-xs font-body pl-4 pr-9 py-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+              >
+                {SORTS.map((option) => (
+                  <option key={option.id} value={option.id} className="bg-[#141414]">
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* The count is announced rather than only shown, so a screen reader
+            user hears the list actually changed after activating a chip. */}
+        <p aria-live="polite" className="sr-only">
+          Showing {visible.length} {visible.length === 1 ? 'project' : 'projects'}
+          {kind === 'All' ? '' : ` in ${kind}`}, sorted by ${
+            SORTS.find((s) => s.id === sort)?.label
+          }.
+        </p>
+
+        {visible.length === 0 ? (
+          <p className="text-sm font-body text-neutral-400 py-12 text-center border border-dashed border-white/10 rounded-3xl">
+            No projects in this category yet.
+          </p>
+        ) : (
+        /* Bento Grid (12 / 7 / 5 / 5 / 7) */
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
-          {projectsData.map((project, idx) => {
-            const isHero = project.colSpanDesktop === 12;
-            const colClass = isHero
-              ? 'md:col-span-12'
-              : project.colSpanDesktop === 7
-                ? 'md:col-span-7'
-                : 'md:col-span-5';
+          {visible.map((project, idx) => {
+            const isHero = !bentoMode ? false : project.colSpanDesktop === 12;
+            const colClass = colClassFor(project);
 
             return (
               <motion.div
@@ -72,12 +193,14 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 aria-label={`Open case study: ${project.title}`}
                 className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] ${project.aspectRatio}`}
               >
-                {/* Background Image */}
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                    {/* Background Image */}
+                    <SmartImage
+                      src={project.image}
+                      alt={project.title}
+                      ratio={RATIOS[project.aspectRatio] || '4 / 3'}
+                      sizes="(min-width: 768px) 58vw, 100vw"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
 
                 {/* Halftone radial pattern overlay */}
                 <div
@@ -163,6 +286,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
             );
           })}
         </div>
+        )}
       </div>
     </section>
   );

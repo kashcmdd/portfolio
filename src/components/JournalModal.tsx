@@ -6,6 +6,10 @@ import { JournalComments } from './JournalComments';
 import { JournalCodeBlock } from './JournalCodeBlock';
 import { articleOutline, outlineSlugs } from '../../scripts/lib/journal-outline.mjs';
 import { journalEntriesData } from '../data/portfolioData';
+import { SmartImage } from './SmartImage';
+import ShareBar from './ShareBar';
+import { articleUrl } from '../utils/share';
+import { useFocusTrap } from '../utils/useFocusTrap';
 
 const renderBlock = (block: JournalBlock, key: number, slug: string | null) => {
   switch (block.type) {
@@ -66,12 +70,12 @@ const renderBlock = (block: JournalBlock, key: number, slug: string | null) => {
     case 'image':
       return (
         <figure key={key} className="my-6">
-          <img
-            src={block.src}
-            alt={block.alt}
-            className="w-full rounded-2xl border border-white/10"
-            loading="lazy"
-          />
+            <SmartImage
+              src={block.src}
+              alt={block.alt}
+              ratio="16 / 9"
+              className="w-full rounded-2xl border border-white/10"
+            />
           {block.caption && (
             <figcaption className="mt-2 text-[11px] font-mono text-neutral-500">
               {block.caption}
@@ -102,6 +106,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
   onSelectEntry,
 }) => {
   const bodyRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useFocusTrap<HTMLDivElement>(Boolean(entry));
   const [progress, setProgress] = useState(0);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showToc, setShowToc] = useState(false);
@@ -196,6 +201,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
         <motion.div
+          ref={dialogRef}
           initial={{ opacity: 0, scale: 0.97, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.97, y: 16 }}
@@ -203,6 +209,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
           role="dialog"
           aria-modal="true"
           aria-label={entry.title}
+          tabIndex={-1}
           className="liquid-glass-strong w-full max-w-3xl my-auto max-h-[calc(100dvh_-_1.5rem)] sm:max-h-[calc(100dvh_-_3rem)] rounded-3xl border border-white/20 text-white shadow-2xl flex flex-col overflow-hidden"
         >
           {/* Reading progress: how far through the article you are */}
@@ -250,6 +257,12 @@ export const JournalModal: React.FC<JournalModalProps> = ({
             <h2 className="text-2xl sm:text-3xl font-display italic text-white tracking-tight pr-12">
               {entry.title}
             </h2>
+
+            <ShareBar
+              url={articleUrl(entry.id)}
+              title={entry.title}
+              className="mt-4"
+            />
 
             {/* Contents. Hidden for short posts, where a two-item list of
                 links would be more chrome than help. */}
@@ -308,9 +321,11 @@ export const JournalModal: React.FC<JournalModalProps> = ({
 
             {/* Banner Image */}
             <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden mb-6 border border-white/10">
-              <img
+              <SmartImage
                 src={entry.image}
                 alt={entry.title}
+                ratio="2 / 1"
+                priority
                 className="w-full h-full object-cover"
               />
             </div>
@@ -335,7 +350,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                     >
                       <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
                         {item.category}
-                        <span className="text-neutral-700">·</span>
+                        <span className="text-neutral-700">Â·</span>
                         {item.readTime}
                       </span>
                       <span className="flex items-start justify-between gap-2 text-sm leading-snug text-white">

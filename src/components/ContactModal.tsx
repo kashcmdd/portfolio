@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { warriorDetails } from '../data/portfolioData';
 import { X, Sparkles, Github } from 'lucide-react';
+import { useFocusTrap } from '../utils/useFocusTrap';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -28,12 +29,15 @@ export const ContactModal: React.FC<ContactModalProps> = ({
     };
   }, [isOpen, onClose]);
 
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
+
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto">
         <motion.div
+          ref={dialogRef}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -41,6 +45,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
           role="dialog"
           aria-modal="true"
           aria-label="Get in touch"
+          tabIndex={-1}
           className="liquid-glass-strong w-full max-w-xl rounded-3xl p-6 sm:p-8 text-white relative shadow-2xl border border-white/20 overflow-hidden my-auto"
         >
           <button

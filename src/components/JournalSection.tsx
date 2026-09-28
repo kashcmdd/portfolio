@@ -4,6 +4,7 @@ import { JournalEntry } from '../types';
 import { journalEntriesData } from '../data/portfolioData';
 import { ArrowUpRight, BookOpen } from 'lucide-react';
 import { activateOnKey } from '../utils/keyboard';
+import { SmartImage } from './SmartImage';
 
 interface JournalSectionProps {
   onSelectJournal: (entry: JournalEntry) => void;
@@ -79,16 +80,18 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               {/* Image + Info */}
               <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
                 <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shrink-0 border border-white/10">
-                  <img
+                  <SmartImage
                     src={entry.image}
                     alt={entry.title}
+                    ratio="1 / 1"
+                    sizes="56px"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 text-[10px] font-body uppercase text-neutral-400 tracking-wider mb-1">
                     <span className="text-[#89AACC] font-semibold">{entry.category}</span>
-                    <span>·</span>
+                    <span>Â·</span>
                     <span>{entry.readTime}</span>
                   </div>
                   <h3 className="text-base sm:text-lg font-body font-medium text-white group-hover:text-neutral-200 transition-colors line-clamp-1">

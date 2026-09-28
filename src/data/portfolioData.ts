@@ -27,6 +27,7 @@ export const projectsData: Project[] = [
   {
     id: "rainbow-leaderboard",
     title: "Rainbow Leaderboard",
+    kind: "Web",
     category: "Competitive Ladder Platform",
     subtitle: "ELO-Ranked Rainbow Six Siege Ladder with Tournaments, Seasons & Discord Auth",
     description: "A self-hosted competitive ranking platform for Rainbow Six Siege communities. Runs a Glicko-style ELO engine with provisional ratings, margin-of-victory weighting and inactivity decay across 1v1 through 5v5 formats, wrapped in a season and tournament system with visual bracket generation. Players authenticate through Discord OAuth2 with granular admin roles, and 41 hand-built SVG rank icons carry the leaderboard from Bronze through Champion. Ships with an admin panel (CSV bulk import, match editing, audit log), one-click CSV/JSON export, and a pytest suite.",
@@ -45,6 +46,7 @@ export const projectsData: Project[] = [
   {
     id: "scriptforge",
     title: "ScriptForge",
+    kind: "Full-Stack",
     category: "Full-Stack Web App",
     subtitle: "Controller-Script Hub for Streaming Devices",
     description: "A Next.js controller-script hub: device & script management, transactional script editing with conflict-safe versions, self-serve accounts with session invalidation and account deletion, CSRF-protected APIs, a GPC script parser, and 75 unit + end-to-end tests.",
@@ -58,6 +60,7 @@ export const projectsData: Project[] = [
   {
     id: "discord-music-bot",
     title: "Discord Music Bot",
+    kind: "Discord",
     category: "Discord Bot Development",
     subtitle: "Multi-Source Music Bot with Web Dashboard, Premium Tiers & Docker Deploys",
     description: "A full-featured Discord music bot covering YouTube, Spotify and SoundCloud playback through a Lavalink-backed audio pipeline, with 25+ slash commands covering queue management, playback filters, lyrics and saved playlists. Adds a three-tier permission model (Free / Pro / VIP) that gates queue depth, volume ceiling, seek, autoplay and a 24/7 voice mode, enforced by both DJ-role checks and per-guild tier overrides. Ships with an OAuth2 web dashboard for remote configuration and a Docker image for one-command deployment.",
@@ -71,6 +74,7 @@ export const projectsData: Project[] = [
   {
     id: "melon",
     title: "Melon",
+    kind: "Discord",
     category: "Discord Moderation",
     subtitle: "Maintained Fork of an All-in-One Multipurpose Bot",
     description: "A maintained fork of the Melon multipurpose bot — antinuke protection, automod, AI chat, tickets, giveaways, join-to-create voice, autopost and more, on hybrid prefix + slash commands with Sequelize-backed Postgres state.",
@@ -84,6 +88,7 @@ export const projectsData: Project[] = [
   {
     id: "kashhcmd-portfolio",
     title: "KashhCMD Portfolio",
+    kind: "Web",
     category: "Web Design & Frontend",
     subtitle: "Liquid Glass Landing Page, Deployed on GitHub Pages",
     description: "This site — a cinematic dark portfolio with liquid glass visuals, GSAP animations and HLS video backgrounds, personalized and continuously deployed to GitHub Pages through a push-triggered Actions workflow.",

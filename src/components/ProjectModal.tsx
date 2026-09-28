@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../types';
 import { X, CheckCircle2 } from 'lucide-react';
 import { DemoPlayer } from './DemoPlayer';
+import { SmartImage } from './SmartImage';
+import { useFocusTrap } from '../utils/useFocusTrap';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -14,6 +16,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   onClose,
 }) => {
   const bodyRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useFocusTrap<HTMLDivElement>(Boolean(project));
   const [demoPlayerOpen, setDemoPlayerOpen] = useState(false);
 
   // Case studies run long, so the panel scrolls internally and the page behind
@@ -39,6 +42,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md">
         <motion.div
+          ref={dialogRef}
           initial={{ opacity: 0, scale: 0.97, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.97, y: 16 }}
@@ -46,6 +50,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           role="dialog"
           aria-modal="true"
           aria-label={project.title}
+          tabIndex={-1}
           className="liquid-glass-strong my-auto flex max-h-[calc(100dvh_-_1.5rem)] sm:max-h-[calc(100dvh_-_3rem)] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/20 text-white shadow-2xl"
         >
           {/* Close Button */}
@@ -63,9 +68,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           >
             {/* Banner Image */}
             <div className="relative w-full h-48 sm:h-64 rounded-2xl overflow-hidden mb-6 border border-white/10">
-              <img
+              <SmartImage
                 src={project.image}
                 alt={project.title}
+                ratio="2 / 1"
+                priority
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

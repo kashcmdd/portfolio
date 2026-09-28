@@ -26,6 +26,7 @@ import {
   Check,
   Copy,
 } from 'lucide-react';
+import SkillsRadar, { LEVEL_SCORE } from './SkillsRadar';
 
 const iconMap: Record<string, React.ElementType> = {
   Code2,
@@ -66,6 +67,12 @@ const LEVEL_DOT: Record<(typeof LEVELS)[number], string> = {
   Advanced: 'bg-[#4E85BF]',
   Proficient: 'bg-neutral-500',
 };
+
+// TechSkill.level is an open string, so every lookup has to be able to miss.
+// The maps stay keyed by the level union so that adding a level is a compile
+// error here rather than a silently unstyled bar at runtime.
+const levelBarClass = (level: string) =>
+  LEVEL_BAR[level as (typeof LEVELS)[number]] ?? 'bg-white/20';
 
 export const TechStackSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -143,6 +150,8 @@ export const TechStackSection: React.FC = () => {
             </div>
           </button>
         </motion.div>
+
+        <SkillsRadar skills={techSkillsData} />
 
         {/* Proficiency breakdown: one stacked bar per category, click to filter */}
         <motion.div
@@ -256,6 +265,35 @@ export const TechStackSection: React.FC = () => {
                 <p className="text-xs font-body font-light text-neutral-400 leading-relaxed">
                   {skill.description}
                 </p>
+
+                {/* Per-skill bar. The level used to be a word in a badge, which
+                    is not comparable at a glance across 21 cards; a bar is. */}
+                <div className="mt-4 pt-3 border-t border-white/5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-body uppercase tracking-wider text-neutral-500">
+                      {skill.level}
+                    </span>
+                    <span className="text-[10px] font-body tabular-nums text-neutral-500">
+                      {LEVEL_SCORE[skill.level] ?? 0}
+                    </span>
+                  </div>
+                  <div
+                    className="h-1.5 rounded-full bg-white/5 overflow-hidden"
+                    role="meter"
+                    aria-valuenow={LEVEL_SCORE[skill.level] ?? 0}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`${skill.name} proficiency`}
+                  >
+                    <motion.div
+                      className={`h-full rounded-full ${levelBarClass(skill.level)}`}
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${LEVEL_SCORE[skill.level] ?? 0}%` }}
+                      viewport={{ once: true, margin: '-40px' }}
+                      transition={{ duration: 0.8, delay: 0.1 + idx * 0.04, ease: 'easeOut' }}
+                    />
+                  </div>
+                </div>
               </motion.div>
             );
           })}

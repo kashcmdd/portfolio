@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Search, Clock } from 'lucide-react';
 import {
@@ -10,6 +10,7 @@ import {
 } from '../data/portfolioData';
 import { entryPlainText } from '../utils/journalText';
 import { useMotionPref } from './MotionPrefProvider';
+import { useFocusTrap } from '../utils/useFocusTrap';
 
 type ResultType = 'project' | 'journal' | 'skill' | 'exploration' | 'action' | 'nav' | 'external';
 
@@ -46,7 +47,7 @@ const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
     className: 'bg-[#e0af68]/15 border border-[#e0af68]/30 text-[#e0af68]',
   },
   nav: {
-    letter: 'â†’',
+    letter: '↓',
     className: 'bg-white/10 border border-white/20 text-neutral-300',
   },
   external: {
@@ -76,6 +77,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const { pref, toggle } = useMotionPref();
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
 
   // Article bodies are indexed once. Doing it per keystroke would re-walk every
   // code sample in the journal on every character typed.
@@ -303,6 +305,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 sm:pt-32 px-4 bg-black/80 backdrop-blur-md">
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search and commands"
+          tabIndex={-1}
           initial={{ opacity: 0, scale: 0.97, y: -16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.97, y: -16 }}
@@ -443,10 +450,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
           <div className="px-6 py-3 border-t border-white/10 flex items-center justify-between text-xs text-neutral-500 font-body">
             <div className="flex items-center gap-4">
               <span>{results.length} results</span>
-              <span className="hidden sm:inline">Use â†‘â†“ to navigate, Enter to select</span>
+              <span className="hidden sm:inline">Use ↑↓ to navigate, Enter to select</span>
             </div>
             <div className="flex items-center gap-2">
-              <kbd className="px-2 py-1 rounded bg-white/10">â†‘â†“</kbd>
+              <kbd className="px-2 py-1 rounded bg-white/10">↑↓</kbd>
               <kbd className="px-2 py-1 rounded bg-white/10">Enter</kbd>
             </div>
           </div>

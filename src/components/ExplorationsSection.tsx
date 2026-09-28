@@ -4,6 +4,7 @@ import { explorationItemsData } from '../data/portfolioData';
 import { ExplorationItem } from '../types';
 import { X, Maximize2 } from 'lucide-react';
 import { activateOnKey } from '../utils/keyboard';
+import { SmartImage } from './SmartImage';
 
 export const ExplorationsSection: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<ExplorationItem | null>(null);
@@ -48,11 +49,13 @@ export const ExplorationsSection: React.FC = () => {
               aria-label={`View ${item.title}`}
               className="group relative aspect-square rounded-3xl bg-[#141414] border border-neutral-800/80 overflow-hidden cursor-pointer shadow-xl hover:border-neutral-700 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
             >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
+                <SmartImage
+                  src={item.image}
+                  alt={item.title}
+                  ratio="1 / 1"
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
 
               <div className="absolute inset-0 p-6 flex flex-col justify-between z-10">
@@ -97,13 +100,15 @@ export const ExplorationsSection: React.FC = () => {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="relative w-full h-64 rounded-2xl overflow-hidden mb-4 border border-white/10">
-                <img
-                  src={selectedItem.image}
-                  alt={selectedItem.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div className="relative w-full h-64 rounded-2xl overflow-hidden mb-4 border border-white/10">
+              <SmartImage
+                src={selectedItem.image}
+                alt={selectedItem.title}
+                ratio="16 / 7"
+                priority
+                className="w-full h-full object-cover"
+              />
+            </div>
 
               <span className="liquid-glass px-3 py-1 rounded-full text-xs font-body text-neutral-300 inline-block mb-2">
                 {selectedItem.category}

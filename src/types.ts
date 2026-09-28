@@ -1,7 +1,13 @@
+// `category` is free-form prose and is displayed verbatim on the card, so it
+// cannot also be used to filter. This is the discrete bucket the work-section
+// filter chips match on.
+export type ProjectKind = 'Web' | 'Full-Stack' | 'Discord';
+
 export interface Project {
   id: string;
   title: string;
   category: string;
+  kind: ProjectKind;
   subtitle: string;
   description: string;
   image: string;

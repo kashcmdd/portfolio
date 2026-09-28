@@ -23,6 +23,59 @@ const socialImage = (image) => (image || '').replace('w=800', 'w=1200&h=630');
 
 // The article pages live at /journal/<id>/ and the index at /journal/, so each
 // needs a different prefix to reach the site root where fonts and icons live.
+const shareBar = (url, title) => {
+  const u = encodeURIComponent(url);
+  const text = encodeURIComponent(`${title} — WarriorOG`);
+  return `<div class="share">
+        <span class="share-label">Share</span>
+        <a class="share-btn" href="https://twitter.com/intent/tweet?text=${text}&url=${u}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">X</span><span class="sr-only">Share ${esc(title)} on X</span></a>
+        <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">in</span><span class="sr-only">Share ${esc(title)} on LinkedIn</span></a>
+        <button class="share-btn" type="button" data-copy="${esc(url)}"><span data-copy-label>Copy link</span><span class="sr-only"> for ${esc(title)}</span></button>
+        <span class="sr-only" data-copy-status role="status"></span>
+      </div>`;
+};
+
+// One delegated listener serves every button on the page, and the fallback keeps
+// the button honest when the async clipboard API is unavailable, which is the
+// case on any non-HTTPS origin.
+const SHARE_SCRIPT = `<script>
+  (function () {
+    var status = document.querySelector('[data-copy-status]');
+    function fallback(value) {
+      var field = document.createElement('textarea');
+      field.value = value;
+      field.setAttribute('readonly', '');
+      field.style.position = 'absolute';
+      field.style.left = '-9999px';
+      document.body.appendChild(field);
+      field.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(field);
+      return ok;
+    }
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest('[data-copy]');
+      if (!button) return;
+      var value = button.getAttribute('data-copy');
+      var done = function (ok) {
+        if (!ok) return;
+        button.querySelector('[data-copy-label]').textContent = 'Copied';
+        if (status) status.textContent = 'Link copied to clipboard';
+        setTimeout(function () {
+          button.querySelector('[data-copy-label]').textContent = 'Copy link';
+          if (status) status.textContent = '';
+        }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(function () { done(true); }, function () { done(fallback(value)); });
+      } else {
+        done(fallback(value));
+      }
+    });
+  })();
+</script>`;
+
 const cssFor = (prefix) => `
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -160,6 +213,48 @@ const cssFor = (prefix) => `
   .toc li { margin: 6px 0; }
   .toc a { color: #b4b4b4; text-decoration: none; font-size: 14px; }
   .toc a:hover { color: #fff; }
+  .share {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 28px;
+  }
+  .share-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #737373;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    background: #141414;
+    color: #d4d4d4;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .share-btn:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .2); color: #fff; }
+  .share-btn:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
   /* Anchored headings must clear the sticky top bar, or #link jumps the
      heading underneath it. */
   article h2 { scroll-margin-top: 72px; }
@@ -490,6 +585,7 @@ function articlePage(entry, base, all) {
         </div>
         <h1>${esc(entry.title)}</h1>
         <p class="sub">${esc(entry.subtitle)}</p>
+        ${shareBar(canonical, entry.title)}
         <img class="banner" src="${esc(entry.image)}" alt="${esc(entry.title)}" />
         ${
           outline.length >= 3
@@ -557,6 +653,7 @@ function articlePage(entry, base, all) {
         });
       })();
     </script>
+    ${SHARE_SCRIPT}
   </body>
 </html>
 `;
@@ -600,6 +697,304 @@ function indexPage(all, base) {
 
 // Written here rather than kept as a static file in public/ so the URLs cannot
 // drift from `base` or from the list of entries above.
+// A skills-based resume: it is built entirely from data that already exists in
+// portfolioData.ts, so it cannot drift into claiming an employer, a role or a
+// date that was never recorded. The print rules below are what make "Save as
+// PDF" produce a clean single-column A4/Letter document rather than a
+// screenshot of a dark web page.
+const RESUME_CSS = `
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #0a0a0a;
+    color: #e5e5e5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 48px 24px 96px; }
+  .top {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 14px 24px;
+    background: rgba(10, 10, 10, .9);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+  }
+  .top a { color: #89AACC; text-decoration: none; font-weight: 600; }
+  .print-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: #141414; color: #e5e5e5;
+    border-radius: 999px; padding: 8px 16px;
+    font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .print-btn:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .28); }
+  .print-btn:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .note {
+    margin: 0 0 28px; padding: 12px 16px;
+    border: 1px solid rgba(137, 170, 204, .3);
+    border-radius: 12px; background: rgba(137, 170, 204, .07);
+    color: #b4c4d4; font-size: 13px;
+  }
+  header.masthead { border-bottom: 2px solid rgba(255, 255, 255, .14); padding-bottom: 20px; margin-bottom: 28px; }
+  header.masthead h1 { margin: 0; font-size: 34px; letter-spacing: -.02em; color: #fff; }
+  header.masthead .role { margin: 4px 0 0; font-size: 17px; color: #89AACC; }
+  header.masthead .contact { margin: 12px 0 0; font-size: 13px; color: #a3a3a3; }
+  header.masthead .contact a { color: #89AACC; }
+  section { margin: 0 0 28px; break-inside: avoid; }
+  h2 {
+    margin: 0 0 12px; font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .16em; color: #89AACC;
+  }
+  .bio { margin: 0; color: #c8c8c8; }
+  .skill-group { margin: 0 0 14px; break-inside: avoid; }
+  .skill-group h3 { margin: 0 0 6px; font-size: 13px; color: #d4d4d4; }
+  .skill-row { display: flex; flex-wrap: wrap; gap: 6px 8px; }
+  .skill {
+    display: inline-flex; align-items: baseline; gap: 5px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .04);
+    border-radius: 6px; padding: 2px 8px; font-size: 12px;
+  }
+  .skill .lv { color: #737373; font-size: 11px; }
+  .skill[data-level="Expert"] { border-color: rgba(137, 170, 204, .55); }
+  .skill[data-level="Expert"] .lv { color: #89AACC; }
+  ol.projects { margin: 0; padding: 0; list-style: none; }
+  ol.projects li { margin: 0 0 14px; break-inside: avoid; }
+  ol.projects .p-title { font-weight: 600; color: #fff; }
+  ol.projects .p-sub { color: #a3a3a3; font-size: 13px; }
+  ol.projects .p-desc { margin: 4px 0 0; color: #c8c8c8; font-size: 13.5px; }
+  ol.projects .p-tags { margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  ol.projects .p-tag {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px; color: #b4b4b4;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 4px; padding: 1px 6px;
+  }
+  ol.projects .p-links { margin: 6px 0 0; display: flex; gap: 14px; font-size: 12.5px; }
+  ol.projects .p-links a { color: #89AACC; text-decoration: none; }
+  footer.end {
+    margin-top: 40px; padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, .1);
+    color: #737373; font-size: 12px;
+  }
+  @page { margin: 14mm; }
+  @media print {
+    body { background: #fff; color: #111; font-size: 10.5pt; line-height: 1.4; }
+    .top, .note, .no-print { display: none !important; }
+    .wrap { max-width: none; padding: 0; }
+    header.masthead h1 { color: #000; font-size: 20pt; }
+    header.masthead .role { color: #24506e; }
+    header.masthead .contact { color: #444; }
+    header.masthead .contact a, h2, .skill .lv { color: #24506e; }
+    .bio, ol.projects .p-desc { color: #222; }
+    h2 { border-bottom: 1px solid #bbb; padding-bottom: 3px; }
+    .skill { border-color: #ccc; background: none; color: #111; }
+    .skill .lv { color: #555; }
+    ol.projects .p-title { color: #000; }
+    ol.projects .p-sub, .p-tag { color: #333; border-color: #ccc; }
+    ol.projects .p-links a { color: #24506e; }
+    footer.end { color: #666; border-top-color: #ccc; }
+    a { text-decoration: none; }
+    section { margin-bottom: 14pt; }
+  }
+`;
+
+function resumePage({ skills, projects, details }, base) {
+  const canonical = `${SITE_ORIGIN}${base}resume/`;
+  const skillGroups = Array.from(new Set(skills.map((s) => s.category))).map((category) => ({
+    category,
+    items: skills.filter((s) => s.category === category),
+  }));
+  const levelRank = { Expert: 0, Advanced: 1, Proficient: 2 };
+
+  return `<!doctype html>
+<html lang="en">
+  <head>${head({
+    title: `${details.name} — Resume`,
+    description: `${details.name}, ${details.title}. Skills, tooling and selected projects.`,
+    canonical,
+    image: `${SITE_ORIGIN}${base}og-image.jpg`,
+    imageAlt: `${details.name} — ${details.title}`,
+    prefix: '../',
+    type: 'profile',
+  })}
+    <style>${RESUME_CSS}</style>
+  </head>
+  <body>
+    <div class="top">
+      <a href="../">&larr; Portfolio</a>
+      <button class="print-btn no-print" type="button" id="save-pdf">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Download / Save as PDF
+      </button>
+    </div>
+    <div class="wrap">
+      <p class="note no-print">
+        This resume is generated from the portfolio data, so it lists skills and
+        projects only — there is no employment history to show. Use your
+        browser's print dialog and choose &ldquo;Save as PDF&rdquo; as the
+        destination; the page is already styled for it.
+      </p>
+
+      <header class="masthead">
+        <h1>${esc(details.name)}</h1>
+        <p class="role">${esc(details.title)}</p>
+        <p class="contact">
+          <a href="${esc(details.githubUrl)}">github.com/${esc(details.githubHandle)}</a>
+        </p>
+      </header>
+
+      <section>
+        <h2>Summary</h2>
+        <p class="bio">${esc(details.bio)}</p>
+      </section>
+
+      <section>
+        <h2>Approach</h2>
+        <p class="bio">${esc(details.philosophy)}</p>
+      </section>
+
+      <section>
+        <h2>Skills</h2>
+        ${skillGroups
+          .map(
+            (group) => `<div class="skill-group">
+          <h3>${esc(group.category)}</h3>
+          <div class="skill-row">
+            ${group.items
+              .slice()
+              .sort((a, b) => (levelRank[a.level] ?? 9) - (levelRank[b.level] ?? 9))
+              .map(
+                (skill) =>
+                  `<span class="skill" data-level="${esc(skill.level)}">${esc(
+                    skill.name
+                  )}<span class="lv">${esc(skill.level)}</span></span>`
+              )
+              .join('\n            ')}
+          </div>
+        </div>`
+          )
+          .join('\n        ')}
+      </section>
+
+      <section>
+        <h2>Selected projects</h2>
+        <ol class="projects">
+          ${projects
+            .map(
+              (project) => `<li>
+            <div class="p-title">${esc(project.title)}</div>
+            <div class="p-sub">${esc(project.category)}</div>
+            <p class="p-desc">${esc(project.subtitle)}</p>
+            <div class="p-tags">${project.tags
+              .map((tag) => `<span class="p-tag">${esc(tag)}</span>`)
+              .join('')}</div>
+            <div class="p-links">
+              ${project.githubUrl ? `<a href="${esc(project.githubUrl)}">Source</a>` : ''}
+              ${project.liveUrl ? `<a href="${esc(project.liveUrl)}">Live</a>` : ''}
+            </div>
+          </li>`
+            )
+            .join('\n          ')}
+        </ol>
+      </section>
+
+      <footer class="end">
+        Generated from the portfolio at <a href="${esc(`${SITE_ORIGIN}${base}`)}">${esc(
+          `${SITE_ORIGIN}${base}`
+        )}</a>.
+      </footer>
+    </div>
+    <script>
+      // The browser's own print pipeline is the PDF writer here. Bundling a
+      // PDF library would add hundreds of kilobytes to produce a worse
+      // document than the print stylesheet already produces.
+      document.getElementById('save-pdf').addEventListener('click', function () { window.print(); });
+    </script>
+  </body>
+</html>
+`;
+}
+
+// Generated rather than added as a Vite HTML input because the links here have
+// to be absolute. A 404 document is served *in place of* the URL that was
+// requested, so a relative "./" would resolve against the missing page's
+// directory and produce a second 404. The base is already known here.
+const NOT_FOUND_CSS = `
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    background: #0a0a0a; color: #e5e5e5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  .box { max-width: 560px; width: 100%; text-align: center; }
+  .code {
+    margin: 0; font-size: clamp(72px, 18vw, 132px); line-height: 1;
+    font-weight: 700; letter-spacing: -.04em;
+    background: linear-gradient(120deg, #89AACC, #4E85BF);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  h1 { margin: 12px 0 10px; font-size: 22px; font-weight: 600; color: #fff; }
+  p { margin: 0 0 28px; color: #a3a3a3; line-height: 1.6; }
+  code.path {
+    display: inline-block; margin-top: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12.5px; color: #89AACC;
+    background: rgba(137, 170, 204, .1);
+    border: 1px solid rgba(137, 170, 204, .25);
+    border-radius: 6px; padding: 4px 10px;
+    max-width: 100%; overflow-wrap: anywhere;
+  }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .links a {
+    display: inline-flex; align-items: center;
+    border: 1px solid rgba(255, 255, 255, .12); background: #141414; color: #e5e5e5;
+    border-radius: 999px; padding: 9px 18px; font-size: 13.5px; text-decoration: none;
+  }
+  .links a:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .28); color: #fff; }
+  .links a:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+`;
+
+function notFoundPage(base) {
+  const home = `${SITE_ORIGIN}${base}`;
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 — Page not found</title>
+    <meta name="description" content="That page does not exist. Head back to the portfolio, the journal, or the project index." />
+    <!-- A 404 must never be indexed, even though the rest of the generated
+         pages here are deliberately noindex too. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="${esc(`${base}favicon.svg`)}" type="image/svg+xml" />
+    <style>${NOT_FOUND_CSS}</style>
+  </head>
+  <body>
+    <div class="box">
+      <p class="code">404</p>
+      <h1>This page doesn't exist.</h1>
+      <p>
+        The link may be broken, or the page may have moved. Nothing here is
+        broken on your end.
+      </p>
+      <div class="links">
+        <a href="${esc(home)}">Back to portfolio</a>
+        <a href="${esc(`${base}journal/`)}">Journal</a>
+        <a href="${esc(`${base}projects/`)}">Projects</a>
+        <a href="${esc(`${base}resume/`)}">Resume</a>
+      </div>
+    </div>
+  </body>
+</html>
+`;
+}
+
 function sitemapXml(base, entries, projects = []) {
   const today = new Date().toISOString().slice(0, 10);
   const urls = [
@@ -616,6 +1011,7 @@ function sitemapXml(base, entries, projects = []) {
       lastmod: today,
       priority: '0.7',
     })),
+    { loc: `${SITE_ORIGIN}${base}resume/`, lastmod: today, priority: '0.6' },
   ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -655,9 +1051,8 @@ const server = await createServer({
 });
 
 try {
-  const { journalEntriesData, projectsData } = await server.ssrLoadModule(
-    '/src/data/portfolioData.ts'
-  );
+  const { journalEntriesData, projectsData, techSkillsData, warriorDetails } =
+    await server.ssrLoadModule('/src/data/portfolioData.ts');
   const base = requireBase(server.config, 'generate-journal-pages');
   const dist = path.join(root, 'dist');
 
@@ -690,7 +1085,23 @@ try {
 
   await mkdir(path.join(dist, 'journal'), { recursive: true });
   await writeFile(path.join(dist, 'journal', 'index.html'), indexPage(journalEntriesData, base));
+
+  if (techSkillsData?.length && warriorDetails) {
+    const dir = path.join(dist, 'resume');
+    await mkdir(dir, { recursive: true });
+    await writeFile(
+      path.join(dir, 'index.html'),
+      resumePage(
+        { skills: techSkillsData, projects: projectsData ?? [], details: warriorDetails },
+        base
+      )
+    );
+    console.log(`  resume/  skills-based resume for ${warriorDetails.name}`);
+  }
+
   await writeFile(path.join(dist, 'robots.txt'), robotsTxt());
+  await writeFile(path.join(dist, '404.html'), notFoundPage(base));
+  console.log(`  404.html  static-host not-found page -> dist/`);
   await writeFile(
     path.join(dist, 'sitemap.xml'),
     sitemapXml(base, journalEntriesData, projectsData)
