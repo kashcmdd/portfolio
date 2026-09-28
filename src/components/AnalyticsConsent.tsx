@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { X, Info } from 'lucide-react';
+import { readAnalyticsConsent, writeAnalyticsConsent } from '../utils/analyticsConsent';
 
 export const AnalyticsConsent: React.FC = () => {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem('analytics_consent') === null) {
+    if (readAnalyticsConsent() === null) {
       setShowBanner(true);
     }
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem('analytics_consent', 'true');
+    writeAnalyticsConsent(true);
     setShowBanner(false);
   };
 
   const handleDecline = () => {
-    localStorage.setItem('analytics_consent', 'false');
+    writeAnalyticsConsent(false);
     setShowBanner(false);
   };
 
@@ -48,6 +49,8 @@ export const AnalyticsConsent: React.FC = () => {
               </button>
             </div>
           </div>
+          {/* Dismissed for now rather than answered, so the banner returns
+              on the next visit instead of recording a decision. */}
           <button
             onClick={() => setShowBanner(false)}
             className="p-1 rounded-full hover:bg-white/20 transition-colors cursor-pointer text-white/60 hover:text-white shrink-0"

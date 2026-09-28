@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { readAnalyticsConsent, onAnalyticsConsentChange } from '../utils/analyticsConsent';
 
 // Privacy-focused analytics using Plausible
 // This component doesn't render anything visible - it just loads the analytics script
@@ -11,8 +12,11 @@ export const Analytics: React.FC<AnalyticsProps> = ({ domain = 'kashcmdd-dev.git
   const [hasConsent, setHasConsent] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem('analytics_consent');
-    setHasConsent(consent === 'true');
+    setHasConsent(readAnalyticsConsent() === true);
+    // Reading consent once was the bug this replaces: a visitor who accepted
+    // from the banner had to reload before anything was tracked. The banner
+    // is a separate component, so the decision arrives as an event.
+    return onAnalyticsConsentChange(setHasConsent);
   }, []);
 
   useEffect(() => {
@@ -27,6 +31,8 @@ export const Analytics: React.FC<AnalyticsProps> = ({ domain = 'kashcmdd-dev.git
       document.head.appendChild(script);
 
       return () => {
+        // Also covers a consent reversal: dropping hasConsent runs this and
+        // takes the script back out of the document.
         document.head.removeChild(script);
       };
     }
