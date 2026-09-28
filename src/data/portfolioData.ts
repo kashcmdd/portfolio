@@ -88,6 +88,14 @@ export const projectsData: Project[] = [
       "HLS video backgrounds gated by IntersectionObserver, with the 594 kB parser lazy-loaded and skipped entirely on native-HLS browsers",
       "Push-to-deploy Pages workflow with vendor code-splitting holding initial JS to about 440 kB",
     ],
+    demoUrl: "https://kashcmdd.github.io/portfolio/",
+    demoDescription: "Live portfolio with liquid glass effects, video backgrounds, and interactive animations",
+    demoFeatures: [
+      "GSAP Animations",
+      "Video Backgrounds",
+      "Liquid Glass UI",
+      "12-Column Grid"
+    ],
   },
 ];
 

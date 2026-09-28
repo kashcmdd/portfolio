@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Search } from 'lucide-react';
 import { warriorDetails } from '../data/portfolioData';
 
 interface NavbarProps {
   activeSection: string;
   onNavigate: (sectionId: string) => void;
   onOpenContactModal: () => void;
+  onOpenSearchModal: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeSection,
   onNavigate,
   onOpenContactModal,
+  onOpenSearchModal,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -85,6 +87,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Divider */}
         <div className="w-px h-5 bg-neutral-800 mx-1.5 hidden md:block" />
 
+        {/* Search Button */}
+        <button
+          onClick={onOpenSearchModal}
+          className="ml-1 p-2 rounded-full liquid-glass hover:bg-white/20 transition-colors cursor-pointer text-white/80 hover:text-white shrink-0"
+          aria-label="Search"
+        >
+          <Search className="w-4 h-4" />
+        </button>
+
         {/* Say Hi Button with animated gradient border */}
         <div className="relative group ml-1 shrink-0">
           <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
@@ -126,6 +137,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               {item.label}
             </button>
           ))}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              onOpenSearchModal();
+            }}
+            className="mt-2 w-full py-2.5 rounded-xl liquid-glass text-white font-semibold text-sm flex items-center justify-center gap-2 font-body"
+          >
+            <Search className="w-4 h-4" />
+            <span>Search</span>
+          </button>
           <button
             onClick={() => {
               setMobileMenuOpen(false);

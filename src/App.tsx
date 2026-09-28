@@ -14,6 +14,9 @@ import { ExplorationsSection } from './components/ExplorationsSection';
 import { StatsSection } from './components/StatsSection';
 import { ContactFooter } from './components/ContactFooter';
 import { ContactModal } from './components/ContactModal';
+import { SearchModal } from './components/SearchModal';
+import { Analytics } from './components/Analytics';
+import { AnalyticsConsent } from './components/AnalyticsConsent';
 import { Project, JournalEntry } from './types';
 import { journalEntriesData } from './data/portfolioData';
 
@@ -31,6 +34,7 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedJournal, setSelectedJournal] = useState<JournalEntry | null>(null);
   const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
 
   // True only while a journal hash was pushed by this app, so that closing the
   // modal can go back instead of leaving a stale entry in the history stack.
@@ -100,6 +104,19 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isLoading]);
 
+  // Keyboard shortcut for search (Cmd/Ctrl + K)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
+        setSearchModalOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleNavigate = (sectionId: string) => {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
@@ -110,6 +127,12 @@ export default function App() {
 
   return (
     <div className="bg-[#0a0a0a] text-white font-body selection:bg-[#89AACC]/30 selection:text-white relative min-h-screen">
+      {/* Analytics */}
+      <Analytics />
+
+      {/* Analytics Consent Banner */}
+      <AnalyticsConsent />
+
       {/* 1. Loading Screen */}
       <AnimatePresence mode="wait">
         {isLoading && (
@@ -124,6 +147,7 @@ export default function App() {
             activeSection={activeSection}
             onNavigate={handleNavigate}
             onOpenContactModal={() => setContactModalOpen(true)}
+            onOpenSearchModal={() => setSearchModalOpen(true)}
           />
 
           {/* 3. Main Sections */}
@@ -180,6 +204,11 @@ export default function App() {
           <ContactModal
             isOpen={contactModalOpen}
             onClose={() => setContactModalOpen(false)}
+          />
+
+          <SearchModal
+            isOpen={searchModalOpen}
+            onClose={() => setSearchModalOpen(false)}
           />
         </>
       )}

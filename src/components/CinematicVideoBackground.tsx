@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 
 export interface VideoOption {
   id: string;
@@ -39,6 +39,31 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
   showOverlayImage = true,
 }) => {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [videoErrors, setVideoErrors] = useState<Set<number>>(new Set());
+  const [hasActiveVideo, setHasActiveVideo] = useState(true);
+
+  const handleVideoError = useCallback((index: number) => {
+    console.warn(`Video ${VIDEO_SOURCES[index].label} failed to load`);
+    setVideoErrors(prev => new Set(prev).add(index));
+    
+    // Check if the active video failed
+    if (index === activeIndex) {
+      setHasActiveVideo(false);
+    }
+  }, [activeIndex]);
+
+  const handleVideoLoad = useCallback((index: number) => {
+    setVideoErrors(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      return newSet;
+    });
+    
+    // If this is the active video and it loaded successfully
+    if (index === activeIndex) {
+      setHasActiveVideo(true);
+    }
+  }, [activeIndex]);
 
   useEffect(() => {
     videoRefs.current.forEach((video, index) => {
@@ -46,7 +71,10 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
       if (index === activeIndex) {
         const playPromise = video.play();
         if (playPromise !== undefined) {
-          playPromise.catch(() => {});
+          playPromise.catch((error) => {
+            console.warn(`Video play failed for ${VIDEO_SOURCES[index].label}:`, error);
+            handleVideoError(index);
+          });
         }
       } else {
         if (!video.paused) {
@@ -54,7 +82,7 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
         }
       }
     });
-  }, [activeIndex]);
+  }, [activeIndex, handleVideoError]);
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0 bg-[#0a0a0a]">
@@ -62,6 +90,8 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
 
       {VIDEO_SOURCES.map((item, index) => {
         const isActive = activeIndex === index;
+        const hasError = videoErrors.has(index);
+        
         return (
           <video
             key={item.id}
@@ -69,13 +99,15 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
               videoRefs.current[index] = el;
             }}
             src={item.url}
-            autoPlay={isActive}
+            autoPlay={isActive && !hasError}
             muted
             loop
             playsInline
             preload={isActive ? 'auto' : 'metadata'}
+            onError={() => handleVideoError(index)}
+            onLoadedData={() => handleVideoLoad(index)}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out transform-gpu ${
-              isActive ? 'opacity-100 z-[1]' : 'opacity-0 z-0'
+              isActive && !hasError ? 'opacity-100 z-[1]' : 'opacity-0 z-0'
             }`}
             style={{
               willChange: 'opacity',
@@ -84,6 +116,11 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
           />
         );
       })}
+
+      {/* Fallback gradient when videos fail */}
+      {!hasActiveVideo && (
+        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#89AACC]/20 via-[#4E85BF]/10 to-[#0a0a0a] animate-pulse" />
+      )}
 
       {showOverlayImage && (
         <div

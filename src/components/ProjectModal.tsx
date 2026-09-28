@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../types';
-import { X, Github, Sparkles, CheckCircle2, ExternalLink } from 'lucide-react';
+import { X, CheckCircle2 } from 'lucide-react';
+import { DemoPlayer } from './DemoPlayer';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -13,6 +14,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   onClose,
 }) => {
   const bodyRef = useRef<HTMLDivElement>(null);
+  const [demoPlayerOpen, setDemoPlayerOpen] = useState(false);
 
   // Case studies run long, so the panel scrolls internally and the page behind
   // it has to stop moving.
@@ -86,10 +88,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </p>
             </div>
 
-            {/* Tech Stack Tags */}
+          {/* Tech Stack Tags */}
             <div className="mb-6">
               <div className="text-xs uppercase tracking-wider text-neutral-400 font-body mb-2.5 font-medium flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#89AACC]" /> Technologies & Frameworks
+                <svg className="w-3.5 h-3.5 text-[#89AACC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="16 18 22 12 16 6"/>
+                  <polyline points="8 6 2 12 8 18"/>
+                </svg>
+                Technologies & Frameworks
               </div>
               <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
@@ -121,45 +127,124 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                 ))}
               </ul>
             </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="shrink-0 flex flex-wrap gap-3 px-6 py-4 sm:px-8 border-t border-white/10">
-            {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
+            {/* Interactive Demo Section */}
+            <div className="p-4 rounded-2xl bg-[#89AACC]/10 border border-[#89AACC]/30">
+              <div className="text-xs uppercase tracking-wider text-[#89AACC] font-body mb-2 font-medium flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <polyline points="9.9 9.9 9.9 14.1 14.1 14.1 14.1 9.9"/>
+                </svg>
+                Interactive Demo
+              </div>
+              <div className="relative aspect-video rounded-xl bg-[#0a0a0a] border border-[#89AACC]/20 overflow-hidden group cursor-pointer hover:border-[#89AACC]/50 transition-colors">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#89AACC]/20 to-[#0a0a0a]">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <button
+                      onClick={() => setDemoPlayerOpen(true)}
+                      className="w-16 h-16 rounded-full liquid-glass flex items-center justify-center text-[#89AACC] hover:bg-[#89AACC]/20 transition-all duration-300 group-hover:scale-110"
+                      aria-label="Launch Interactive Demo"
+                    >
+                      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polygon points="5,3 19,12 5,21 5,3"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0a0a0a] to-transparent">
+                  <h4 className="text-sm font-body font-semibold text-white mb-1">
+                    Live Project Preview
+                  </h4>
+                  <p className="text-xs font-body text-neutral-400">
+                    Interactive demonstration of key features and UI patterns used in this project
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
+                {project.demoFeatures?.map((feature) => (
+                  <div
+                    key={feature}
+                    className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
+                  >
+                    <div className="text-xs font-body text-[#89AACC] font-semibold">
+                      {feature}
+                    </div>
+                  </div>
+                )) || [
+                  'Responsive Design',
+                  'Interactive UI',
+                  'Modern Framework',
+                  'Production Ready'
+                ].slice(0, 4).map((feature) => (
+                  <div
+                    key={feature}
+                    className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
+                  >
+                    <div className="text-xs font-body text-[#89AACC] font-semibold">
+                      {feature}
+                    </div>
+                  </div>
+                ))}
+                </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="shrink-0 flex flex-wrap gap-3 px-6 py-4 sm:px-8 border-t border-white/10">
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                  </svg>
+                  Visit Live Site
+                </a>
+              )}
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={
+                    project.liveUrl
+                      ? 'liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2'
+                      : 'flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2'
+                  }
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 5.94 8.23c-3.07.44-5.66 1.81-7.12 4.27m9 6V9"/>
+                  </svg>
+                  View Repository
+                </a>
+              )}
+              <button
+                onClick={onClose}
+                className="liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer"
               >
-                <ExternalLink className="w-4 h-4" />
-                Visit Live Site
-              </a>
-            )}
-            {project.githubUrl && (
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={
-                  project.liveUrl
-                    ? 'liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2'
-                    : 'flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2'
-                }
-              >
-                <Github className="w-4 h-4" />
-                View Repository
-              </a>
-            )}
-            <button
-              onClick={onClose}
-              className="liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer"
-            >
-              Close Case Study
-            </button>
+                Close Case Study
+              </button>
+            </div>
           </div>
         </motion.div>
       </div>
+
+      {/* Demo Player */}
+      <DemoPlayer
+        isOpen={demoPlayerOpen}
+        onClose={() => setDemoPlayerOpen(false)}
+        title={project.title}
+        demoUrl={project.demoUrl}
+        codePenId={project.codePenId}
+        codeSandboxId={project.codeSandboxId}
+        description={project.demoDescription}
+      />
     </AnimatePresence>
   );
 };

@@ -12,6 +12,11 @@ export interface Project {
   colSpanDesktop: number; // 5, 7 or 12 for bento grid
   aspectRatio: string;
   highlights?: string[]; // case study bullets; falls back to generic highlights
+  demoFeatures?: string[]; // Interactive demo features for project preview
+  demoUrl?: string; // Custom demo URL
+  codePenId?: string; // CodePen embed ID
+  codeSandboxId?: string; // CodeSandbox embed ID
+  demoDescription?: string; // Description for the demo player
 }
 
 export type JournalBlock =

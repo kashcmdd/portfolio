@@ -142,16 +142,22 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                   </div>
 
                   {/* Tech stack pills */}
-                  <div className="flex flex-wrap gap-1.5 justify-center">
-                    {project.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="bg-white/10 text-neutral-300 text-[11px] font-body px-2.5 py-0.5 rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+          <div className="flex flex-wrap gap-1.5 justify-center">
+            {project.tags.slice(0, 4).map((tag) => (
+              <span
+                key={tag}
+                className="bg-white/10 text-neutral-300 text-[11px] font-body px-2.5 py-0.5 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Interactive Demo Placeholder */}
+          <div className="absolute top-3 right-3 flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-green-500/60" title="Interactive Demo Available"></div>
+            <span className="text-[10px] font-mono text-neutral-500">Live Demo</span>
+          </div>
                 </div>
               </motion.div>
             );

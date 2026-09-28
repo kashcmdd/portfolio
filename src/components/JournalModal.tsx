@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { JournalEntry, JournalBlock } from '../types';
 import { X, Calendar, Clock, Tag, ExternalLink } from 'lucide-react';
+import { JournalComments } from './JournalComments';
 
 const renderBlock = (block: JournalBlock, key: number) => {
   switch (block.type) {
@@ -200,6 +201,9 @@ export const JournalModal: React.FC<JournalModalProps> = ({ entry, onClose }) =>
             <div className="font-body font-light">
               {entry.content.map(renderBlock)}
             </div>
+
+            {/* Comments Section */}
+            <JournalComments entryId={entry.id} />
           </div>
 
           {/* Footer: the second way out stays reachable too */}

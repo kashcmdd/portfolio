@@ -236,6 +236,24 @@ const cssFor = (prefix) => `
   .more a span { color: #8a8a8a; font-size: .8rem; white-space: nowrap; }
   .end { max-width: 760px; margin: 0 auto; padding: 0 24px 60px; color: #6a6a6a; font-size: .82rem; }
   .end a { color: #8a8a8a; }
+  .comments-section { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, .1); }
+  .comments-header h3 { margin: 0 0 8px; font-size: 1.1rem; color: #fff; }
+  .comments-notice { margin: 0 0 24px; font-size: .82rem; color: #8a8a8a; font-style: italic; }
+  .comments-form { background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .1); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+  .comment-input { width: 100%; background: rgba(0, 0, 0, .5); border: 1px solid rgba(255, 255, 255, .1); border-radius: 8px; padding: 12px 16px; color: #fff; font-size: .9rem; margin-bottom: 12px; }
+  .comment-input::placeholder { color: #8a8a8a; }
+  .comment-textarea { width: 100%; background: rgba(0, 0, 0, .5); border: 1px solid rgba(255, 255, 255, .1); border-radius: 8px; padding: 12px 16px; color: #fff; font-size: .9rem; resize: vertical; font-family: inherit; }
+  .comment-textarea::placeholder { color: #8a8a8a; }
+  .comment-submit { background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%); color: #000; border: none; border-radius: 20px; padding: 10px 20px; font-size: .9rem; font-weight: 600; cursor: pointer; margin-top: 8px; }
+  .comment-submit:hover { opacity: .9; }
+  .comment-submit:disabled { opacity: .5; cursor: not-allowed; }
+  .comments-list { display: flex; flex-direction: column; gap: 16px; }
+  .comment-item { background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .1); border-radius: 12px; padding: 16px; }
+  .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .comment-author { font-weight: 600; color: #fff; font-size: .9rem; }
+  .comment-time { font-size: .8rem; color: #8a8a8a; }
+  .comment-content { color: #d4d4d4; font-size: .95rem; line-height: 1.5; }
+  .no-comments { text-align: center; padding: 40px 20px; color: #8a8a8a; font-size: .9rem; }
   @media (max-width: 640px) {
     .more a { flex-direction: column; gap: 4px; }
   }
@@ -315,6 +333,20 @@ function articlePage(entry, base, all) {
         <img class="banner" src="${esc(entry.image)}" alt="${esc(entry.title)}" />
         ${entry.content.map(renderBlock).join('\n        ')}
       </article>
+      
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <div class="comments-header">
+          <h3>Discussion</h3>
+          <p class="comments-notice">Comments are stored locally in your browser. They won't be visible to other users.</p>
+        </div>
+        <div class="comments-form">
+          <input type="text" id="comment-author-${entry.id}" placeholder="Your name" class="comment-input" maxlength="50" />
+          <textarea id="comment-content-${entry.id}" placeholder="Share your thoughts..." class="comment-textarea" rows="3" maxlength="500"></textarea>
+          <button onclick="postComment('${entry.id}')" class="comment-submit">Post Comment</button>
+        </div>
+        <div id="comments-list-${entry.id}" class="comments-list"></div>
+      </div>
       ${
         others.length
           ? `<nav class="more">
