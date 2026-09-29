@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../types';
-import { X, CheckCircle2 } from 'lucide-react';
+import { X, CheckCircle2, Target } from 'lucide-react';
 import { DemoPlayer } from './DemoPlayer';
 import { SmartImage } from './SmartImage';
 import { ArchitectureDiagram } from './ArchitectureDiagram';
@@ -94,6 +94,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               <p className="text-xs sm:text-sm font-body font-light text-neutral-300 leading-relaxed">
                 {project.description}
               </p>
+              {/* What the project is worth, stated before the feature list so a
+                  skimming reader gets the point even if they read nothing else. */}
+              {project.outcome && (
+                <p className="mt-3 flex items-start gap-2 rounded-xl border border-[#89AACC]/25 bg-[#89AACC]/10 px-3 py-2 text-xs font-body text-neutral-200 sm:text-sm">
+                  <Target className="mt-0.5 h-4 w-4 shrink-0 text-[#89AACC]" aria-hidden="true" />
+                  <span>{project.outcome}</span>
+                </p>
+              )}
             </div>
 
           {/* Tech Stack Tags */}

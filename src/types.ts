@@ -10,6 +10,13 @@ export interface Project {
   kind: ProjectKind;
   subtitle: string;
   description: string;
+  /**
+   * One honest line on what the project is worth in use, as opposed to what it
+   * contains. Descriptions list features; this says why those features matter.
+   * Kept qualitative on purpose — a number here would need a source, and a
+   * portfolio that cites made-up metrics is worse than one that cites none.
+   */
+  outcome?: string;
   image: string;
   tags: string[];
   githubUrl?: string;

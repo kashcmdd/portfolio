@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="ScriptForge preview placeholder">
-  <title>ScriptForge preview placeholder</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="ScriptForge cover art">
+  <title>ScriptForge</title>
   <defs>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="#89AACC"/>
@@ -63,6 +63,6 @@
   <g font-family="Inter, system-ui, sans-serif">
     <text x="150" y="640" fill="#ffffff" font-size="44" font-weight="600" letter-spacing="1">ScriptForge</text>
     <rect x="150" y="662" width="120" height="4" rx="2" fill="url(#accent)"/>
-    <text x="150" y="704" fill="#8a94a3" font-size="19" letter-spacing="2.5">PREVIEW PENDING</text>
+    <text x="150" y="704" fill="#8a94a3" font-size="19" letter-spacing="2.5">CONTROLLER-SCRIPT HUB · NEXT.JS</text>
   </g>
 </svg>

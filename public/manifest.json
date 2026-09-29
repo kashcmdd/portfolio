@@ -23,7 +23,15 @@
     }
   ],
   "categories": ["portfolio", "developer", "design"],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/portfolio-dev/portfolio-site.webp",
+      "sizes": "1800x927",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "The KashhCMD portfolio landing page"
+    }
+  ],
   "shortcuts": [
     {
       "name": "View Projects",

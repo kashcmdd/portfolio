@@ -405,6 +405,15 @@ const cssFor = (prefix) => `
   .arch-layers { margin: 0; padding: 0 16px 4px; list-style: none; }
   .arch-nodes, .arch-edges { margin: 0; padding: 0 16px 4px 34px; color: #b4b4b4; font-size: .85rem; }
   .arch-details > :last-child { margin-bottom: 16px; }
+  .outcome {
+    margin: 0 0 30px;
+    padding: 14px 16px;
+    border: 1px solid rgba(137, 170, 204, .3);
+    background: rgba(137, 170, 204, .08);
+    border-radius: 14px;
+    color: #dbe6f0;
+    font-size: .95rem;
+  }
   .decision {
     margin: 0 0 30px;
     padding: 16px 18px;
@@ -603,6 +612,7 @@ function projectPage(project, base, all) {
         <p class="sub">${esc(project.subtitle)}</p>
         <img class="banner" src="${esc(project.image)}" alt="${esc(project.title)}" />
         <p>${esc(project.description)}</p>
+        ${project.outcome ? `<p class="outcome">${esc(project.outcome)}</p>` : ''}
 
         <h2>What it does</h2>
         <ul>
@@ -870,6 +880,9 @@ const RESUME_CSS = `
   }
   .print-btn:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .28); }
   .print-btn:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  /* The .top a rule is more specific than .print-btn, so the download link
+     needs its own colour back or it renders as a plain accent text link. */
+  .top a.print-btn { color: #e5e5e5; font-weight: 500; }
   .note {
     margin: 0 0 28px; padding: 12px 16px;
     border: 1px solid rgba(137, 170, 204, .3);
@@ -964,17 +977,21 @@ function resumePage({ skills, projects, details }, base) {
   <body>
     <div class="top">
       <a href="../">&larr; Portfolio</a>
+      <a class="print-btn no-print" href="KashhCMD-Resume.pdf" download>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF
+      </a>
       <button class="print-btn no-print" type="button" id="save-pdf">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Download / Save as PDF
+        Print / Save as PDF
       </button>
     </div>
     <div class="wrap">
       <p class="note no-print">
         This resume is generated from the portfolio data, so it lists skills and
-        projects only — there is no employment history to show. Use your
-        browser's print dialog and choose &ldquo;Save as PDF&rdquo; as the
-        destination; the page is already styled for it.
+        projects only — there is no employment history to show. The download is
+        a plain PDF built at the same time as this page; the print button stays
+        as a fallback if you would rather choose the destination yourself.
       </p>
 
       <header class="masthead">
