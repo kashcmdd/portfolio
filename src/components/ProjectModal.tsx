@@ -214,6 +214,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
             {/* Action Buttons */}
             <div className="shrink-0 flex flex-wrap gap-3 px-6 py-4 sm:px-8 border-t border-white/10">
+              {/* The modal is a quick read; the generated page is the permalink a
+                  reader can quote or open without JavaScript. */}
+              <a
+                href={`projects/${project.id}/`}
+                className="liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2"
+              >
+                Read full case study
+              </a>
               {project.liveUrl && (
                 <a
                   href={project.liveUrl}

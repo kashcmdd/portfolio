@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
-import { ArrowUpRight, MessageSquare, BookOpen, FileDown } from 'lucide-react';
+import { ArrowUpRight, MessageSquare, BookOpen, FileDown, LayoutGrid } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 
 interface ContactFooterProps {
@@ -111,6 +111,13 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
           {/* Social Links */}
           <div className="flex items-center gap-6">
             <a
+              href={`${import.meta.env.BASE_URL}projects/`}
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <LayoutGrid className="w-4 h-4" />
+              <span>Projects</span>
+            </a>
+            <a
               href={`${import.meta.env.BASE_URL}journal/`}
               className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
@@ -129,7 +136,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Discord</span>
+              <span>Contact</span>
             </button>
           </div>
         </div>

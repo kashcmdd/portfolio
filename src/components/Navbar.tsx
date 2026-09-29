@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight, Search } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Search, Keyboard } from 'lucide-react';
 import { warriorDetails } from '../data/portfolioData';
 
 interface NavbarProps {
@@ -7,6 +7,7 @@ interface NavbarProps {
   onNavigate: (sectionId: string) => void;
   onOpenContactModal: () => void;
   onOpenSearchModal: () => void;
+  onOpenShortcuts: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -14,6 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate,
   onOpenContactModal,
   onOpenSearchModal,
+  onOpenShortcuts,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -94,6 +96,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           aria-label="Search"
         >
           <Search className="w-4 h-4" />
+        </button>
+
+        {/* Keyboard shortcuts cheatsheet. Hidden on touch-sized screens, where
+            there is no hardware keyboard to explain; the palette still lists it. */}
+        <button
+          onClick={onOpenShortcuts}
+          className="ml-1 hidden md:inline-flex items-center justify-center p-2 rounded-full liquid-glass hover:bg-white/20 transition-colors cursor-pointer text-white/80 hover:text-white shrink-0"
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+        >
+          <Keyboard className="w-4 h-4" />
         </button>
 
         {/* Say Hi Button with animated gradient border */}

@@ -69,9 +69,10 @@ const SECTION_LINKS: { id: string; label: string }[] = [
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onShowShortcuts?: () => void;
 }
 
-export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
+export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onShowShortcuts }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -172,6 +173,21 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         url: '',
         keywords: 'motion animation accessibility reduce toggle quiet still',
         run: toggle,
+      },
+      {
+        type: 'action',
+        title: 'Show keyboard shortcuts',
+        description: 'Every shortcut the site responds to',
+        url: '',
+        keywords: 'keyboard shortcuts keys help cheatsheet hotkeys accessibility',
+        run: () => onShowShortcuts?.(),
+      },
+      {
+        type: 'action',
+        title: 'Open the project pages',
+        description: 'One static page per project, no app required',
+        url: 'projects/',
+        keywords: 'projects work case study static page full html no app',
       },
       {
         type: 'action',
@@ -361,7 +377,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
     setResults(scored.map(({ result }) => result));
     setSelectedIndex(0);
-  }, [query, articleBodies, pref, toggle]);
+  }, [query, articleBodies, pref, toggle, onShowShortcuts]);
 
   if (!isOpen) return null;
 

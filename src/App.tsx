@@ -16,6 +16,7 @@ import { StatsSection } from './components/StatsSection';
 import { ContactFooter } from './components/ContactFooter';
 import { ContactModal } from './components/ContactModal';
 import { SearchModal } from './components/SearchModal';
+import { ShortcutsModal } from './components/ShortcutsModal';
 import { Analytics } from './components/Analytics';
 import { AnalyticsConsent } from './components/AnalyticsConsent';
 import { Project, JournalEntry } from './types';
@@ -54,6 +55,7 @@ export default function App() {
   const [selectedJournal, setSelectedJournal] = useState<JournalEntry | null>(null);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
   const [unknownRoute] = useState(isUnknownRoute);
 
   // True only while a journal hash was pushed by this app, so that closing the
@@ -127,6 +129,8 @@ export default function App() {
   // Keyboard shortcuts for search: Cmd/Ctrl+K, and "/" the way a code editor
   // or a docs site does it. "/" is only a shortcut while the visitor is not
   // typing, otherwise it would swallow the character in every input on the page.
+  // "?" (Shift+/) opens the shortcut cheatsheet, so the shortcuts are findable
+  // without one. It is guarded the same way, since "?" is also ordinary text.
   useEffect(() => {
     const isTyping = (target: EventTarget | null) => {
       const el = target as HTMLElement | null;
@@ -149,6 +153,11 @@ export default function App() {
       if (event.key === '/' && !isTyping(event.target) && !event.metaKey && !event.ctrlKey) {
         event.preventDefault();
         setSearchModalOpen(true);
+        return;
+      }
+      if (event.key === '?' && !isTyping(event.target)) {
+        event.preventDefault();
+        setShortcutsModalOpen(true);
       }
     };
 
@@ -203,6 +212,7 @@ export default function App() {
             onNavigate={handleNavigate}
             onOpenContactModal={() => setContactModalOpen(true)}
             onOpenSearchModal={() => setSearchModalOpen(true)}
+            onOpenShortcuts={() => setShortcutsModalOpen(true)}
           />
 
           {/* 3. Main Sections */}
@@ -267,6 +277,12 @@ export default function App() {
           <SearchModal
             isOpen={searchModalOpen}
             onClose={() => setSearchModalOpen(false)}
+            onShowShortcuts={() => setShortcutsModalOpen(true)}
+          />
+
+          <ShortcutsModal
+            isOpen={shortcutsModalOpen}
+            onClose={() => setShortcutsModalOpen(false)}
           />
         </>
       )}
