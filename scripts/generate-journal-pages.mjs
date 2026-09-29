@@ -1011,6 +1011,7 @@ const RESUME_CSS = `
 
   @page { margin: 14mm; }
   @media print {
+    html { background: #fff; color-scheme: light; }
     body { background: #fff; color: #111; font-size: 10.5pt; line-height: 1.4; background-image: none; }
     .top, .note, .no-print { display: none !important; }
     .wrap { max-width: none; padding: 0; }
@@ -1025,7 +1026,7 @@ const RESUME_CSS = `
     header.masthead .contact a { color: #24506e; border-bottom: none; }
     header.masthead .contact .sep { background: #999; }
     .bio { color: #222; }
-    h2 { color: #24506e; border-bottom: 1px solid #bbb; padding-bottom: 4px; }
+    h2 { color: #24506e; border-bottom: 1px solid #bbb; padding-bottom: 4px; break-after: avoid; }
     h2::before { display: none; }
     .skill-grid, .project-grid { display: block; }
     .skill-group, .project {

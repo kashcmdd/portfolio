@@ -65,7 +65,7 @@ Edit it, then run `npm run lint` and `npm run build`.
 
 ## Static output
 
-`npm run build` is more than a bundle. Once Vite finishes, three scripts run:
+`npm run build` is more than a bundle. Once Vite finishes, four scripts run:
 
 - `scripts/generate-journal-pages.mjs` — `/journal/` (index plus one page per
   article), `/projects/` (index plus one page per project), `/resume/`,
@@ -74,6 +74,11 @@ Edit it, then run `npm run lint` and `npm run build`.
   samples are highlighted with Prism during the same pass.
 - `scripts/generate-rss.mjs` — `rss.xml`.
 - `scripts/copy-sw.mjs` — the service worker.
+- `scripts/generate-resume-pdf.mjs` — `KashhCMD-Resume.pdf`. It prints the
+  generated `/resume/` page with headless Chrome or Edge, so the PDF carries the
+  real Inter and Instrument Serif faces, and falls back to a small hand-written
+  PDF when no browser is installed. `RESUME_PDF_BROWSER` overrides the browser
+  path.
 
 Those pages are plain HTML, so they read with JavaScript disabled; the
 `<noscript>` block in `index.html` points at the journal for exactly that reason.

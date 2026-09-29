@@ -5,17 +5,20 @@
  * dialog, but that needs a browser, a print dialog and a "Save as PDF"
  * destination. A recruiter who clicks "download" expects a file to arrive.
  *
- * There is no PDF library here on purpose. Helvetica is one of the fourteen
- * base fonts every reader ships, so a resume needs no embedded font data, and
- * the layout is a small column of text — no images, no tables, no vector art.
- * An accent header, rules under each section and a two-column skills block are
- * all drawn with the handful of operators the format has always had. The
- * document is plain ASCII: content is transliterated rather than relying on a
- * Unicode encoding the base fonts do not carry.
+ * The preferred path drives headless Chromium (Chrome or Edge) to print that
+ * same page, so the PDF carries the real Inter and Instrument Serif faces and
+ * the print stylesheet's layout. When no browser is available — a CI image,
+ * say — it falls back to the hand-written document below: Helvetica is one of
+ * the fourteen base fonts every reader ships, so that one embeds nothing and is
+ * transliterated to plain ASCII rather than relying on an encoding the base
+ * fonts do not carry. The fallback is plainer, but it always builds.
  */
 import { mkdir, writeFile } from 'node:fs/promises';
+import { cpSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createServer } from 'vite';
 import { requireBase } from './lib/journal-blocks.mjs';
 
@@ -40,27 +43,47 @@ const ascii = (value) =>
 const pdfString = (value) =>
   ascii(value).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
 
-// Greedy wrap. Helvetica averages a little under half an em per character, so
-// maxChars is chosen conservatively against the point width of the column.
-const wrap = (value, maxChars) => {
+// Helvetica advance widths in units per 1000. Wrapping by measured width is
+// exact, where a character count was a guess that broke as soon as a line held
+// more wide letters than the estimate assumed.
+const WIDTHS = {
+  ' ': 278, '!': 278, '"': 355, '#': 556, '$': 556, '%': 889, '&': 667, "'": 191,
+  '(': 333, ')': 333, '*': 389, '+': 584, ',': 278, '-': 333, '.': 278, '/': 278,
+  ':': 278, ';': 278, '<': 584, '=': 584, '>': 584, '?': 556, '@': 1015,
+  '[': 278, '\\': 278, ']': 278, '^': 469, '_': 556, '`': 333,
+  '{': 334, '|': 260, '}': 334, '~': 584,
+  A: 667, B: 667, C: 722, D: 722, E: 667, F: 611, G: 778, H: 722, I: 278, J: 500,
+  K: 667, L: 556, M: 833, N: 722, O: 778, P: 667, Q: 778, R: 722, S: 667, T: 611,
+  U: 722, V: 667, W: 944, X: 667, Y: 667, Z: 611,
+  a: 556, b: 556, c: 500, d: 556, e: 556, f: 278, g: 556, h: 556, i: 222, j: 222,
+  k: 500, l: 222, m: 833, n: 556, o: 556, p: 556, q: 556, r: 333, s: 500, t: 278,
+  u: 556, v: 500, w: 722, x: 500, y: 500, z: 500,
+};
+for (let digit = 0; digit <= 9; digit += 1) WIDTHS[String(digit)] = 556;
+
+const measure = (value, size) => {
+  let total = 0;
+  for (const ch of ascii(value)) total += ((WIDTHS[ch] ?? 556) / 1000) * size;
+  return total;
+};
+
+// Greedy wrap against the real point width of the column.
+const wrap = (value, maxWidth, size = 10) => {
   const words = ascii(value).split(/\s+/).filter(Boolean);
   const lines = [];
   let line = '';
   for (const word of words) {
     const candidate = line ? `${line} ${word}` : word;
-    if (candidate.length <= maxChars) {
-      line = candidate;
-    } else {
-      if (line) lines.push(line);
+    if (line && measure(candidate, size) > maxWidth) {
+      lines.push(line);
       line = word;
+    } else {
+      line = candidate;
     }
   }
   if (line) lines.push(line);
   return lines.length ? lines : [''];
 };
-
-// Rough Helvetica advance width, used only to centre the short footer string.
-const textWidth = (value, size) => ascii(value).length * size * 0.5;
 
 // ---- palette and geometry -------------------------------------------------
 
@@ -77,7 +100,7 @@ const TOP = PAGE_HEIGHT - MARGIN;
 const BOTTOM = 60;
 const LEADING = 14;
 const SKILLS_RIGHT_X = MARGIN + 104;
-const SKILLS_CHARS = 72;
+const SKILLS_RIGHT_WIDTH = PAGE_WIDTH - MARGIN - SKILLS_RIGHT_X;
 
 const FONTS = { regular: 'F1', bold: 'F2', italic: 'F3' };
 
@@ -106,8 +129,8 @@ class Resume {
     if (this.y - space < BOTTOM) this.newPage();
   }
 
-  text(value, { x = MARGIN, size = 10, font = 'regular', color = INK } = {}) {
-    this.items.push({ type: 'text', x, y: this.y, size, font, color, text: value });
+  text(value, { x = MARGIN, y = this.y, size = 10, font = 'regular', color = INK } = {}) {
+    this.items.push({ type: 'text', x, y, size, font, color, text: value });
   }
 
   rule({ x = MARGIN, width = CONTENT_WIDTH, thickness = 0.7, color = RULE } = {}) {
@@ -119,8 +142,8 @@ class Resume {
   }
 
   // A paragraph breaks across pages rather than overflowing the bottom margin.
-  paragraph(value, { maxChars = 96, size = 10, font = 'regular', color = INK } = {}) {
-    for (const lineText of wrap(value, maxChars)) {
+  paragraph(value, { maxWidth = CONTENT_WIDTH, size = 10, font = 'regular', color = INK } = {}) {
+    for (const lineText of wrap(value, maxWidth, size)) {
       if (this.y - LEADING < BOTTOM) this.newPage();
       this.text(lineText, { size, font, color });
       this.space(LEADING);
@@ -139,7 +162,7 @@ class Resume {
   // Two columns a row at a time, so a long skill list stays beside its category
   // instead of doubling the block's height.
   skillRow(category, items) {
-    const rightLines = wrap(items, SKILLS_CHARS);
+    const rightLines = wrap(items, SKILLS_RIGHT_WIDTH, 10);
     const height = Math.max(1, rightLines.length) * LEADING;
     this.ensure(height + 4);
     const startY = this.y;
@@ -209,19 +232,18 @@ const buildResume = ({ details, skills, projects }) => {
     if (index > 0) doc.space(4);
     // Measure the whole entry before drawing it, so a page break lands between
     // projects instead of halfway through one.
-    const outcomeLines = wrap(project.outcome || project.subtitle, 96).length;
-    const tagLines = wrap(project.tags.join('  |  '), 100).length;
+    const outcomeLines = wrap(project.outcome || project.subtitle, CONTENT_WIDTH, 10).length;
+    const tagLines = wrap(project.tags.join('  |  '), CONTENT_WIDTH, 9).length;
     const linkLines = project.githubUrl || project.liveUrl ? 1 : 0;
     doc.ensure(14 + (outcomeLines + tagLines + linkLines) * LEADING);
 
     doc.text(`${project.title}  -  ${project.category}`, { size: 11, font: 'bold' });
     doc.space(14);
     doc.paragraph(project.outcome || project.subtitle, {
-      maxChars: 96,
       font: 'italic',
       color: [0.28, 0.28, 0.28],
     });
-    doc.paragraph(project.tags.join('  |  '), { maxChars: 100, size: 9, color: MUTED });
+    doc.paragraph(project.tags.join('  |  '), { size: 9, color: MUTED });
     const links = [project.githubUrl, project.liveUrl].filter(Boolean).map(ascii);
     if (links.length) doc.paragraph(links.join('    '), { size: 9, color: ACCENT });
   });
@@ -241,7 +263,7 @@ const buildResume = ({ details, skills, projects }) => {
     const label = `Page ${index + 1} of ${doc.pages.length}`;
     items.push({
       type: 'text',
-      x: PAGE_WIDTH - MARGIN - textWidth(label, 8),
+      x: PAGE_WIDTH - MARGIN - measure(label, 8),
       y: 34,
       size: 8,
       font: 'regular',
@@ -300,35 +322,118 @@ const buildPdf = (pages) => {
   return Buffer.from(pdf, 'latin1');
 };
 
+// ---- browser printing -----------------------------------------------------
+// Chromium prints the generated /resume/ page straight to PDF, embedding the
+// same Inter and Instrument Serif the page uses. The fallback below draws the
+// document by hand, which is plainer but needs nothing installed.
+
+const BROWSER_CANDIDATES = [
+  process.env.RESUME_PDF_BROWSER,
+  'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+  'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
+  '/usr/bin/google-chrome',
+  '/usr/bin/chromium',
+  '/usr/bin/chromium-browser',
+  '/usr/bin/microsoft-edge',
+  '/snap/bin/chromium',
+].filter(Boolean);
+
+const findBrowser = () =>
+  BROWSER_CANDIDATES.find((candidate) => existsSync(candidate)) ?? null;
+
+const printWithBrowser = (browser, htmlPath, outPath) =>
+  new Promise((resolve, reject) => {
+    if (existsSync(outPath)) rmSync(outPath);
+    const userDataDir = mkdtempSync(path.join(tmpdir(), 'resume-pdf-'));
+    const finish = (error) => {
+      try {
+        rmSync(userDataDir, { recursive: true, force: true });
+      } catch {
+        /* best effort; a leftover temp profile is harmless */
+      }
+      if (error) reject(error);
+      else resolve();
+    };
+    const child = spawn(
+      browser,
+      [
+        '--headless=new',
+        '--disable-gpu',
+        '--hide-scrollbars',
+        '--no-pdf-header-footer',
+        // Give the webfonts time to finish loading before the page is frozen.
+        '--virtual-time-budget=6000',
+        `--user-data-dir=${userDataDir}`,
+        `--print-to-pdf=${outPath}`,
+        pathToFileURL(htmlPath).href,
+      ],
+      { stdio: 'ignore' }
+    );
+    child.on('error', (error) => finish(error));
+    child.on('exit', (code) => {
+      if (code === 0 && existsSync(outPath)) finish();
+      else finish(new Error(`browser exited with code ${code}`));
+    });
+  });
+
 // ---- run ------------------------------------------------------------------
 
-const server = await createServer({
-  root,
-  configFile: path.join(root, 'vite.config.ts'),
-  server: { middlewareMode: true, hmr: false, watch: null },
-  optimizeDeps: { noDiscovery: true, include: [] },
-  appType: 'custom',
-  logLevel: 'error',
-});
+const dist = path.join(root, 'dist');
+const pdfPath = path.join(dist, 'KashhCMD-Resume.pdf');
+const htmlPath = path.join(dist, 'resume', 'index.html');
 
-try {
-  const { techSkillsData, projectsData, warriorDetails } = await server.ssrLoadModule(
-    '/src/data/portfolioData.ts'
-  );
-  requireBase(server.config, 'generate-resume-pdf');
+await mkdir(dist, { recursive: true });
 
-  const pages = buildResume({
-    details: warriorDetails,
-    skills: techSkillsData ?? [],
-    projects: projectsData ?? [],
+const browser = findBrowser();
+let printed = false;
+if (browser && existsSync(htmlPath)) {
+  // The page loads its fonts relative to /resume/. A build has already copied
+  // public/ into dist/, but the dev middleware generates the page without that
+  // copy, so make sure the fonts are beside it before the file:// load.
+  const distFonts = path.join(dist, 'fonts');
+  if (!existsSync(distFonts)) {
+    cpSync(path.join(root, 'public', 'fonts'), distFonts, { recursive: true });
+  }
+  try {
+    await printWithBrowser(browser, htmlPath, pdfPath);
+    printed = true;
+    console.log(
+      `  KashhCMD-Resume.pdf  printed from /resume/ with ${path.basename(browser)} -> dist/`
+    );
+  } catch (error) {
+    console.warn(`  resume PDF: browser print unavailable (${error.message})`);
+  }
+}
+
+if (!printed) {
+  const server = await createServer({
+    root,
+    configFile: path.join(root, 'vite.config.ts'),
+    server: { middlewareMode: true, hmr: false, watch: null },
+    optimizeDeps: { noDiscovery: true, include: [] },
+    appType: 'custom',
+    logLevel: 'error',
   });
-  const pdf = buildPdf(pages);
 
-  const dist = path.join(root, 'dist');
-  await mkdir(dist, { recursive: true });
-  await writeFile(path.join(dist, 'KashhCMD-Resume.pdf'), pdf);
+  try {
+    const { techSkillsData, projectsData, warriorDetails } = await server.ssrLoadModule(
+      '/src/data/portfolioData.ts'
+    );
+    requireBase(server.config, 'generate-resume-pdf');
 
-  console.log(`  KashhCMD-Resume.pdf  ${pages.length} page(s), ${pdf.length} bytes -> dist/`);
-} finally {
-  await server.close();
+    const pages = buildResume({
+      details: warriorDetails,
+      skills: techSkillsData ?? [],
+      projects: projectsData ?? [],
+    });
+    const pdf = buildPdf(pages);
+    await writeFile(pdfPath, pdf);
+    console.log(
+      `  KashhCMD-Resume.pdf  ${pages.length} page(s), ${pdf.length} bytes (fallback) -> dist/`
+    );
+  } finally {
+    await server.close();
+  }
 }
