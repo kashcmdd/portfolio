@@ -4,6 +4,7 @@ import {
   TechSkill,
   ExplorationItem,
   CurrentlyBuilding,
+  RecentWork,
   Architecture,
 } from '../types';
 
@@ -784,11 +785,38 @@ export const explorationItemsData: ExplorationItem[] = [
  * on the site that is expected to change often, which is the point: it answers
  * "is any of this still alive?" without writing a post.
  *
- * PLACEHOLDER - replace with something real, or set the whole thing to null to
- * hide the strip.
+ * Set the whole thing to null to hide the strip.
  */
 export const currentlyBuildingData: CurrentlyBuilding = {
-  name: 'KashhCMD Portfolio',  // This repo itself, actively improving UI/IA and adding real-time features based on live feedback
-  description: 'Ship code in smaller, visible pieces while maintaining a high-quality launch bar.',
-  status: 'Live',
+  name: 'KashhCMD Portfolio',
+  description:
+    'Hardening the case studies: architecture diagrams and decision logs now render as static pages, and search ranks by relevance.',
+  status: 'In progress',
 };
+
+/**
+ * A short changelog shown next to the current work. Keep it to the handful of
+ * changes worth a stranger's attention, newest first, and keep the dates real.
+ */
+export const recentWorkData: RecentWork[] = [
+  {
+    date: 'Sep 2026',
+    title: 'Architecture diagrams on project pages',
+    kind: 'Feature',
+  },
+  {
+    date: 'Sep 2026',
+    title: 'Search results ranked by relevance',
+    kind: 'Feature',
+  },
+  {
+    date: 'Sep 2026',
+    title: 'Live-demo badges only when a demo exists',
+    kind: 'Fix',
+  },
+  {
+    date: 'Sep 2026',
+    title: 'Decision log for every journal entry',
+    kind: 'Content',
+  },
+];

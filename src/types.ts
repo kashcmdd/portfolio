@@ -119,3 +119,18 @@ export interface CurrentlyBuilding {
   status?: string;
   url?: string;
 }
+
+/**
+ * A short, hand-kept list of shipped changes shown beside the current work.
+ *
+ * Deliberately plain data with fixed dates rather than a live feed. The site is
+ * static, so a relative timestamp ("15m ago") computed at render time would keep
+ * claiming recent activity on a page nobody had touched — a lie that reads as
+ * life. A dated changelog is honest about exactly how fresh it is.
+ */
+export interface RecentWork {
+  /** Short display date, e.g. "Sep 2026". */
+  date: string;
+  title: string;
+  kind: 'Feature' | 'Fix' | 'Refactor' | 'Content';
+}

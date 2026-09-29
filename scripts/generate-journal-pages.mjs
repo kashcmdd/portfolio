@@ -374,6 +374,54 @@ const cssFor = (prefix) => `
   .comments-section { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, .1); }
   .comments-section h3 { margin: 0 0 8px; font-size: 1.1rem; color: #fff; }
   .comments-notice { margin: 0; font-size: .82rem; color: #8a8a8a; font-style: italic; }
+  .arch-summary { color: #c9c9c9; }
+  .arch-details {
+    margin: 14px 0 0;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .02);
+    overflow: hidden;
+  }
+  .arch-details summary {
+    cursor: pointer;
+    padding: 12px 16px;
+    font-size: .85rem;
+    color: #b4b4b4;
+    list-style: none;
+  }
+  .arch-details summary::-webkit-details-marker { display: none; }
+  .arch-details summary::after { content: '+'; float: right; color: #89AACC; }
+  .arch-details[open] summary::after { content: '\u2013'; }
+  .arch-details summary:focus-visible { outline: 2px solid #89AACC; outline-offset: -2px; }
+  .arch-details p { padding: 0 16px; margin: 14px 0 6px; color: #b4b4b4; font-size: .85rem; }
+  .arch-layers { margin: 0; padding: 0 16px 4px; list-style: none; }
+  .arch-nodes, .arch-edges { margin: 0; padding: 0 16px 4px 34px; color: #b4b4b4; font-size: .85rem; }
+  .arch-details > :last-child { margin-bottom: 16px; }
+  .decision {
+    margin: 0 0 30px;
+    padding: 16px 18px;
+    border: 1px solid rgba(137, 170, 204, .3);
+    background: rgba(137, 170, 204, .08);
+    border-radius: 14px;
+  }
+  .decision h2 {
+    margin: 0 0 10px;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #89AACC;
+  }
+  .decision dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; }
+  .decision dt {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    padding-top: 2px;
+  }
+  .decision dd { margin: 0; font-size: .9rem; color: #e5e5e5; }
   @media (max-width: 640px) {
     .more a { flex-direction: column; gap: 4px; }
   }
@@ -480,6 +528,9 @@ function projectPage(project, base, all) {
     'Zero-downtime containerized deployments & state persistence',
     'Responsive, fluid UI with liquid glass visual tokens',
   ];
+  // Edges are stored as ids; the reader wants the human labels.
+  const nodeLabel = (id) =>
+    project.architecture?.nodes.find((node) => node.id === id)?.label || id;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -521,16 +572,52 @@ function projectPage(project, base, all) {
         <ul class="tags">
           ${project.tags.map((t) => `<li>${esc(t)}</li>`).join('\n          ')}
         </ul>`
-            : ''
+          : ''
         }
 
-        ${
-          project.githubUrl || project.liveUrl
-            ? `<div class="links">
+        ${project.architecture && project.architecture.summary
+          ? `<h2>How It Fits Together</h2>
+        <p class="arch-summary">${esc(project.architecture.summary)}</p>
+        <details class="arch-details">
+          <summary>View layers and connections</summary>
+          <p><strong>Layers</strong></p>
+          <ul class="arch-layers">
+            ${project.architecture.layers
+              .map((layer) => `<li>${esc(layer.title)}</li>`)
+              .join('\n            ')}
+          </ul>
+          <p><strong>Components</strong></p>
+          <ul class="arch-nodes">
+            ${project.architecture.nodes
+              .map(
+                (node) =>
+                  `<li><strong>${esc(node.label)}</strong>${
+                    node.detail ? ` — ${esc(node.detail)}` : ''
+                  }</li>`
+              )
+              .join('\n            ')}
+          </ul>
+          <p><strong>Connections</strong></p>
+          <ul class="arch-edges">
+            ${project.architecture.edges
+              .map(
+                (edge) =>
+                  `<li>${esc(nodeLabel(edge.from))} → ${esc(nodeLabel(edge.to))}${
+                    edge.label ? ` (${esc(edge.label)})` : ''
+                  }</li>`
+              )
+              .join('\n            ')}
+          </ul>
+        </details>`
+          : ''
+        }
+
+        ${project.githubUrl || project.liveUrl
+          ? `<div class="links">
           ${project.githubUrl ? `<a href="${esc(project.githubUrl)}" rel="noopener noreferrer">Source code</a>` : ''}
           ${project.liveUrl ? `<a href="${esc(project.liveUrl)}" rel="noopener noreferrer">Live site</a>` : ''}
         </div>`
-            : ''
+          : ''
         }
       </article>
 
@@ -587,6 +674,15 @@ function articlePage(entry, base, all) {
         <p class="sub">${esc(entry.subtitle)}</p>
         ${shareBar(canonical, entry.title)}
         <img class="banner" src="${esc(entry.image)}" alt="${esc(entry.title)}" />
+        ${entry.decision
+          ? `<div class="decision">
+          <h2>Decision</h2>
+          <dl>
+            <dt>Chose</dt><dd>${esc(entry.decision.chose)}</dd>
+            <dt>Over</dt><dd>${esc(entry.decision.over)}</dd>
+          </dl>
+        </div>`
+          : ''}
         ${
           outline.length >= 3
             ? `<nav class="toc" aria-label="Contents">

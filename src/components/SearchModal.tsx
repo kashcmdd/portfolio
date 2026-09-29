@@ -202,15 +202,48 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       return;
     }
 
-    const searchResults: SearchResult[] = commands.filter((command) =>
-      matches(
-        `${command.title} ${command.description} ${command.keywords || ''}`.toLowerCase()
-      )
-    );
+    // Results render as one flat list, so order is the only signal a reader gets
+    // about confidence. Every result is scored, then the whole set is sorted by
+    // that score. Before this, results were emitted grouped by type, which meant
+    // a passing mention in an article body could sit above an exact project
+    // title purely because of which array it was pushed onto.
+    //
+    // Membership is still an AND over the terms, so the set of results does not
+    // change — only their order does.
+    const rank = (field: string, weight: number) => {
+      const lower = field.toLowerCase();
+      let total = 0;
+      for (const term of terms) {
+        const at = lower.indexOf(term);
+        // A missing term drops the whole field, matching the previous behaviour
+        // where every term had to appear within a single field.
+        if (at === -1) return 0;
+        const startsClean = at === 0 || !/[a-z0-9]/.test(lower[at - 1]);
+        const endsAt = at + term.length;
+        const endsClean = endsAt >= lower.length || !/[a-z0-9]/.test(lower[endsAt]);
+        const wholeWord = startsClean && endsClean;
+        // Earlier is a better hit; the cap stops a long body from drowning out
+        // an exact title match.
+        const earliness = 1 - Math.min(at, 160) / 320;
+        total += (wholeWord ? 1.7 : 1) * earliness;
+      }
+      return (total / terms.length) * weight;
+    };
 
-    // Every whitespace-separated term has to appear somewhere in the haystack.
-    // A single `includes` over a joined string would also match "type react",
-    // which no field contains.
+    const scored: Array<{ score: number; result: SearchResult }> = [];
+
+    commands.forEach((command) => {
+      const haystack = `${command.title} ${command.description} ${command.keywords || ''}`;
+      if (!matches(haystack.toLowerCase())) return;
+      scored.push({
+        score:
+          rank(command.title, 5) +
+          rank(command.description, 2) +
+          rank(command.keywords || '', 1),
+        result: command,
+      });
+    });
+
     projectsData.forEach((project) => {
       const titleMatch = matches(project.title.toLowerCase());
       const descMatch = matches(project.description.toLowerCase());
@@ -218,13 +251,21 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       const categoryMatch = matches(project.category.toLowerCase());
 
       if (titleMatch || descMatch || tagMatch || categoryMatch) {
-        searchResults.push({
-          type: 'project',
-          title: project.title,
-          description: project.subtitle,
-          url: `#work`,
-          tags: project.tags,
-          category: project.category,
+        scored.push({
+          score:
+            (titleMatch ? 6 : 0) +
+            rank(project.subtitle, 3) +
+            (descMatch ? 2.5 : 0) +
+            (categoryMatch ? 1.5 : 0) +
+            (tagMatch ? 1 : 0),
+          result: {
+            type: 'project',
+            title: project.title,
+            description: project.subtitle,
+            url: `#work`,
+            tags: project.tags,
+            category: project.category,
+          },
         });
       }
     });
@@ -239,15 +280,23 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       const bodyMatch = matches(articleBodies.get(entry.id) || '');
 
       if (titleMatch || descMatch || categoryMatch || bodyMatch) {
-        searchResults.push({
-          type: 'journal',
-          title: entry.title,
-          description: bodyMatch && !titleMatch && !descMatch && !categoryMatch
-            ? 'Mentioned in the article body'
-            : entry.subtitle,
-          url: `#journal/${entry.id}`,
-          category: entry.category,
-          date: entry.date,
+        scored.push({
+          score:
+            (titleMatch ? 6 : 0) +
+            (descMatch ? 3 : 0) +
+            (categoryMatch ? 1.5 : 0) +
+            (bodyMatch ? 1 : 0),
+          result: {
+            type: 'journal',
+            title: entry.title,
+            description:
+              bodyMatch && !titleMatch && !descMatch && !categoryMatch
+                ? 'Mentioned in the article body'
+                : entry.subtitle,
+            url: `#journal/${entry.id}`,
+            category: entry.category,
+            date: entry.date,
+          },
         });
       }
     });
@@ -261,41 +310,56 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
     techSkillsData.forEach((skill) => {
       if (bareLevel) return;
-      if (
-        matches(skill.name.toLowerCase()) ||
-        matches(skill.category.toLowerCase()) ||
-        matches(skill.description.toLowerCase()) ||
-        matches(skill.level.toLowerCase())
-      ) {
-        searchResults.push({
-          type: 'skill',
-          title: skill.name,
-          description: skill.description,
-          // techSkillsData is rendered by TechStackSection, not SkillsSection.
-          url: `#stack`,
-          category: skill.category,
-          tags: [skill.level],
+      const nameMatch = matches(skill.name.toLowerCase());
+      const categoryMatch = matches(skill.category.toLowerCase());
+      const descMatch = matches(skill.description.toLowerCase());
+      const levelMatch = matches(skill.level.toLowerCase());
+
+      if (nameMatch || categoryMatch || descMatch || levelMatch) {
+        scored.push({
+          score:
+            (nameMatch ? 6 : 0) +
+            (categoryMatch ? 2 : 0) +
+            (descMatch ? 1.5 : 0) +
+            (levelMatch ? 1 : 0),
+          result: {
+            type: 'skill',
+            title: skill.name,
+            description: skill.description,
+            // techSkillsData is rendered by TechStackSection, not SkillsSection.
+            url: `#stack`,
+            category: skill.category,
+            tags: [skill.level],
+          },
         });
       }
     });
 
     explorationItemsData.forEach((item) => {
-      if (
-        matches(item.title.toLowerCase()) ||
-        matches(item.description.toLowerCase()) ||
-        matches(item.category.toLowerCase())
-      ) {
-        searchResults.push({
-          type: 'exploration',
-          title: item.title,
-          description: item.description,
-          url: `#explorations`,
-          category: item.category,
+      const titleMatch = matches(item.title.toLowerCase());
+      const descMatch = matches(item.description.toLowerCase());
+      const categoryMatch = matches(item.category.toLowerCase());
+
+      if (titleMatch || descMatch || categoryMatch) {
+        scored.push({
+          score: (titleMatch ? 6 : 0) + (descMatch ? 2 : 0) + (categoryMatch ? 1.5 : 0),
+          result: {
+            type: 'exploration',
+            title: item.title,
+            description: item.description,
+            url: `#explorations`,
+            category: item.category,
+          },
         });
       }
     });
 
-    setResults(searchResults);
+    // Highest score first. Array.prototype.sort is stable, so equal scores keep
+    // their insertion order, which preserves the old type grouping as a
+    // tie-break.
+    scored.sort((a, b) => b.score - a.score);
+
+    setResults(scored.map(({ result }) => result));
     setSelectedIndex(0);
   }, [query, articleBodies, pref, toggle]);
 
