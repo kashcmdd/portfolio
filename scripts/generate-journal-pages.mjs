@@ -853,100 +853,193 @@ function indexPage(all, base) {
 // screenshot of a dark web page.
 const RESUME_CSS = `
   *, *::before, *::after { box-sizing: border-box; }
+
+  /* The pages preload these two files in <head>, so declaring them here is what
+     actually puts them to use rather than letting the preload go to waste. The
+     paths are relative to /resume/, which is the only page this sheet serves. */
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('../fonts/inter-normal-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Instrument Serif';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/instrument-serif-italic-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  :root { --accent: #89AACC; --line: rgba(255, 255, 255, .1); --muted: #9a9a9a; }
   body {
     margin: 0;
     background: #0a0a0a;
     color: #e5e5e5;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 15px;
-    line-height: 1.55;
+    line-height: 1.6;
+    background-image: radial-gradient(900px 520px at 82% -12%, rgba(137, 170, 204, .16), transparent 62%);
+    background-attachment: fixed;
   }
-  .wrap { max-width: 820px; margin: 0 auto; padding: 48px 24px 96px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px 96px; }
+
   .top {
     position: sticky; top: 0; z-index: 5;
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
-    padding: 14px 24px;
-    background: rgba(10, 10, 10, .9);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    padding: 12px 24px;
+    background: rgba(10, 10, 10, .82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
   }
-  .top a { color: #89AACC; text-decoration: none; font-weight: 600; }
+  .brand {
+    color: #fff; text-decoration: none; font-size: 20px;
+    font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+  }
+  .top-actions { display: flex; gap: 8px; }
   .print-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    border: 1px solid rgba(255, 255, 255, .14);
-    background: #141414; color: #e5e5e5;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, .03); color: #e5e5e5;
     border-radius: 999px; padding: 8px 16px;
-    font: inherit; font-size: 13px; cursor: pointer;
+    font: inherit; font-size: 13px; text-decoration: none; cursor: pointer;
+    transition: background .2s, border-color .2s;
   }
-  .print-btn:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .28); }
-  .print-btn:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
-  /* The .top a rule is more specific than .print-btn, so the download link
-     needs its own colour back or it renders as a plain accent text link. */
-  .top a.print-btn { color: #e5e5e5; font-weight: 500; }
+  .print-btn:hover { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .28); }
+  .print-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
   .note {
-    margin: 0 0 28px; padding: 12px 16px;
-    border: 1px solid rgba(137, 170, 204, .3);
-    border-radius: 12px; background: rgba(137, 170, 204, .07);
-    color: #b4c4d4; font-size: 13px;
+    margin: 0 0 24px; padding: 10px 14px;
+    border: 1px solid rgba(137, 170, 204, .25);
+    border-radius: 12px; background: rgba(137, 170, 204, .06);
+    color: #a9bccd; font-size: 12.5px;
   }
-  header.masthead { border-bottom: 2px solid rgba(255, 255, 255, .14); padding-bottom: 20px; margin-bottom: 28px; }
-  header.masthead h1 { margin: 0; font-size: 34px; letter-spacing: -.02em; color: #fff; }
-  header.masthead .role { margin: 4px 0 0; font-size: 17px; color: #89AACC; }
-  header.masthead .contact { margin: 12px 0 0; font-size: 13px; color: #a3a3a3; }
-  header.masthead .contact a { color: #89AACC; }
-  section { margin: 0 0 28px; break-inside: avoid; }
+
+  header.masthead {
+    display: flex; align-items: center; gap: 22px;
+    padding: 28px; margin-bottom: 30px;
+    border: 1px solid var(--line); border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .012));
+  }
+  .monogram {
+    width: 74px; height: 74px; flex: 0 0 74px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 22px; color: #0a0a0a;
+    font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+    font-size: 36px;
+    background: linear-gradient(135deg, #89AACC, #4E85BF);
+    box-shadow: 0 12px 30px rgba(137, 170, 204, .25);
+  }
+  header.masthead h1 {
+    margin: 0; color: #fff;
+    font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400;
+    font-size: 42px; line-height: 1.05; letter-spacing: -.01em;
+  }
+  header.masthead .role { margin: 6px 0 0; font-size: 16px; color: var(--accent); }
+  header.masthead .contact {
+    margin: 10px 0 0; font-size: 13px; color: var(--muted);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  }
+  header.masthead .contact a {
+    color: #dbe6f0; text-decoration: none;
+    border-bottom: 1px solid rgba(137, 170, 204, .4);
+  }
+  header.masthead .contact .sep { width: 4px; height: 4px; border-radius: 50%; background: #555; }
+
+  section { margin: 0 0 34px; }
   h2 {
-    margin: 0 0 12px; font-size: 12px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .16em; color: #89AACC;
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 0 16px; font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .18em; color: var(--accent);
   }
+  h2::before { content: ''; width: 22px; height: 1px; background: var(--accent); opacity: .7; }
   .bio { margin: 0; color: #c8c8c8; }
-  .skill-group { margin: 0 0 14px; break-inside: avoid; }
-  .skill-group h3 { margin: 0 0 6px; font-size: 13px; color: #d4d4d4; }
-  .skill-row { display: flex; flex-wrap: wrap; gap: 6px 8px; }
-  .skill {
-    display: inline-flex; align-items: baseline; gap: 5px;
-    border: 1px solid rgba(255, 255, 255, .12);
-    background: rgba(255, 255, 255, .04);
-    border-radius: 6px; padding: 2px 8px; font-size: 12px;
+
+  .skill-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .skill-group {
+    padding: 14px 16px; border: 1px solid var(--line); border-radius: 16px;
+    background: rgba(255, 255, 255, .022);
   }
-  .skill .lv { color: #737373; font-size: 11px; }
-  .skill[data-level="Expert"] { border-color: rgba(137, 170, 204, .55); }
-  .skill[data-level="Expert"] .lv { color: #89AACC; }
-  ol.projects { margin: 0; padding: 0; list-style: none; }
-  ol.projects li { margin: 0 0 14px; break-inside: avoid; }
-  ol.projects .p-title { font-weight: 600; color: #fff; }
-  ol.projects .p-sub { color: #a3a3a3; font-size: 13px; }
-  ol.projects .p-desc { margin: 4px 0 0; color: #c8c8c8; font-size: 13.5px; }
-  ol.projects .p-tags { margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  ol.projects .p-tag {
+  .skill-group h3 { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: #fff; }
+  .skill-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .skill {
+    display: inline-flex; align-items: baseline; gap: 6px;
+    border: 1px solid var(--line); background: rgba(255, 255, 255, .03);
+    border-radius: 999px; padding: 3px 11px; font-size: 12.5px; color: #e5e5e5;
+  }
+  .skill .lv { color: #8a8a8a; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; }
+  .skill[data-level="Expert"] { border-color: rgba(137, 170, 204, .5); background: rgba(137, 170, 204, .08); }
+  .skill[data-level="Expert"] .lv { color: var(--accent); }
+
+  .project-grid { display: grid; gap: 14px; }
+  .project {
+    padding: 18px 20px; border: 1px solid var(--line); border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .012));
+  }
+  .project-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .project-head h3 { margin: 0; font-size: 17px; color: #fff; }
+  .p-cat {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent);
+    border: 1px solid rgba(137, 170, 204, .3); border-radius: 999px; padding: 2px 9px;
+  }
+  .p-desc { margin: 8px 0 0; color: #c8c8c8; font-size: 14px; }
+  .p-tags { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .p-tag {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 11px; color: #b4b4b4;
-    border: 1px solid rgba(255, 255, 255, .1);
-    border-radius: 4px; padding: 1px 6px;
+    border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px;
   }
-  ol.projects .p-links { margin: 6px 0 0; display: flex; gap: 14px; font-size: 12.5px; }
-  ol.projects .p-links a { color: #89AACC; text-decoration: none; }
+  .p-links { margin: 12px 0 0; display: flex; gap: 16px; font-size: 12.5px; }
+  .p-links a { color: var(--accent); text-decoration: none; }
+  .p-links a:hover { text-decoration: underline; }
+
   footer.end {
-    margin-top: 40px; padding-top: 16px;
-    border-top: 1px solid rgba(255, 255, 255, .1);
-    color: #737373; font-size: 12px;
+    margin-top: 44px; padding-top: 18px;
+    border-top: 1px solid var(--line); color: #737373; font-size: 12px;
   }
+  footer.end a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .skill-grid { grid-template-columns: 1fr; }
+    header.masthead { flex-direction: column; align-items: flex-start; }
+    header.masthead h1 { font-size: 34px; }
+  }
+
   @page { margin: 14mm; }
   @media print {
-    body { background: #fff; color: #111; font-size: 10.5pt; line-height: 1.4; }
+    body { background: #fff; color: #111; font-size: 10.5pt; line-height: 1.4; background-image: none; }
     .top, .note, .no-print { display: none !important; }
     .wrap { max-width: none; padding: 0; }
-    header.masthead h1 { color: #000; font-size: 20pt; }
+    header.masthead {
+      display: block; padding: 0 0 12px; margin-bottom: 16px; border: none;
+      border-bottom: 2px solid #bbb; border-radius: 0; background: none;
+    }
+    .monogram { display: none; }
+    header.masthead h1 { color: #000; font-size: 22pt; }
     header.masthead .role { color: #24506e; }
     header.masthead .contact { color: #444; }
-    header.masthead .contact a, h2, .skill .lv { color: #24506e; }
-    .bio, ol.projects .p-desc { color: #222; }
-    h2 { border-bottom: 1px solid #bbb; padding-bottom: 3px; }
-    .skill { border-color: #ccc; background: none; color: #111; }
+    header.masthead .contact a { color: #24506e; border-bottom: none; }
+    header.masthead .contact .sep { background: #999; }
+    .bio { color: #222; }
+    h2 { color: #24506e; border-bottom: 1px solid #bbb; padding-bottom: 4px; }
+    h2::before { display: none; }
+    .skill-grid, .project-grid { display: block; }
+    .skill-group, .project {
+      border: none; background: none; padding: 0; margin: 0 0 10pt; break-inside: avoid;
+    }
+    .skill-group h3, .project-head h3 { color: #000; }
+    .skill { border-color: #ccc; background: none; color: #111; border-radius: 4px; }
     .skill .lv { color: #555; }
-    ol.projects .p-title { color: #000; }
-    ol.projects .p-sub, .p-tag { color: #333; border-color: #ccc; }
-    ol.projects .p-links a { color: #24506e; }
+    .skill[data-level="Expert"] { background: none; border-color: #24506e; }
+    .skill[data-level="Expert"] .lv { color: #24506e; }
+    .p-cat { border-color: #999; color: #333; }
+    .p-desc { color: #222; }
+    .p-tag { color: #333; border-color: #ccc; }
+    .p-links a { color: #24506e; }
     footer.end { color: #666; border-top-color: #ccc; }
     a { text-decoration: none; }
     section { margin-bottom: 14pt; }
@@ -960,6 +1053,7 @@ function resumePage({ skills, projects, details }, base) {
     items: skills.filter((s) => s.category === category),
   }));
   const levelRank = { Expert: 0, Advanced: 1, Proficient: 2 };
+  const monogram = esc(details.name.charAt(0).toUpperCase());
 
   return `<!doctype html>
 <html lang="en">
@@ -976,30 +1070,36 @@ function resumePage({ skills, projects, details }, base) {
   </head>
   <body>
     <div class="top">
-      <a href="../">&larr; Portfolio</a>
-      <a class="print-btn no-print" href="../KashhCMD-Resume.pdf" download>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download PDF
-      </a>
-      <button class="print-btn no-print" type="button" id="save-pdf">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Print / Save as PDF
-      </button>
+      <a class="brand" href="../">KashhCMD</a>
+      <div class="top-actions">
+        <a class="print-btn no-print" href="../KashhCMD-Resume.pdf" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+        <button class="print-btn no-print" type="button" id="save-pdf">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </button>
+      </div>
     </div>
     <div class="wrap">
       <p class="note no-print">
         This resume is generated from the portfolio data, so it lists skills and
-        projects only — there is no employment history to show. The download is
-        a plain PDF built at the same time as this page; the print button stays
-        as a fallback if you would rather choose the destination yourself.
+        projects only — there is no employment history to show. Download the PDF,
+        or print this page if you would rather choose the destination yourself.
       </p>
 
       <header class="masthead">
-        <h1>${esc(details.name)}</h1>
-        <p class="role">${esc(details.title)}</p>
-        <p class="contact">
-          <a href="${esc(details.githubUrl)}">github.com/${esc(details.githubHandle)}</a>
-        </p>
+        <div class="monogram" aria-hidden="true">${monogram}</div>
+        <div>
+          <h1>${esc(details.name)}</h1>
+          <p class="role">${esc(details.title)}</p>
+          <p class="contact">
+            <a href="${esc(details.githubUrl)}">github.com/${esc(details.githubHandle)}</a>
+            <span class="sep" aria-hidden="true"></span>
+            <span>Discord bots &amp; web apps, built end to end</span>
+          </p>
+        </div>
       </header>
 
       <section>
@@ -1014,36 +1114,40 @@ function resumePage({ skills, projects, details }, base) {
 
       <section>
         <h2>Skills</h2>
-        ${skillGroups
-          .map(
-            (group) => `<div class="skill-group">
-          <h3>${esc(group.category)}</h3>
-          <div class="skill-row">
-            ${group.items
-              .slice()
-              .sort((a, b) => (levelRank[a.level] ?? 9) - (levelRank[b.level] ?? 9))
-              .map(
-                (skill) =>
-                  `<span class="skill" data-level="${esc(skill.level)}">${esc(
-                    skill.name
-                  )}<span class="lv">${esc(skill.level)}</span></span>`
-              )
-              .join('\n            ')}
-          </div>
-        </div>`
-          )
-          .join('\n        ')}
+        <div class="skill-grid">
+          ${skillGroups
+            .map(
+              (group) => `<div class="skill-group">
+            <h3>${esc(group.category)}</h3>
+            <div class="skill-row">
+              ${group.items
+                .slice()
+                .sort((a, b) => (levelRank[a.level] ?? 9) - (levelRank[b.level] ?? 9))
+                .map(
+                  (skill) =>
+                    `<span class="skill" data-level="${esc(skill.level)}">${esc(
+                      skill.name
+                    )}<span class="lv">${esc(skill.level)}</span></span>`
+                )
+                .join('\n              ')}
+            </div>
+          </div>`
+            )
+            .join('\n          ')}
+        </div>
       </section>
 
       <section>
-        <h2>Selected projects</h2>
-        <ol class="projects">
+        <h2>Selected Projects</h2>
+        <div class="project-grid">
           ${projects
             .map(
-              (project) => `<li>
-            <div class="p-title">${esc(project.title)}</div>
-            <div class="p-sub">${esc(project.category)}</div>
-            <p class="p-desc">${esc(project.subtitle)}</p>
+              (project) => `<article class="project">
+            <div class="project-head">
+              <h3>${esc(project.title)}</h3>
+              <span class="p-cat">${esc(project.category)}</span>
+            </div>
+            <p class="p-desc">${esc(project.outcome || project.subtitle)}</p>
             <div class="p-tags">${project.tags
               .map((tag) => `<span class="p-tag">${esc(tag)}</span>`)
               .join('')}</div>
@@ -1051,10 +1155,10 @@ function resumePage({ skills, projects, details }, base) {
               ${project.githubUrl ? `<a href="${esc(project.githubUrl)}">Source</a>` : ''}
               ${project.liveUrl ? `<a href="${esc(project.liveUrl)}">Live</a>` : ''}
             </div>
-          </li>`
+          </article>`
             )
             .join('\n          ')}
-        </ol>
+        </div>
       </section>
 
       <footer class="end">
