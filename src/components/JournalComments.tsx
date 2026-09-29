@@ -143,7 +143,7 @@ export const JournalComments: React.FC<JournalCommentsProps> = ({ entryId }) => 
             </p>
           </div>
         ) : (
-          comments
+          [...comments]
             .sort((a, b) => b.timestamp - a.timestamp)
             .map((comment) => (
               <div

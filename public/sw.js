@@ -1,6 +1,10 @@
-const CACHE_NAME = 'kashcmd-portfolio-dev-v1';
-const STATIC_CACHE = 'kashcmd-static-dev-v1';
-const DYNAMIC_CACHE = 'kashcmd-dynamic-dev-v1';
+// The build hash is substituted by scripts/copy-sw.mjs. A new build therefore
+// installs a worker with new cache names, and the activate step below clears
+// the old ones instead of serving last deploy's HTML, CSS and JS forever.
+const BUILD = '__BUILD_VERSION__';
+const CACHE_NAME = `kashcmd-portfolio-dev-${BUILD}`;
+const STATIC_CACHE = `kashcmd-static-dev-${BUILD}`;
+const DYNAMIC_CACHE = `kashcmd-dynamic-dev-${BUILD}`;
 
 // The worker is served from the Vite base, so its own location is the source of
 // truth for it. Deriving the prefix here keeps the site working on any base
@@ -129,13 +133,13 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       }).catch(() => {
-        // Return a fallback for images
-        if (request.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
-          return new Response('Image unavailable offline', {
-            status: 503,
-            statusText: 'Service Unavailable'
-          });
-        }
+        // respondWith(undefined) throws, so a cache miss offline has to resolve
+        // to a real Response whatever the asset type, not only for images.
+        const isImage = request.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
+        return new Response(isImage ? 'Image unavailable offline' : 'Unavailable offline', {
+          status: 503,
+          statusText: 'Service Unavailable'
+        });
       });
     })
   );

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
 import { CinematicVideoBackground, VIDEO_SOURCES } from './CinematicVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
 import { ArrowUpRight, Eye } from 'lucide-react';
@@ -27,29 +26,54 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     return () => clearInterval(interval);
   }, []);
 
+  // GSAP is a large dependency for one intro timeline, so it is imported after
+  // mount instead of shipped in the first bundle; the reveal starts the moment
+  // the chunk resolves. The context is kept so it can be reverted on unmount.
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    let cancelled = false;
+    let ctx: { revert: () => void } | undefined;
 
-      tl.to('.name-reveal', {
-        opacity: 1,
-        y: 0,
-        duration: 1.0,
-        delay: 0.1,
-      }).to(
-        '.blur-in',
-        {
-          opacity: 1,
-          filter: 'blur(0px)',
-          y: 0,
-          duration: 0.8,
-          stagger: 0.1,
-        },
-        '-=0.6'
-      );
-    }, heroRef);
+    void import('gsap')
+      .then(({ gsap }) => {
+        if (cancelled) return;
+        ctx = gsap.context(() => {
+          const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    return () => ctx.revert();
+          tl.to('.name-reveal', {
+            opacity: 1,
+            y: 0,
+            duration: 1.0,
+            delay: 0.1,
+          }).to(
+            '.blur-in',
+            {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 0.8,
+              stagger: 0.1,
+            },
+            '-=0.6'
+          );
+        }, heroRef);
+      })
+      .catch(() => {
+        // The copy starts hidden and GSAP reveals it, so if the chunk cannot
+        // load the hero has to be made visible by hand rather than left blank.
+        if (cancelled || !heroRef.current) return;
+        heroRef.current
+          .querySelectorAll<HTMLElement>('.name-reveal, .blur-in')
+          .forEach((el) => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+            el.style.filter = 'none';
+          });
+      });
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, []);
 
   const handleSelectVideo = (index: number) => {

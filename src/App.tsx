@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { LoadingScreen } from './components/LoadingScreen';
 import { Navbar } from './components/Navbar';
@@ -6,22 +6,36 @@ import { HeroSection } from './components/HeroSection';
 import { AboutSection } from './components/AboutSection';
 import { SkillsSection } from './components/SkillsSection';
 import { SelectedWorksSection } from './components/SelectedWorksSection';
-import { ProjectModal } from './components/ProjectModal';
 import { TechStackSection } from './components/TechStackSection';
 import { JournalSection } from './components/JournalSection';
-import { JournalModal } from './components/JournalModal';
 import { NowBuildingStrip } from './components/NowBuildingStrip';
 import { ExplorationsSection } from './components/ExplorationsSection';
 import { StatsSection } from './components/StatsSection';
 import { ContactFooter } from './components/ContactFooter';
-import { ContactModal } from './components/ContactModal';
-import { SearchModal } from './components/SearchModal';
-import { ShortcutsModal } from './components/ShortcutsModal';
 import { Analytics } from './components/Analytics';
 import { AnalyticsConsent } from './components/AnalyticsConsent';
 import { Project, JournalEntry } from './types';
 import { journalEntriesData } from './data/portfolioData';
 import NotFoundView from './components/NotFoundView';
+
+// Every dialog only ever opens on an interaction, so none of them belongs in
+// the first paint. They are split out and pulled in on idle (see the prefetch
+// effect), which keeps the initial bundle to the sections a visitor can see.
+const ProjectModal = lazy(() =>
+  import('./components/ProjectModal').then((m) => ({ default: m.ProjectModal }))
+);
+const JournalModal = lazy(() =>
+  import('./components/JournalModal').then((m) => ({ default: m.JournalModal }))
+);
+const ContactModal = lazy(() =>
+  import('./components/ContactModal').then((m) => ({ default: m.ContactModal }))
+);
+const SearchModal = lazy(() =>
+  import('./components/SearchModal').then((m) => ({ default: m.SearchModal }))
+);
+const ShortcutsModal = lazy(() =>
+  import('./components/ShortcutsModal').then((m) => ({ default: m.ShortcutsModal }))
+);
 
 const entryIdFromHash = (): string | null => {
   const match = window.location.hash.match(/^#journal\/([a-z0-9-]+)$/);
@@ -62,6 +76,44 @@ export default function App() {
   // modal can go back instead of leaving a stale entry in the history stack.
   const pushedJournalHash = useRef(false);
 
+  // Stable so the loading screen's counter effect cannot be restarted by a
+  // re-render passing a fresh callback identity mid-count.
+  const finishLoading = useCallback(() => setIsLoading(false), []);
+
+  // The overlay covers the page, so the page behind it must not scroll while
+  // the intro is up.
+  useEffect(() => {
+    if (!isLoading) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isLoading]);
+
+  // Warm the lazy dialogs once the page is interactive, so the first open is
+  // instant without any of that code weighing down the first paint.
+  useEffect(() => {
+    if (isLoading || unknownRoute) return;
+    const warm = () => {
+      void import('./components/SearchModal');
+      void import('./components/JournalModal');
+      void import('./components/ProjectModal');
+      void import('./components/ContactModal');
+      void import('./components/ShortcutsModal');
+    };
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (idleWindow.requestIdleCallback) {
+      const id = idleWindow.requestIdleCallback(warm, { timeout: 3000 });
+      return () => idleWindow.cancelIdleCallback?.(id);
+    }
+    const timeout = window.setTimeout(warm, 1500);
+    return () => window.clearTimeout(timeout);
+  }, [isLoading, unknownRoute]);
+
   // Deep link on first load: #journal/<id> opens the post once the app is up.
   useEffect(() => {
     if (isLoading) return;
@@ -100,30 +152,47 @@ export default function App() {
     setSelectedJournal(null);
   };
 
-  // Active section tracking on scroll
+  // Active section tracking on scroll. The offsets are measured once (and on
+  // resize) rather than read back from the DOM on every event, and the handler
+  // is coalesced into a frame so a fast scroll cannot queue a layout read per
+  // pixel. Both were the difference between a smooth and a janky scroll on a
+  // page this long.
   useEffect(() => {
     if (isLoading) return;
 
     const sectionIds = ['hero', 'about', 'skills', 'work', 'stack', 'journal', 'explorations', 'contact'];
 
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+    let bounds: { id: string; top: number; bottom: number }[] = [];
+    const measure = () => {
+      bounds = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => Boolean(el))
+        .map((el) => ({ id: el.id, top: el.offsetTop, bottom: el.offsetTop + el.offsetHeight }));
+    };
+    measure();
 
-      for (const id of sectionIds) {
-        const element = document.getElementById(id);
-        if (element) {
-          const top = element.offsetTop;
-          const height = element.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(id);
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY + 200;
+        for (const section of bounds) {
+          if (y >= section.top && y < section.bottom) {
+            setActiveSection(section.id);
             break;
           }
         }
-      }
+        ticking = false;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', measure);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', measure);
+    };
   }, [isLoading]);
 
   // Keyboard shortcuts for search: Cmd/Ctrl+K, and "/" the way a code editor
@@ -187,14 +256,14 @@ export default function App() {
       {/* Analytics Consent Banner */}
       <AnalyticsConsent />
 
-      {/* 1. Loading Screen */}
+      {/* 1. Loading Screen. The page renders underneath it, so fonts, the hero
+          video and the first images are already in flight while the intro
+          plays, instead of starting only once it finishes. */}
       <AnimatePresence mode="wait">
-        {isLoading && (
-          <LoadingScreen onComplete={() => setIsLoading(false)} />
-        )}
+        {isLoading && <LoadingScreen onComplete={finishLoading} />}
       </AnimatePresence>
 
-      {!isLoading && !unknownRoute && (
+      {!unknownRoute && (
         <>
           {/* First tab stop on the page. A keyboard user would otherwise have to
               Tab through the whole navigation to reach the content, which on a
@@ -257,37 +326,58 @@ export default function App() {
             onNavigateTop={() => handleNavigate('hero')}
           />
 
-          {/* Modals */}
-          <ProjectModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-          />
+          {/* Modals. Each is lazy and only mounted while it has something to
+              show, so a closed dialog costs nothing after its chunk is warmed. */}
+          {selectedProject && (
+            <Suspense fallback={null}>
+              <ProjectModal
+                project={selectedProject}
+                onClose={() => setSelectedProject(null)}
+              />
+            </Suspense>
+          )}
 
-          <JournalModal
-          entry={selectedJournal}
-          onClose={closeJournal}
-          onSelectEntry={openJournal}
-          />
+          {selectedJournal && (
+            <Suspense fallback={null}>
+              <JournalModal
+                entry={selectedJournal}
+                onClose={closeJournal}
+                onSelectEntry={openJournal}
+              />
+            </Suspense>
+          )}
 
-          <ContactModal
-            isOpen={contactModalOpen}
-            onClose={() => setContactModalOpen(false)}
-          />
+          {contactModalOpen && (
+            <Suspense fallback={null}>
+              <ContactModal
+                isOpen
+                onClose={() => setContactModalOpen(false)}
+              />
+            </Suspense>
+          )}
 
-          <SearchModal
-            isOpen={searchModalOpen}
-            onClose={() => setSearchModalOpen(false)}
-            onShowShortcuts={() => setShortcutsModalOpen(true)}
-          />
+          {searchModalOpen && (
+            <Suspense fallback={null}>
+              <SearchModal
+                isOpen
+                onClose={() => setSearchModalOpen(false)}
+                onShowShortcuts={() => setShortcutsModalOpen(true)}
+              />
+            </Suspense>
+          )}
 
-          <ShortcutsModal
-            isOpen={shortcutsModalOpen}
-            onClose={() => setShortcutsModalOpen(false)}
-          />
+          {shortcutsModalOpen && (
+            <Suspense fallback={null}>
+              <ShortcutsModal
+                isOpen
+                onClose={() => setShortcutsModalOpen(false)}
+              />
+            </Suspense>
+          )}
         </>
       )}
 
-      {!isLoading && unknownRoute && <NotFoundView />}
+      {unknownRoute && <NotFoundView />}
     </div>
   );
 }

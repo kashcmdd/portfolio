@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
 import { ArrowUpRight, MessageSquare, BookOpen, FileDown, FileText, LayoutGrid } from 'lucide-react';
@@ -16,19 +15,46 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
 }) => {
   const marqueeRef = useRef<HTMLDivElement | null>(null);
 
-  // Marquee animation with GSAP
+  // The marquee is below the fold, so GSAP is not imported until the footer is
+  // near the viewport. A visitor who never scrolls this far never downloads it,
+  // and one who does gets the animation as the footer slides in.
   useEffect(() => {
-    if (!marqueeRef.current) return;
-    const ctx = gsap.context(() => {
-      gsap.to('.marquee-inner', {
-        xPercent: -50,
-        repeat: -1,
-        duration: 25,
-        ease: 'none',
-      });
-    }, marqueeRef);
+    const target = marqueeRef.current;
+    if (!target) return;
 
-    return () => ctx.revert();
+    let cancelled = false;
+    let ctx: { revert: () => void } | undefined;
+
+    const start = () => {
+      void import('gsap').then(({ gsap }) => {
+        if (cancelled) return;
+        ctx = gsap.context(() => {
+          gsap.to('.marquee-inner', {
+            xPercent: -50,
+            repeat: -1,
+            duration: 25,
+            ease: 'none',
+          });
+        }, target);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          observer.disconnect();
+          start();
+        }
+      },
+      { rootMargin: '300px' }
+    );
+    observer.observe(target);
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      ctx?.revert();
+    };
   }, []);
 
   return (

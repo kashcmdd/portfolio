@@ -84,13 +84,23 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
     });
   }, [activeIndex, handleVideoError]);
 
+  // Only the active clip and the one after it are given a source. Four <video>
+  // elements all pointing at remote files meant four requests on first paint for
+  // one visible background; the other two now wait until they are about to be
+  // shown. The next clip still preloads so the cross-fade stays smooth.
+  const nextIndex = (activeIndex + 1) % VIDEO_SOURCES.length;
+
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0 bg-[#0a0a0a]">
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0 bg-[#0a0a0a]"
+    >
       <div className="absolute inset-0 bg-gradient-to-br from-[#121820] via-[#0a0a0a] to-[#0f141c] z-0" />
 
       {VIDEO_SOURCES.map((item, index) => {
         const isActive = activeIndex === index;
         const hasError = videoErrors.has(index);
+        const isNext = index === nextIndex;
         
         return (
           <video
@@ -98,7 +108,7 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
             ref={(el) => {
               videoRefs.current[index] = el;
             }}
-            src={item.url}
+            src={isActive || isNext ? item.url : undefined}
             autoPlay={isActive && !hasError}
             muted
             loop

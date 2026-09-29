@@ -8,7 +8,8 @@
  * the service worker is allowed to control, so a stale /portfolio/ value sends
  * the dev install straight to production.
  */
-import { readFile, writeFile, access } from 'node:fs/promises';
+import { readFile, writeFile, access, readdir } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveConfig } from 'vite';
@@ -56,12 +57,25 @@ if (scoped.start_url !== base || scoped.scope !== base) {
 await writeFile(manifestPath, `${JSON.stringify(scoped, null, 2)}\n`, 'utf8');
 console.log(`  manifest.json  start_url + scope -> ${base}`);
 
-// sw.js derives its prefix from its own location at runtime, so it is a plain
-// copy and needs no rewriting.
+// sw.js derives its prefix from its own location at runtime, so its paths need
+// no rewriting — but its cache names do need a build id. The hash is taken over
+// the content-hashed asset filenames plus index.html, so it changes whenever the
+// bundle does and the worker's activate step clears the previous caches.
 const swSource = path.join(root, 'public', 'sw.js');
 if (await exists(swSource)) {
-  await writeFile(path.join(distDir, 'sw.js'), await readFile(swSource));
-  console.log('  sw.js          base derived from scope at runtime');
+  const assetNames = (await readdir(path.join(distDir, 'assets'))).sort().join(',');
+  const indexHtml = await readFile(path.join(distDir, 'index.html'));
+  const buildVersion = createHash('sha256')
+    .update(assetNames)
+    .update(indexHtml)
+    .digest('hex')
+    .slice(0, 10);
+  const swContents = (await readFile(swSource, 'utf8')).replaceAll(
+    '__BUILD_VERSION__',
+    buildVersion
+  );
+  await writeFile(path.join(distDir, 'sw.js'), swContents);
+  console.log(`  sw.js          cache version ${buildVersion}`);
 } else {
   console.warn('  sw.js          not found in public/');
 }
