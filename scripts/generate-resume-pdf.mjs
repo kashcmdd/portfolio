@@ -7,10 +7,11 @@
  *
  * There is no PDF library here on purpose. Helvetica is one of the fourteen
  * base fonts every reader ships, so a resume needs no embedded font data, and
- * the layout is a single column of text — no images, no tables, no vector art.
- * That is small enough to write by hand and keeps the build dependency-free.
- * The document is plain ASCII: content is transliterated rather than relying on
- * a Unicode encoding the base fonts do not carry.
+ * the layout is a small column of text — no images, no tables, no vector art.
+ * An accent header, rules under each section and a two-column skills block are
+ * all drawn with the handful of operators the format has always had. The
+ * document is plain ASCII: content is transliterated rather than relying on a
+ * Unicode encoding the base fonts do not carry.
  */
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -31,6 +32,7 @@ const ascii = (value) =>
     .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
     .replace(/[\u201C\u201D\u201E]/g, '"')
     .replace(/\u2014|\u2013|\u2012/g, '-')
+    .replace(/\u2022/g, '-')
     .replace(/\u2026/g, '...')
     .replace(/\u00B7/g, '-')
     .replace(/[^\x20-\x7E]/g, '');
@@ -38,9 +40,8 @@ const ascii = (value) =>
 const pdfString = (value) =>
   ascii(value).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
 
-// Greedy wrap. Text is monospaced only in the sense that we estimate width:
-// Helvetica averages a little under half an em per character, so maxChars is
-// chosen conservatively against the 504pt text column.
+// Greedy wrap. Helvetica averages a little under half an em per character, so
+// maxChars is chosen conservatively against the point width of the column.
 const wrap = (value, maxChars) => {
   const words = ascii(value).split(/\s+/).filter(Boolean);
   const lines = [];
@@ -58,105 +59,203 @@ const wrap = (value, maxChars) => {
   return lines.length ? lines : [''];
 };
 
-// ---- page model -----------------------------------------------------------
+// Rough Helvetica advance width, used only to centre the short footer string.
+const textWidth = (value, size) => ascii(value).length * size * 0.5;
 
-const ACCENT = [0.537, 0.667, 0.8];
+// ---- palette and geometry -------------------------------------------------
+
+const ACCENT = [0.145, 0.353, 0.533];
 const INK = [0.09, 0.09, 0.09];
 const MUTED = [0.42, 0.42, 0.42];
+const RULE = [0.82, 0.82, 0.82];
+
+const PAGE_WIDTH = 612;
+const PAGE_HEIGHT = 792;
+const MARGIN = 54;
+const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
+const TOP = PAGE_HEIGHT - MARGIN;
+const BOTTOM = 60;
+const LEADING = 14;
+const SKILLS_RIGHT_X = MARGIN + 104;
+const SKILLS_CHARS = 72;
 
 const FONTS = { regular: 'F1', bold: 'F2', italic: 'F3' };
 
-// Each entry is one baseline. `gap` adds blank baselines before it, which is how
-// section spacing works now that every line shares one leading.
-const line = (text, { font = 'regular', size = 10, color = INK, gap = 0 } = {}) => ({
-  text,
-  font,
-  size,
-  color,
-  gap,
-});
+// ---- document writer ------------------------------------------------------
 
-const buildLines = ({ details, skills, projects }) => {
-  const out = [];
+// A page is a list of drawing operations in absolute page coordinates. The
+// writer owns a single descending cursor; anything that needs two things side
+// by side computes its own x and shares the cursor's y.
+class Resume {
+  constructor() {
+    this.pages = [];
+    this.startPage();
+  }
 
-  out.push(line(details.name, { font: 'bold', size: 22 }));
-  out.push(line(details.title, { size: 12, color: MUTED, gap: 0 }));
-  out.push(line(`github.com/${details.githubHandle}`, { size: 10, color: MUTED }));
+  startPage() {
+    this.items = [];
+    this.pages.push(this.items);
+    this.y = TOP;
+  }
 
-  out.push(line('SUMMARY', { font: 'bold', size: 11, color: ACCENT, gap: 3 }));
-  wrap(details.bio, 96).forEach((text) => out.push(line(text)));
+  newPage() {
+    this.startPage();
+  }
 
-  out.push(line('APPROACH', { font: 'bold', size: 11, color: ACCENT, gap: 3 }));
-  wrap(details.philosophy, 96).forEach((text) => out.push(line(text)));
+  ensure(space) {
+    if (this.y - space < BOTTOM) this.newPage();
+  }
 
-  out.push(line('SKILLS', { font: 'bold', size: 11, color: ACCENT, gap: 3 }));
+  text(value, { x = MARGIN, size = 10, font = 'regular', color = INK } = {}) {
+    this.items.push({ type: 'text', x, y: this.y, size, font, color, text: value });
+  }
+
+  rule({ x = MARGIN, width = CONTENT_WIDTH, thickness = 0.7, color = RULE } = {}) {
+    this.items.push({ type: 'rule', x, y: this.y, width, thickness, color });
+  }
+
+  space(amount) {
+    this.y -= amount;
+  }
+
+  // A paragraph breaks across pages rather than overflowing the bottom margin.
+  paragraph(value, { maxChars = 96, size = 10, font = 'regular', color = INK } = {}) {
+    for (const lineText of wrap(value, maxChars)) {
+      if (this.y - LEADING < BOTTOM) this.newPage();
+      this.text(lineText, { size, font, color });
+      this.space(LEADING);
+    }
+  }
+
+  heading(value) {
+    this.ensure(46);
+    this.space(12);
+    this.text(ascii(value).toUpperCase(), { size: 10.5, font: 'bold', color: ACCENT });
+    this.space(14);
+    this.rule({ y: this.y + 3, thickness: 0.7 });
+    this.space(8);
+  }
+
+  // Two columns a row at a time, so a long skill list stays beside its category
+  // instead of doubling the block's height.
+  skillRow(category, items) {
+    const rightLines = wrap(items, SKILLS_CHARS);
+    const height = Math.max(1, rightLines.length) * LEADING;
+    this.ensure(height + 4);
+    const startY = this.y;
+    this.text(category, { x: MARGIN, y: startY, size: 10, font: 'bold' });
+    rightLines.forEach((lineText, index) => {
+      this.text(lineText, { x: SKILLS_RIGHT_X, y: startY - index * LEADING, size: 10 });
+    });
+    this.space(height + 2);
+  }
+}
+
+const rgb = ([r, g, b]) => `${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} rg`;
+
+const contentStream = (items) => {
+  const parts = [];
+  for (const item of items) {
+    if (item.type === 'rule') {
+      parts.push(rgb(item.color));
+      parts.push(`${item.x} ${item.y} ${item.width} ${item.thickness} re f`);
+    } else {
+      parts.push(rgb(item.color));
+      parts.push('BT');
+      parts.push(`/${item.font} ${item.size} Tf`);
+      parts.push(`1 0 0 1 ${item.x} ${item.y} Tm`);
+      parts.push(`(${pdfString(item.text)}) Tj`);
+      parts.push('ET');
+    }
+  }
+  return parts.join('\n');
+};
+
+// ---- document content -----------------------------------------------------
+
+const buildResume = ({ details, skills, projects }) => {
+  const doc = new Resume();
+
+  doc.text(details.name, { size: 25, font: 'bold' });
+  doc.space(27);
+  doc.text(details.title, { size: 12.5, color: ACCENT });
+  doc.space(15);
+  doc.text(`github.com/${details.githubHandle}  |  ${SITE_ORIGIN}/`, {
+    size: 9.5,
+    color: MUTED,
+  });
+  doc.space(10);
+  doc.rule({ y: doc.y, thickness: 1.6, color: ACCENT });
+  doc.space(6);
+
+  doc.heading('Summary');
+  doc.paragraph(details.bio);
+
+  doc.heading('Approach');
+  doc.paragraph(details.philosophy);
+
+  doc.heading('Skills');
   const categories = Array.from(new Set(skills.map((skill) => skill.category)));
   for (const category of categories) {
     const items = skills
       .filter((skill) => skill.category === category)
       .map((skill) => `${skill.name} (${skill.level})`)
       .join('  |  ');
-    out.push(line(category, { font: 'bold', size: 10, gap: 1 }));
-    wrap(items, 96).forEach((text) => out.push(line(text, { size: 10 })));
+    doc.skillRow(category, items);
   }
 
-  out.push(line('SELECTED PROJECTS', { font: 'bold', size: 11, color: ACCENT, gap: 3 }));
-  for (const project of projects) {
-    out.push(line(`${project.title} - ${project.category}`, { font: 'bold', size: 11, gap: 2 }));
-    if (project.outcome) {
-      wrap(project.outcome, 96).forEach((text) => out.push(line(text, { font: 'italic' })));
-    } else {
-      wrap(project.subtitle, 96).forEach((text) => out.push(line(text, { font: 'italic' })));
-    }
-    wrap(project.tags.join(' · '), 100).forEach((text) =>
-      out.push(line(text, { size: 9, color: MUTED }))
-    );
+  doc.heading('Selected Projects');
+  projects.forEach((project, index) => {
+    if (index > 0) doc.space(4);
+    // Measure the whole entry before drawing it, so a page break lands between
+    // projects instead of halfway through one.
+    const outcomeLines = wrap(project.outcome || project.subtitle, 96).length;
+    const tagLines = wrap(project.tags.join('  |  '), 100).length;
+    const linkLines = project.githubUrl || project.liveUrl ? 1 : 0;
+    doc.ensure(14 + (outcomeLines + tagLines + linkLines) * LEADING);
+
+    doc.text(`${project.title}  -  ${project.category}`, { size: 11, font: 'bold' });
+    doc.space(14);
+    doc.paragraph(project.outcome || project.subtitle, {
+      maxChars: 96,
+      font: 'italic',
+      color: [0.28, 0.28, 0.28],
+    });
+    doc.paragraph(project.tags.join('  |  '), { maxChars: 100, size: 9, color: MUTED });
     const links = [project.githubUrl, project.liveUrl].filter(Boolean).map(ascii);
-    if (links.length) out.push(line(links.join('   '), { size: 9, color: ACCENT }));
-  }
+    if (links.length) doc.paragraph(links.join('    '), { size: 9, color: ACCENT });
+  });
 
-  out.push(
-    line(`Generated from ${SITE_ORIGIN}/`, { size: 8.5, color: MUTED, gap: 3 })
-  );
+  // Footer on every page, drawn last so it never competes with content.
+  doc.pages.forEach((items, index) => {
+    items.push({ type: 'rule', x: MARGIN, y: 46, width: CONTENT_WIDTH, thickness: 0.5, color: RULE });
+    items.push({
+      type: 'text',
+      x: MARGIN,
+      y: 34,
+      size: 8,
+      font: 'regular',
+      color: MUTED,
+      text: `${details.name} - ${details.title}`,
+    });
+    const label = `Page ${index + 1} of ${doc.pages.length}`;
+    items.push({
+      type: 'text',
+      x: PAGE_WIDTH - MARGIN - textWidth(label, 8),
+      y: 34,
+      size: 8,
+      font: 'regular',
+      color: MUTED,
+      text: label,
+    });
+  });
 
-  return out;
+  return doc.pages;
 };
 
-// ---- PDF writer -----------------------------------------------------------
+// ---- PDF file assembly ----------------------------------------------------
 
-const PAGE_WIDTH = 612;
-const PAGE_HEIGHT = 792;
-const MARGIN = 54;
-const LEADING = 14;
-const TOP = PAGE_HEIGHT - MARGIN;
-const LINES_PER_PAGE = 46;
-
-const rgb = ([r, g, b]) =>
-  `${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} rg`;
-
-const contentStream = (lines) => {
-  const parts = ['BT', `1 0 0 1 ${MARGIN} ${TOP} Tm`, `${LEADING} TL`];
-  for (const item of lines) {
-    for (let i = 0; i < item.gap; i += 1) parts.push('T*');
-    parts.push(`/${item.font} ${item.size} Tf`);
-    parts.push(rgb(item.color));
-    parts.push(`(${pdfString(item.text)}) Tj`);
-    parts.push('T*');
-  }
-  parts.push('ET');
-  return parts.join('\n');
-};
-
-const paginate = (lines) => {
-  const pages = [];
-  for (let i = 0; i < lines.length; i += LINES_PER_PAGE) {
-    pages.push(lines.slice(i, i + LINES_PER_PAGE));
-  }
-  return pages.length ? pages : [[]];
-};
-
-const buildPdf = (lines) => {
-  const pages = paginate(lines);
+const buildPdf = (pages) => {
   // Objects 1-5 are fixed (catalog, pages, three fonts); each page then owns a
   // page object and a content-stream object, numbered in pairs from 6.
   const pageObjects = pages.map((_, index) => 6 + index * 2);
@@ -174,8 +273,8 @@ const buildPdf = (lines) => {
   objects[5] =
     '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>';
 
-  pages.forEach((pageLines, index) => {
-    const stream = contentStream(pageLines);
+  pages.forEach((items, index) => {
+    const stream = contentStream(items);
     const length = Buffer.byteLength(stream, 'latin1');
     objects[pageObjects[index]] =
       '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] ' +
@@ -218,19 +317,18 @@ try {
   );
   requireBase(server.config, 'generate-resume-pdf');
 
-  const lines = buildLines({
+  const pages = buildResume({
     details: warriorDetails,
     skills: techSkillsData ?? [],
     projects: projectsData ?? [],
   });
-  const pdf = buildPdf(lines);
+  const pdf = buildPdf(pages);
 
   const dist = path.join(root, 'dist');
   await mkdir(dist, { recursive: true });
   await writeFile(path.join(dist, 'KashhCMD-Resume.pdf'), pdf);
 
-  const pages = paginate(lines).length;
-  console.log(`  KashhCMD-Resume.pdf  ${pages} page(s), ${pdf.length} bytes -> dist/`);
+  console.log(`  KashhCMD-Resume.pdf  ${pages.length} page(s), ${pdf.length} bytes -> dist/`);
 } finally {
   await server.close();
 }
