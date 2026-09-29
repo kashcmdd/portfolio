@@ -104,7 +104,7 @@ export default function App() {
   useEffect(() => {
     if (isLoading) return;
 
-    const sectionIds = ['hero', 'about', 'skills', 'work', 'journal', 'stack', 'explorations', 'contact'];
+    const sectionIds = ['hero', 'about', 'skills', 'work', 'stack', 'journal', 'explorations', 'contact'];
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;

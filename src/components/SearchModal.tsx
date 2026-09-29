@@ -60,8 +60,8 @@ const SECTION_LINKS: { id: string; label: string }[] = [
   { id: 'about', label: 'Go to About' },
   { id: 'skills', label: 'Go to Skills' },
   { id: 'work', label: 'Go to Projects' },
-  { id: 'journal', label: 'Go to Journal' },
   { id: 'stack', label: 'Go to Stack' },
+  { id: 'journal', label: 'Go to Journal' },
   { id: 'explorations', label: 'Go to Explorations' },
   { id: 'contact', label: 'Go to Contact' },
 ];
