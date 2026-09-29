@@ -215,7 +215,7 @@ export const projectsData: Project[] = [
     highlights: [
       "Liquid glass design tokens in Tailwind v4, composed over a responsive 12-column bento grid",
       "HLS video backgrounds gated by IntersectionObserver, with the 594 kB parser lazy-loaded and skipped entirely on native-HLS browsers",
-      "Push-to-deploy Pages workflow with vendor code-splitting holding initial JS to about 440 kB",
+      "Push-to-deploy Pages workflow with vendor code-splitting holding first-paint JS to about 585 kB",
     ],
     demoUrl: "https://kashcmdd.github.io/portfolio/",
     demoDescription: "Live portfolio with liquid glass effects, video backgrounds, and interactive animations",
@@ -460,6 +460,10 @@ const { default: Hls } = await import('hls.js');`,
       {
         type: "quote",
         text: "Initial JavaScript went from 1,076 kB to about 440 kB. The hls chunk is still 595 kB, it just is not your problem until you scroll to it.",
+      },
+      {
+        type: "paragraph",
+        text: "Those figures are from the day of the change, and the site has grown a lot since: the journal, the command palette, the case-study modals, the decision log and the architecture diagrams all landed afterwards. First paint measures about 585 kB today, still spread across the same five cached chunks. That is not the exercise failing. Splitting was never a promise that the number would stay small, only that a growing one keeps arriving in pieces the browser can cache separately.",
       },
     ],
   },
