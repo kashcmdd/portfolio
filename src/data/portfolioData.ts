@@ -788,7 +788,7 @@ export const explorationItemsData: ExplorationItem[] = [
  * hide the strip.
  */
 export const currentlyBuildingData: CurrentlyBuilding = {
-  name: 'Your next project',
-  description: 'One line on what you are working on right now.',
-  status: 'In progress',
+  name: 'KashhCMD Portfolio',  // This repo itself, actively improving UI/IA and adding real-time features based on live feedback
+  description: 'Ship code in smaller, visible pieces while maintaining a high-quality launch bar.',
+  status: 'Live',
 };

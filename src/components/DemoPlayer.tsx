@@ -155,8 +155,12 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
         <div className="px-6 py-3 border-t border-white/10 shrink-0">
           <div className="flex items-center justify-between text-xs text-neutral-500 font-body">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Interactive Demo Mode</span>
+              {(demoUrl || codePenId || codeSandboxId) && (
+                <>
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Interactive Demo Mode</span>
+                </>
+              )}
             </div>
             <div className="flex items-center gap-4">
               {codePenId && <span>Powered by CodePen</span>}

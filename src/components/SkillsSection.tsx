@@ -98,9 +98,9 @@ export const SkillsSection: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="text-xs font-body text-neutral-400 mb-6 uppercase tracking-[0.3em] font-medium flex items-center gap-2"
           >
-            <span className="w-8 h-px bg-neutral-700" />
-            // SKILLS & WHAT I DO
-          </motion.div>
+              <span className="w-8 h-px bg-neutral-700" />
+              SKILLS & WHAT I DO
+            </motion.div>
 
           {/* Heading */}
           <motion.h2

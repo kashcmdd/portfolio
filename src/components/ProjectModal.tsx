@@ -148,67 +148,69 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </div>
             )}
 
-            {/* Interactive Demo Section */}
-            <div className="p-4 rounded-2xl bg-[#89AACC]/10 border border-[#89AACC]/30">
-              <div className="text-xs uppercase tracking-wider text-[#89AACC] font-body mb-2 font-medium flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                  <polyline points="9.9 9.9 9.9 14.1 14.1 14.1 14.1 9.9"/>
-                </svg>
-                Interactive Demo
-              </div>
-              <div className="relative aspect-video rounded-xl bg-[#0a0a0a] border border-[#89AACC]/20 overflow-hidden group cursor-pointer hover:border-[#89AACC]/50 transition-colors">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#89AACC]/20 to-[#0a0a0a]">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <button
-                      onClick={() => setDemoPlayerOpen(true)}
-                      className="w-16 h-16 rounded-full liquid-glass flex items-center justify-center text-[#89AACC] hover:bg-[#89AACC]/20 transition-all duration-300 group-hover:scale-110"
-                      aria-label="Launch Interactive Demo"
+            {/* Interactive Demo Section (only shown if project has a demo source) */}
+            {(project.demoUrl || project.codePenId || project.codeSandboxId) && (
+              <div className="p-4 rounded-2xl bg-[#89AACC]/10 border border-[#89AACC]/30">
+                <div className="text-xs uppercase tracking-wider text-[#89AACC] font-body mb-2 font-medium flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="9.9 9.9 9.9 14.1 14.1 14.1 14.1 9.9"/>
+                  </svg>
+                  Interactive Demo
+                </div>
+                <div className="relative aspect-video rounded-xl bg-[#0a0a0a] border border-[#89AACC]/20 overflow-hidden group cursor-pointer hover:border-[#89AACC]/50 transition-colors">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#89AACC]/20 to-[#0a0a0a]">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <button
+                        onClick={() => setDemoPlayerOpen(true)}
+                        className="w-16 h-16 rounded-full liquid-glass flex items-center justify-center text-[#89AACC] hover:bg-[#89AACC]/20 transition-all duration-300 group-hover:scale-110"
+                        aria-label="Launch Interactive Demo"
+                      >
+                        <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polygon points="5,3 19,12 5,21 5,3"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0a0a0a] to-transparent">
+                    <h4 className="text-sm font-body font-semibold text-white mb-1">
+                      Live Project Preview
+                    </h4>
+                    <p className="text-xs font-body text-neutral-400">
+                      Interactive demonstration of key features and UI patterns used in this project
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
+                  {project.demoFeatures?.map((feature) => (
+                    <div
+                      key={feature}
+                      className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
                     >
-                      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polygon points="5,3 19,12 5,21 5,3"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0a0a0a] to-transparent">
-                  <h4 className="text-sm font-body font-semibold text-white mb-1">
-                    Live Project Preview
-                  </h4>
-                  <p className="text-xs font-body text-neutral-400">
-                    Interactive demonstration of key features and UI patterns used in this project
-                  </p>
+                      <div className="text-xs font-body text-[#89AACC] font-semibold">
+                        {feature}
+                      </div>
+                    </div>
+                  )) || [
+                    'Responsive Design',
+                    'Interactive UI',
+                    'Modern Framework',
+                    'Production Ready'
+                  ].slice(0, 4).map((feature) => (
+                    <div
+                      key={feature}
+                      className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
+                    >
+                      <div className="text-xs font-body text-[#89AACC] font-semibold">
+                        {feature}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
-                {project.demoFeatures?.map((feature) => (
-                  <div
-                    key={feature}
-                    className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
-                  >
-                    <div className="text-xs font-body text-[#89AACC] font-semibold">
-                      {feature}
-                    </div>
-                  </div>
-                )) || [
-                  'Responsive Design',
-                  'Interactive UI',
-                  'Modern Framework',
-                  'Production Ready'
-                ].slice(0, 4).map((feature) => (
-                  <div
-                    key={feature}
-                    className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
-                  >
-                    <div className="text-xs font-body text-[#89AACC] font-semibold">
-                      {feature}
-                    </div>
-                  </div>
-                ))}
-                </div>
-            </div>
+            )}
 
             {/* Action Buttons */}
             <div className="shrink-0 flex flex-wrap gap-3 px-6 py-4 sm:px-8 border-t border-white/10">
