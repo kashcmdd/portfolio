@@ -794,7 +794,7 @@ export const explorationItemsData: ExplorationItem[] = [
 export const currentlyBuildingData: CurrentlyBuilding = {
   name: 'KashhCMD Portfolio',
   description:
-    'Hardening the case studies: architecture diagrams and decision logs now render as static pages, and search ranks by relevance.',
+    'Architecture diagrams and decision logs now ship as static pages; search ranks by relevance.',
   status: 'In progress',
 };
 
