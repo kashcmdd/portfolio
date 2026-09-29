@@ -12,7 +12,7 @@ export const projectUrl = (id: string) => `${SITE_ORIGIN}${BASE_PATH}projects/${
 
 export const resumeUrl = () => `${SITE_ORIGIN}${BASE_PATH}resume/`;
 
-const shareText = (title: string) => `${title} — WarriorOG`;
+const shareText = (title: string) => `${title} — KashhCMD`;
 
 export const shareTargets = (url: string, title: string) => ({
   x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(

@@ -18,14 +18,22 @@ import { PRISM_TOKEN_CSS } from './lib/prism.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_ORIGIN = 'https://kashcmdd.github.io';
 
-// Unsplash URLs arrive at w=800; social cards want 1200x630.
-const socialImage = (image) => (image || '').replace('w=800', 'w=1200&h=630');
+// Unsplash URLs arrive at w=800; social cards want 1200x630. Project images are
+// build-time assets that stay root-relative (asset() bakes the base path in at
+// import time), and social crawlers reject relative URLs, so those get promoted
+// to the canonical origin here. Sources that are already absolute — Unsplash and
+// the site og-image — pass through untouched.
+const socialImage = (image) => {
+  const sized = (image || '').replace('w=800', 'w=1200&h=630');
+  if (!sized || /^https?:\/\//i.test(sized)) return sized;
+  return `${SITE_ORIGIN}${sized}`;
+};
 
 // The article pages live at /journal/<id>/ and the index at /journal/, so each
 // needs a different prefix to reach the site root where fonts and icons live.
 const shareBar = (url, title) => {
   const u = encodeURIComponent(url);
-  const text = encodeURIComponent(`${title} — WarriorOG`);
+  const text = encodeURIComponent(`${title} — KashhCMD`);
   return `<div class="share">
         <span class="share-label">Share</span>
         <a class="share-btn" href="https://twitter.com/intent/tweet?text=${text}&url=${u}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">X</span><span class="sr-only">Share ${esc(title)} on X</span></a>
@@ -470,16 +478,22 @@ const jsonLd = (entry, canonical, published) =>
   }).replace(/</g, '\\u003c');
 
 function projectsIndexPage(all, base) {
+  const canonical = `${SITE_ORIGIN}${base}projects/`;
+  const description =
+    'Selected work: web apps, Discord bots and frontend experiments by KashhCMD.';
   return `<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Projects - KashhCMD</title>
-    <meta name="description" content="Selected work: web apps, Discord bots and frontend experiments by KashhCMD." />
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="canonical" href="${SITE_ORIGIN}${base}projects/" />
+  <head>${head({
+    title: 'Projects',
+    description,
+    canonical,
+    image: `${SITE_ORIGIN}${base}og-image.jpg`,
+    imageAlt: 'KashhCMD — Discord bots and web apps, built end to end.',
+    prefix: '../',
+    type: 'website',
+  })}
     <style>${cssFor('../')}</style>
+    <script type="application/ld+json">${projectsIndexJsonLd(all, base)}</script>
   </head>
   <body>
     <div class="top"><a href="../">KashhCMD</a> / Projects</div>
@@ -516,6 +530,23 @@ const projectJsonLd = (project, canonical) =>
     keywords: (project.tags || []).join(', '),
   }).replace(/</g, '\\u003c');
 
+// The index is a list of the project pages, so it gets a CollectionPage whose
+// hasPart mirrors the visible cards. The site og-image stands in here: the index
+// has no cover of its own, and a crawler will not chase a page that lacks one.
+const projectsIndexJsonLd = (projects, base) =>
+  JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Projects',
+    url: `${SITE_ORIGIN}${base}projects/`,
+    author: { '@type': 'Person', name: 'KashhCMD' },
+    hasPart: projects.map((project) => ({
+      '@type': 'CreativeWork',
+      name: project.title,
+      url: `${SITE_ORIGIN}${base}projects/${project.id}/`,
+    })),
+  }).replace(/</g, '\\u003c');
+
 // The project pages exist because a portfolio that only describes work inside a
 // modal is not linkable, not quotable and not readable by anything that is not a
 // browser. Same reasoning as the article pages: one URL per project, plain HTML,
@@ -540,12 +571,24 @@ function projectPage(project, base, all) {
     <title>${esc(project.title)} - KashhCMD</title>
     <meta name="description" content="${esc(project.subtitle)}" />
     <meta name="robots" content="noindex, nofollow" />
+    <meta name="author" content="KashhCMD" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0a0a" />
     <link rel="canonical" href="${esc(canonical)}" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="KashhCMD (Dev)" />
     <meta property="og:title" content="${esc(project.title)}" />
     <meta property="og:description" content="${esc(project.subtitle)}" />
     <meta property="og:url" content="${esc(canonical)}" />
-    <meta property="og:image" content="${socialImage(project.image)}" />
+    <meta property="og:image" content="${esc(socialImage(project.image))}" />
+    <meta property="og:image:alt" content="${esc(project.title)}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${esc(project.title)}" />
+    <meta name="twitter:description" content="${esc(project.subtitle)}" />
+    <meta name="twitter:image" content="${esc(socialImage(project.image))}" />
+    <meta name="twitter:image:alt" content="${esc(project.title)}" />
     <style>${cssFor('../../')}</style>
     <script type="application/ld+json">${projectJsonLd(project, canonical)}</script>
   </head>
