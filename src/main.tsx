@@ -2,16 +2,13 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import { MotionPrefProvider } from './components/MotionPrefProvider.tsx';
-import { A11yPrefProvider } from './components/A11yPrefProvider.tsx';
 import './index.css';
 import * as serviceWorkerRegistration from './utils/serviceWorkerRegistration';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <MotionPrefProvider>
-      <A11yPrefProvider>
-        <App />
-      </A11yPrefProvider>
+      <App />
     </MotionPrefProvider>
   </StrictMode>,
 );
