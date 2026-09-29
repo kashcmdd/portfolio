@@ -350,7 +350,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                     >
                       <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
                         {item.category}
-                        <span className="text-neutral-700">Â·</span>
+                        <span className="text-neutral-700" aria-hidden="true">&middot;</span>
                         {item.readTime}
                       </span>
                       <span className="flex items-start justify-between gap-2 text-sm leading-snug text-white">

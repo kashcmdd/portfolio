@@ -99,7 +99,11 @@ export const HlsVideoBackground: React.FC<HlsVideoBackgroundProps> = ({
   }, [isVisible, hlsSource, fallbackSource]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+    <div
+      ref={containerRef}
+      data-video-background=""
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
+    >
       <video
         ref={videoRef}
         autoPlay

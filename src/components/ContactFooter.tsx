@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
 import { ArrowUpRight, MessageSquare, BookOpen, FileDown } from 'lucide-react';
+import NewsletterSignup from './NewsletterSignup';
 
 interface ContactFooterProps {
   onOpenContactModal: () => void;
@@ -90,6 +91,8 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             </button>
           </div>
         </div>
+
+        <NewsletterSignup />
 
         {/* Bottom Bar */}
         <div className="pt-12 mt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-body text-neutral-400">

@@ -4,12 +4,121 @@ import {
   TechSkill,
   ExplorationItem,
   CurrentlyBuilding,
+  Architecture,
 } from '../types';
 
 // Files in public/ are served from the Vite base, not the domain root, and a
 // string in this module is a runtime <img src> that the bundler never rewrites.
 // BASE_URL already carries the trailing slash and follows base in vite.config.ts.
 const asset = (file: string) => `${import.meta.env.BASE_URL}${file}`;
+
+/*
+ * Architecture diagrams (#19).
+ *
+ * Every node and edge here is traceable to the project's own description, tags
+ * or highlights - nothing is inferred. If a project gains or drops a component,
+ * the diagram has to change with it, or it stops being a description and starts
+ * being decoration.
+ */
+const scriptforgeArchitecture: Architecture = {
+  summary:
+    'A single Next.js application serves the device and script UI and its own API. Every mutating route is CSRF-protected and runs through a version service that keeps concurrent edits from clobbering each other, and a GPC parser handles the script bodies. Accounts, sessions and all persistent state live in SQLite, with 75 unit and end-to-end tests covering the paths.',
+  layers: [
+    { title: 'Client' },
+    { title: 'Application' },
+    { title: 'Services' },
+    { title: 'State & Tests' },
+  ],
+  nodes: [
+    { id: 'ui', label: 'Device & Script UI', detail: 'React + Tailwind', layer: 0 },
+    { id: 'routes', label: 'API Routes', detail: 'CSRF-protected', layer: 1 },
+    { id: 'accounts', label: 'Accounts', detail: 'self-serve', layer: 1 },
+    { id: 'versioning', label: 'Version Service', detail: 'conflict-safe', layer: 2 },
+    { id: 'parser', label: 'GPC Parser', layer: 2 },
+    { id: 'sessions', label: 'Session Guard', detail: 'invalidation', layer: 2 },
+    { id: 'sqlite', label: 'SQLite', detail: 'transactions', layer: 3 },
+    { id: 'vitest', label: 'Vitest', detail: '75 unit + e2e', layer: 3 },
+  ],
+  edges: [
+    { from: 'ui', to: 'routes', label: 'typed fetch' },
+    { from: 'ui', to: 'accounts' },
+    { from: 'routes', to: 'versioning', label: 'transaction' },
+    { from: 'routes', to: 'parser' },
+    { from: 'accounts', to: 'sessions' },
+    { from: 'versioning', to: 'sqlite' },
+    { from: 'sessions', to: 'sqlite' },
+    { from: 'routes', to: 'vitest', label: 'covered by' },
+    { from: 'versioning', to: 'vitest', label: 'covered by' },
+  ],
+};
+
+const musicBotArchitecture: Architecture = {
+  summary:
+    'The bot process and the audio work are split. discord.js handles 25-odd slash commands in the guild and defers every playback request to a separate Lavalink node, which pulls and decodes tracks through yt-dlp and ffmpeg. A three-tier permission model sits in front of playback, checked against both DJ roles and per-guild overrides, and an OAuth2 web dashboard can change that configuration remotely. The whole thing ships as a single Docker image.',
+  layers: [
+    { title: 'Client' },
+    { title: 'Bot' },
+    { title: 'Services' },
+    { title: 'Audio & State' },
+  ],
+  nodes: [
+    { id: 'voice', label: 'Guild Voice', detail: 'incl. 24/7 mode', layer: 0 },
+    { id: 'dash', label: 'Web Dashboard', detail: 'OAuth2', layer: 0 },
+    { id: 'cmds', label: 'Slash Commands', detail: '25+', layer: 1 },
+    { id: 'guards', label: 'Tier + DJ Guards', detail: 'Free / Pro / VIP', layer: 2 },
+    { id: 'lavalink', label: 'Lavalink Node', detail: 'audio pipeline', layer: 2 },
+    { id: 'config', label: 'Config API', detail: 'remote config', layer: 2 },
+    { id: 'playlists', label: 'Saved Playlists', layer: 2 },
+    { id: 'sources', label: 'yt-dlp + ffmpeg', detail: 'YT / Spotify / SC', layer: 3 },
+    { id: 'tiers', label: 'Per-Guild Tiers', layer: 3 },
+  ],
+  edges: [
+    { from: 'voice', to: 'cmds' },
+    { from: 'dash', to: 'config' },
+    { from: 'cmds', to: 'guards' },
+    { from: 'cmds', to: 'lavalink' },
+    { from: 'cmds', to: 'config' },
+    { from: 'cmds', to: 'playlists' },
+    { from: 'guards', to: 'tiers' },
+    { from: 'config', to: 'tiers' },
+    { from: 'lavalink', to: 'sources' },
+  ],
+};
+
+const melonArchitecture: Architecture = {
+  summary:
+    'A maintained fork of the Melon multipurpose bot. One hybrid router accepts both prefix and slash commands and dispatches into feature modules for antinuke protection, automod, AI chat, tickets, giveaways, join-to-create voice and autopost. Those modules never talk to a database directly: everything goes through Sequelize, which keeps the fork manageable when the upstream bot changes shape.',
+  layers: [
+    { title: 'Guild' },
+    { title: 'Command Layer' },
+    { title: 'Feature Modules' },
+    { title: 'Persistence' },
+    { title: 'Storage' },
+  ],
+  nodes: [
+    { id: 'guild', label: 'Discord Guild', detail: 'prefix + slash', layer: 0 },
+    { id: 'router', label: 'Hybrid Router', detail: 'both command styles', layer: 1 },
+    { id: 'antinuke', label: 'Antinuke', detail: 'protection', layer: 2 },
+    { id: 'automod', label: 'Automod', layer: 2 },
+    { id: 'ai', label: 'AI Chat', layer: 2 },
+    { id: 'tickets', label: 'Tickets + Giveaways', layer: 2 },
+    { id: 'voice', label: 'Voice + Autopost', layer: 2 },
+    { id: 'orm', label: 'Sequelize ORM', layer: 3 },
+    { id: 'pg', label: 'PostgreSQL', layer: 4 },
+  ],
+  edges: [
+    { from: 'guild', to: 'router' },
+    { from: 'router', to: 'antinuke' },
+    { from: 'router', to: 'automod' },
+    { from: 'router', to: 'ai' },
+    { from: 'router', to: 'tickets' },
+    { from: 'router', to: 'voice' },
+    { from: 'antinuke', to: 'orm' },
+    { from: 'automod', to: 'orm' },
+    { from: 'tickets', to: 'orm' },
+    { from: 'orm', to: 'pg' },
+  ],
+};
 
 export const warriorDetails = {
   name: "KashhCMD",
@@ -56,6 +165,7 @@ export const projectsData: Project[] = [
     featured: true,
     colSpanDesktop: 7,
     aspectRatio: "aspect-[16/10]",
+    architecture: scriptforgeArchitecture,
   },
   {
     id: "discord-music-bot",
@@ -70,6 +180,7 @@ export const projectsData: Project[] = [
     featured: true,
     colSpanDesktop: 5,
     aspectRatio: "aspect-[4/3]",
+    architecture: musicBotArchitecture,
   },
   {
     id: "melon",
@@ -84,6 +195,7 @@ export const projectsData: Project[] = [
     featured: true,
     colSpanDesktop: 5,
     aspectRatio: "aspect-[4/3]",
+    architecture: melonArchitecture,
   },
   {
     id: "kashhcmd-portfolio",
@@ -156,6 +268,10 @@ export const journalEntriesData: JournalEntry[] = [
     date: "SEP 25, 2026",
     readTime: "7 MIN READ",
     category: "ALGORITHMS",
+    decision: {
+      chose: "A decay floor at the current rank, linear and capped",
+      over: "Decaying towards zero on a fixed daily subtraction",
+    },
     image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80",
     content: [
       {
@@ -249,6 +365,10 @@ decay = min(days_inactive * settings.decay_per_day, settings.max_decay)`,
     date: "SEP 25, 2026",
     readTime: "6 MIN READ",
     category: "PERFORMANCE",
+    decision: {
+      chose: "Lazy-loading the 594 kB HLS parser on demand",
+      over: "A single static import paid for by every visitor",
+    },
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
     content: [
       {
@@ -349,6 +469,10 @@ const { default: Hls } = await import('hls.js');`,
     date: "SEP 25, 2026",
     readTime: "5 MIN READ",
     category: "ARCHITECTURE",
+    decision: {
+      chose: "SQLite for the single-node app, Postgres for the bot",
+      over: "Reaching for one database everywhere",
+    },
     image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80",
     content: [
       {
@@ -409,6 +533,10 @@ const { default: Hls } = await import('hls.js');`,
     date: "SEP 25, 2026",
     readTime: "6 MIN READ",
     category: "DEPLOYMENT",
+    decision: {
+      chose: "A static, build-time URL scheme with no client router",
+      over: "A runtime router that has to reinvent the base path",
+    },
     image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
     content: [
       {
@@ -515,6 +643,10 @@ if (match) openEntry(match[1]);`,
     date: "SEP 25, 2026",
     readTime: "5 MIN READ",
     category: "ARCHITECTURE",
+    decision: {
+      chose: "A six-member typed block union rendered by the site itself",
+      over: "Markdown plus three dependencies to render it",
+    },
     image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
     content: [
       {

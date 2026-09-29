@@ -85,7 +85,10 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
   }, [activeIndex, handleVideoError]);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0 bg-[#0a0a0a]">
+    <div
+      data-video-background=""
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0 bg-[#0a0a0a]"
+    >
       <div className="absolute inset-0 bg-gradient-to-br from-[#121820] via-[#0a0a0a] to-[#0f141c] z-0" />
 
       {VIDEO_SOURCES.map((item, index) => {

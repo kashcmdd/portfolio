@@ -195,6 +195,99 @@
   .skeleton-shimmer { animation: none; }
 }
 
+/* ---------------------------------------------------------------------------
+   Accessibility preferences (#29)
+
+   Driven by two attributes on <html>, set pre-paint by the inline script in
+   index.html and afterwards by A11yPrefProvider. Deliberately unlayered: in
+   CSS cascade layers an unlayered rule outranks every @layer rule, and the
+   Tailwind utilities these need to beat all live inside @layer utilities.
+   Without that, "high contrast" would only win against hand-written rules.
+
+   Placed before the print block on purpose. Both are unlayered, so source order
+   decides: printing must still come out light-on-white even when the visitor
+   has high contrast switched on for the screen.
+--------------------------------------------------------------------------- */
+:root[data-contrast='high'] {
+  /* Tailwind v4 resolves text-neutral-400 and friends through these, so
+     shifting the variables lifts every muted label on the site at once instead
+     of needing a per-component override list. */
+  --color-neutral-300: #ededed;
+  --color-neutral-400: #d6d6d6;
+  --color-neutral-500: #b4b4b4;
+  --color-neutral-600: #9a9a9a;
+  --color-neutral-700: #858585;
+  --color-neutral-800: #6b6b6b;
+  --color-neutral-900: #3d3d3d;
+  --color-neutral-950: #0d0d0d;
+
+  /* The site's own HSL tokens, for the components that read these directly. */
+  --bg: 0 0% 0%;
+  --surface: 0 0% 12%;
+  --text: 0 0% 100%;
+  --muted: 0 0% 82%;
+  --stroke: 0 0% 45%;
+  --accent: 210 60% 82%;
+
+  color-scheme: dark;
+}
+
+/* Pure black behind the near-black original. A 4% grey background is the single
+   biggest reason body text looks washed out on an OLED panel. */
+:root[data-contrast='high'] body {
+  background-color: #000;
+}
+
+/* Glass panels fade their background when the page behind them is busy, which
+   is precisely the situation high contrast exists to solve. Going opaque costs
+   the frosted look and buys back a predictable contrast ratio. */
+:root[data-contrast='high'] .liquid-glass,
+:root[data-contrast='high'] .liquid-glass-strong {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* Hairline borders at white/5 and white/10 are invisible once the panel behind
+   them goes brighter, so the focus and card edges are thickened instead. */
+:root[data-contrast='high'] :focus-visible {
+  outline: 3px solid #7dd3fc;
+  outline-offset: 3px;
+}
+
+:root[data-contrast='high'] img {
+  filter: contrast(1.08);
+}
+
+/* Text size. Tailwind v4 sizes everything in rem, so scaling the root font size
+   scales the whole layout proportionally - including the fixed rem spacing -
+   rather than only enlarging glyphs and leaving the boxes behind. 112.5% and
+   125% are the two steps that stay usable at the 320px viewport this supports. */
+:root[data-textsize='large'] {
+  font-size: 112.5%;
+}
+
+:root[data-textsize='xlarge'] {
+  font-size: 125%;
+}
+
+/* Scaled text reflows into more lines, and the fixed video backgrounds do not
+   get taller, so the reading measure is widened a little to stop it becoming a
+   3-word-per-line column. */
+:root[data-textsize='large'] p,
+:root[data-textsize='xlarge'] p {
+  max-width: 46ch;
+}
+
+/* High contrast is a legibility preference, and the video backgrounds are the
+   least legible thing on the page. Replacing them with a flat field keeps the
+   contrast work from being undone by moving footage. */
+:root[data-contrast='high'] .video-background,
+:root[data-contrast='high'] [data-video-background] {
+  display: none;
+}
+
 /* Printing a portfolio is a real thing to do - a recruiter prints it, or saves
    the page to PDF from the browser. The default print of a dark, animated,
    fixed-header site is close to unusable, so this switches to ink-friendly

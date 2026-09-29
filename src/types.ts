@@ -23,6 +23,7 @@ export interface Project {
   codePenId?: string; // CodePen embed ID
   codeSandboxId?: string; // CodeSandbox embed ID
   demoDescription?: string; // Description for the demo player
+  architecture?: Architecture; // Layered system diagram, when the project has one
 }
 
 export type JournalBlock =
@@ -42,6 +43,15 @@ export interface JournalEntry {
   category: string;
   image: string;
   content: JournalBlock[];
+  /**
+   * Set on entries that are really a record of a choice rather than a tutorial.
+   * These are what the decision log indexes (#15). "over" is the alternative
+   * that lost, which is the part that makes the entry worth reading.
+   */
+  decision?: {
+    chose: string;
+    over: string;
+  };
 }
 
 export interface TechSkill {
@@ -58,6 +68,45 @@ export interface ExplorationItem {
   category: string;
   image: string;
   description: string;
+}
+
+/**
+ * Architecture diagrams (#19).
+ *
+ * Modelled as data rather than hand-drawn SVG so the layout maths lives in one
+ * component, the static journal/page generator can render the same diagram into
+ * standalone HTML, and the accessible text version is guaranteed to describe
+ * the same nodes the picture does.
+ *
+ * Edges are expected to point from a lower `layer` index to a higher one, i.e.
+ * top to bottom, which is what the curve rendering is built around.
+ */
+export interface ArchNode {
+  id: string;
+  label: string;
+  /** Small second line inside the box. Keep it to a few words. */
+  detail?: string;
+  /** Index into `Architecture.layers`. */
+  layer: number;
+}
+
+export interface ArchEdge {
+  from: string;
+  to: string;
+  /** Short verb or protocol placed on the arrow, e.g. "typed fetch". */
+  label?: string;
+}
+
+export interface ArchLayer {
+  title: string;
+}
+
+export interface Architecture {
+  /** One-paragraph description. Doubles as the diagram's alt text. */
+  summary: string;
+  layers: ArchLayer[];
+  nodes: ArchNode[];
+  edges: ArchEdge[];
 }
 
 /**

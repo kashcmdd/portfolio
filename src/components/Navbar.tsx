@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight, Search } from 'lucide-react';
 import { warriorDetails } from '../data/portfolioData';
+import { A11yMenu } from './A11yMenu';
 
 interface NavbarProps {
   activeSection: string;
@@ -95,6 +96,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <Search className="w-4 h-4" />
         </button>
+
+        {/* Display preferences: high contrast and text size, both persisted. */}
+        <div className="ml-1">
+          <A11yMenu />
+        </div>
 
         {/* Say Hi Button with animated gradient border */}
         <div className="relative group ml-1 shrink-0">

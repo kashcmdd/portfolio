@@ -16,6 +16,46 @@
     <meta name="theme-color" content="#0a0a0a" />
     <link rel="canonical" href="https://kashcmdd.github.io/portfolio-dev/" />
 
+    <!--
+      Applies saved contrast and text-size before first paint. Must be inline and
+      synchronous: waiting for the React bundle would render the default theme
+      for a frame and then jump. Attribute names must match applyA11yPrefs in
+      src/utils/a11yPrefs.ts.
+
+      Text size is never inferred from the OS. There is no media query for the
+      system font-size preference, and the closest-looking one (min-resolution)
+      reports screen density - true of most laptops and every phone - so
+      honouring it would enlarge the site for people who never asked.
+    -->
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          var contrast = 'normal';
+          var textSize = 'normal';
+          var raw = localStorage.getItem('kashh:a11y');
+          if (raw) {
+            var saved = JSON.parse(raw);
+            if (saved && (saved.contrast === 'high' || saved.contrast === 'normal')) {
+              contrast = saved.contrast;
+            }
+            if (
+              saved &&
+              (saved.textSize === 'normal' || saved.textSize === 'large' || saved.textSize === 'xlarge')
+            ) {
+              textSize = saved.textSize;
+            }
+          } else if (window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches) {
+            contrast = 'high';
+          }
+          if (contrast === 'high') root.setAttribute('data-contrast', 'high');
+          if (textSize !== 'normal') root.setAttribute('data-textsize', textSize);
+        } catch (e) {
+          /* storage blocked or malformed JSON; defaults already apply */
+        }
+      })();
+    </script>
+
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

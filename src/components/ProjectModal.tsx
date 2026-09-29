@@ -4,6 +4,7 @@ import { Project } from '../types';
 import { X, CheckCircle2 } from 'lucide-react';
 import { DemoPlayer } from './DemoPlayer';
 import { SmartImage } from './SmartImage';
+import { ArchitectureDiagram } from './ArchitectureDiagram';
 import { useFocusTrap } from '../utils/useFocusTrap';
 
 interface ProjectModalProps {
@@ -134,6 +135,18 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                 ))}
               </ul>
             </div>
+
+            {/* System diagram, when the project has one. Placed after the
+                highlights so the bullets are the summary and the diagram is
+                the detail a reader can choose to go into. */}
+            {project.architecture && (
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10">
+                <div className="text-xs uppercase tracking-wider text-neutral-400 font-body mb-3 font-medium">
+                  How It Fits Together
+                </div>
+                <ArchitectureDiagram arch={project.architecture} />
+              </div>
+            )}
 
             {/* Interactive Demo Section */}
             <div className="p-4 rounded-2xl bg-[#89AACC]/10 border border-[#89AACC]/30">
