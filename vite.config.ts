@@ -89,6 +89,23 @@ function devStaticArtifacts(): Plugin {
           })
           .catch(() => next());
       });
+
+      // Anything the artifacts are built from is watched so a long dev session
+      // does not keep serving the document that was generated on its first
+      // request. Editing the generators or the portfolio data drops the cached
+      // result and the next request regenerates it — no server restart.
+      const scriptsRoot = path.join(__dirname, 'scripts');
+      const watchedSources = [scriptsRoot, path.join(__dirname, 'src', 'data', 'portfolioData.ts')];
+      server.watcher.add(watchedSources);
+      const invalidate = (file: string) => {
+        const changed = path.resolve(file);
+        if (changed.startsWith(scriptsRoot) || watchedSources.some((source) => source === changed)) {
+          generated = null;
+        }
+      };
+      server.watcher.on('change', invalidate);
+      server.watcher.on('add', invalidate);
+      server.watcher.on('unlink', invalidate);
     },
   };
 }
