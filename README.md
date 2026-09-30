@@ -20,6 +20,20 @@ switched off, so pushing to `main` updates nothing — see
 
 React 19 · TypeScript (strict) · Vite 6 · Tailwind CSS v4 · GSAP · Motion · HLS.js · Lucide React · Prism (lazy)
 
+## Documentation
+
+This README is the entry point. Deeper notes live in [`docs/`](docs/):
+
+- [`docs/architecture.md`](docs/architecture.md) — how the app is put together:
+  entry points, sections, dialogs, data flow, utilities and the dev middleware.
+- [`docs/content-model.md`](docs/content-model.md) — `src/data/portfolioData.ts`
+  and `src/types.ts`, and the renderers that must stay in step with the block
+  model.
+- [`docs/static-generation.md`](docs/static-generation.md) — the build pipeline:
+  each generator, what it writes, and the `check-static-output` assertion.
+- [`docs/contributing.md`](docs/contributing.md) — the validation loop, house
+  style, and the constraints that are deliberate.
+
 ## Getting started
 
 ```bash
