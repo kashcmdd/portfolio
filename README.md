@@ -1,16 +1,11 @@
 <div align="center">
 
-# KashhCMD Portfolio (Development Version)
-
-> **⚠️ This is the development build of the portfolio — a preview of new work before it reaches the live site.**
-> **For the production site, visit [kashcmdd/portfolio](https://github.com/kashcmdd/portfolio)**
+# KashhCMD Portfolio
 
 A cinematic dark portfolio: liquid glass visuals, GSAP and Motion animation, HLS video backgrounds, a typed technical journal, and project case studies that exist as real HTML as well as in-app modals.
 
-**Not published from this repo.** The Pages workflow here is deliberately
-switched off, so pushing to `main` updates nothing — see
-[Deployment](#deployment) for why, and how it would be turned on. Run
-`npm run preview` to look at a build locally.
+**Published to GitHub Pages.** Pushing to `main` builds and deploys the site at
+`https://kashcmdd.github.io/portfolio/` — see [Deployment](#deployment).
 
 <img src="public/portfolio-site.webp" alt="The portfolio landing page" width="820" />
 
@@ -41,7 +36,7 @@ npm install
 npm run dev      # dev server on http://localhost:3001
 npm run lint     # tsc --noEmit — the only validation step, and what CI runs
 npm run build    # vite build, then the static generators, into dist/
-npm run preview  # serve dist/ at the /portfolio-dev/ base path
+npm run preview  # serve dist/ at the /portfolio/ base path
 ```
 
 Node 20 is what the workflow pins; the build also runs on newer releases.
@@ -115,27 +110,22 @@ static host, not in preview.
 
 ## Deployment
 
-`.github/workflows/deploy.yml` is present and correct in shape — Node 20,
-`npm run lint`, `npm run build`, upload `dist/`, deploy with `actions/deploy-pages`
-— but it is **intentionally not enabled**. The repository's Pages source is
-switched off, so the run stops at `actions/configure-pages@v5`. This is the dev
-build; the production site is
-[kashcmdd/portfolio](https://github.com/kashcmdd/portfolio). Please do not turn the
-workflow on as a "fix" — the dev URL is
-`https://kashcmdd.github.io/portfolio-dev/` and it is populated only when someone
-publishes there on purpose.
+`.github/workflows/deploy.yml` builds and deploys on every push to `main`:
+Node 20, `npm ci`, `npm run lint`, `npm run build`, upload `dist/`, then
+`actions/deploy-pages`. The site is served from GitHub Pages at
+`https://kashcmdd.github.io/portfolio/`.
 
-`vite.config.ts` sets `base: '/portfolio-dev/'` to match the Pages subpath, which
+`vite.config.ts` sets `base: '/portfolio/'` to match the Pages subpath, which
 is also why `dist/index.html` opened straight off disk will not find its assets —
 use `npm run preview`.
 
 ## Indexing
 
-This build is deliberately invisible to search engines: `index.html` carries
-`<meta name="robots" content="noindex, nofollow">`, every generated page does the
-same, and `robots.txt` is `Disallow: /`. All three are on purpose in this
-repository. `sitemap.xml` is still written, but with crawling disallowed it is a
-route list for humans and tooling rather than something a crawler will fetch.
+The site is meant to be found: `index.html` carries
+`<meta name="robots" content="index, follow">`, every generated page does the
+same, and `robots.txt` is `Allow: /`. `sitemap.xml` is generated for the same
+reason. Fill the `google-site-verification` and `msvalidate.01` meta tags in
+`index.html` with the real tokens issued by each search console.
 
 ## Notes
 

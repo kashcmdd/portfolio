@@ -91,7 +91,7 @@ export const NowBuildingStrip: React.FC = () => {
             </ul>
 
             <a
-              href="https://github.com/kashcmdd/portfolio-dev/commits/main"
+              href="https://github.com/kashcmdd/portfolio/commits/main"
               target="_blank"
               rel="noopener noreferrer"
               className="flex shrink-0 items-center gap-1 self-start whitespace-nowrap font-body text-xs text-[#89AACC] transition-colors hover:text-white sm:self-auto"

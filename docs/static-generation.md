@@ -19,7 +19,7 @@ static output is built from the same data the SPA renders.
 
 All three generator scripts that emit URLs call `requireBase()` first, which
 throws if Vite resolved `base` to an empty string or `/`. The base is
-`/portfolio-dev/` in this repository; a build with no base fails loudly rather
+`/portfolio/` in this repository; a build with no base fails loudly rather
 than shipping absolute links to the wrong project.
 
 ## `scripts/generate-journal-pages.mjs`
@@ -38,12 +38,12 @@ What it writes under `dist/`:
 | `resume/index.html`, `resume/index.md` | Skills-based resume |
 | `uses/index.html`, `uses/index.md` | Colophon |
 | `404.html` | Static-host not-found page |
-| `sitemap.xml` | Route list (still written although crawling is disallowed) |
-| `robots.txt` | `User-agent: *` / `Disallow: /`, mirroring the noindex meta |
+| `sitemap.xml` | Route list written for crawlers |
+| `robots.txt` | `User-agent: *` / `Allow: /`, mirroring the `index, follow` meta |
 | `llms.txt` | Text index of the whole site |
 
 Every generated page carries its own title, description, canonical, Open Graph
-and Twitter tags and JSON-LD, plus the `noindex, nofollow` robots meta. Article
+and Twitter tags and JSON-LD, plus the `index, follow` robots meta. Article
 pages additionally get a share bar (with a delegated clipboard handler and a
 `document.execCommand` fallback), a decision card when `entry.decision` is set,
 a table of contents when there are three or more headings, and Prism-highlighted
@@ -75,10 +75,10 @@ Runs after Vite has copied `public/` into `dist/`. It does two things:
 
 1. Rewrites `dist/manifest.json` — `start_url`, `scope`, every icon `src` and
    every shortcut `url`/icon — replacing the checked-in source prefix
-   `/portfolio-dev/` with the resolved Vite base. It then asserts that
+   `/portfolio/` with the resolved Vite base. It then asserts that
    `start_url` and `scope` equal the base and throws if they do not, which
    catches a `public/manifest.json` that no longer starts those with
-   `/portfolio-dev/`.
+   `/portfolio/`.
 2. Substitutes `__BUILD_VERSION__` in `public/sw.js` (written to `dist/sw.js`)
    with a 10-character SHA-256 digest taken over the sorted `dist/assets/`
    filenames and `dist/index.html`. The service worker's cache names include
@@ -166,9 +166,9 @@ type declarations for those `.mjs` modules, which it imports directly.
 
 ## The URL / base contract
 
-- `vite.config.ts` sets `base: '/portfolio-dev/'`.
+- `vite.config.ts` sets `base: '/portfolio/'`.
 - `src/utils/share.ts` hard-codes `SITE_ORIGIN = 'https://kashcmdd.github.io'`
-  and `BASE_PATH = '/portfolio-dev/'`.
+  and `BASE_PATH = '/portfolio/'`.
 - The Node generators hard-code `SITE_ORIGIN = 'https://kashcmdd.github.io'`
   (in `generate-journal-pages.mjs`, `generate-rss.mjs` and
   `generate-resume-pdf.mjs`).

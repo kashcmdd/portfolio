@@ -1,6 +1,6 @@
 # Architecture
 
-How the development portfolio is put together, end to end. Read
+How the portfolio is put together, end to end. Read
 [`README.md`](../README.md) first — it is the canonical entry point and covers
 stack, commands, static output and deployment. This page goes one level deeper
 into the running application; [`static-generation.md`](static-generation.md)
@@ -29,11 +29,10 @@ render. Registration is a no-op outside production builds and on a cross-origin
 base (`import.meta.env.PROD` guard in `src/utils/serviceWorkerRegistration.ts`).
 
 `index.html` carries the site-level `<head>`: title, description, canonical
-(`https://kashcmdd.github.io/portfolio-dev/`), Open Graph and Twitter tags, the
-Person JSON-LD, font preloads, and the `noindex, nofollow` robots tag. The
+(`https://kashcmdd.github.io/portfolio/`), Open Graph and Twitter tags, the
+Person JSON-LD, font preloads, and the `index, follow` robots tag. The
 `<noscript>` block points at `/journal/`, which is static HTML and readable
-without JavaScript. See the README's "Indexing" section for why `noindex` is
-intentional here.
+without JavaScript.
 
 ## `src/App.tsx`
 
@@ -184,7 +183,7 @@ interface MotionPrefValue {
 | `serviceWorkerRegistration.ts` | `register` | Production-only service worker registration |
 
 `share.ts` hard-codes `SITE_ORIGIN = 'https://kashcmdd.github.io'` and
-`BASE_PATH = '/portfolio-dev/'`, matching the same constants in the Node
+`BASE_PATH = '/portfolio/'`, matching the same constants in the Node
 generators. See [`static-generation.md`](static-generation.md) for that contract.
 
 ## Analytics and consent
@@ -225,7 +224,7 @@ All 34 files under `src/components/`, grouped by how they are reached:
 
 These are not bugs and should not be "fixed":
 
-- `vite.config.ts` sets `base: '/portfolio-dev/'`, so `dist/index.html` opened
+- `vite.config.ts` sets `base: '/portfolio/'`, so `dist/index.html` opened
   straight off disk will not find its assets — use `npm run preview`.
 - The `devStaticArtifacts` Vite plugin (in `vite.config.ts`) runs
   `generate-journal-pages.mjs`, `generate-rss.mjs` and
@@ -234,7 +233,7 @@ These are not bugs and should not be "fixed":
   on a static host. It deliberately omits `copy-sw.mjs`, which needs build
   output that does not exist in dev. Editing `scripts/` or `portfolioData.ts`
   invalidates the cached result.
-- `sitemap.xml` is still written although crawling is disallowed; it is a route
-  list for humans and tooling here.
+- `sitemap.xml` is written for crawlers, and doubles as a human-readable route
+  list.
 - There is no test framework, no backend, no `react-router`, no light theme and
   no reaction/view counters — all by design.

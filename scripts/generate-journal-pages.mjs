@@ -547,7 +547,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${esc(title)} — KashhCMD</title>
     <meta name="description" content="${esc(description)}" />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="index, follow" />
     <meta name="author" content="KashhCMD" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0a0a0a" />
@@ -555,7 +555,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg" />
     <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png" />
     <meta property="og:type" content="${type}" />
-    <meta property="og:site_name" content="KashhCMD (Dev)" />
+    <meta property="og:site_name" content="KashhCMD" />
     <meta property="og:url" content="${esc(canonical)}" />
     <meta property="og:title" content="${esc(title)}" />
     <meta property="og:description" content="${esc(description)}" />
@@ -711,7 +711,7 @@ function projectPage(project, base, all) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${esc(project.title)} - KashhCMD</title>
     <meta name="description" content="${esc(project.subtitle)}" />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="index, follow" />
     <meta name="author" content="KashhCMD" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0a0a0a" />
@@ -719,7 +719,7 @@ function projectPage(project, base, all) {
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="KashhCMD (Dev)" />
+    <meta property="og:site_name" content="KashhCMD" />
     <meta property="og:title" content="${esc(project.title)}" />
     <meta property="og:description" content="${esc(project.subtitle)}" />
     <meta property="og:url" content="${esc(canonical)}" />
@@ -1533,14 +1533,14 @@ ${urls
 `;
 }
 
-// This build is noindex (see index.html and the per-page robots meta), so
-// robots.txt is a second line of defence rather than a crawl invitation.
-// Pointing crawlers at a sitemap here would contradict both. Kept ASCII so the
-// file reads the same in every tool that touches it.
-const robotsTxt = () => `# Development build - not for indexing.
-# Mirrors the noindex, nofollow meta in index.html and on every generated page.
+// Production is indexable (see index.html and the per-page robots meta), so
+// robots.txt invites crawlers rather than blocking them. The sitemap is
+// referenced from the pages themselves. Kept ASCII so the file reads the same in
+// every tool that touches it.
+const robotsTxt = () => `# Production build - open to indexing.
+# Mirrors the index, follow meta in index.html and on every generated page.
 User-agent: *
-Disallow: /
+Allow: /
 `;
 
 /**
@@ -1846,7 +1846,7 @@ try {
   );
 
   console.log(`\n${journalEntriesData.length} article pages + journal index -> dist/journal/`);
-  console.log(`sitemap.xml + robots.txt (Disallow: /) -> dist/`);
+  console.log(`sitemap.xml + robots.txt (Allow: /) -> dist/`);
   console.log(`llms.txt + .md mirrors -> dist/`);
 } finally {
   await server.close();

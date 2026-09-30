@@ -3,7 +3,7 @@
 // from window.location: a link shared from a local dev server or from a
 // preview build would carry that origin to the recipient.
 export const SITE_ORIGIN = 'https://kashcmdd.github.io';
-export const BASE_PATH = '/portfolio-dev/';
+export const BASE_PATH = '/portfolio/';
 
 export const articleUrl = (id: string) =>
   `${SITE_ORIGIN}${BASE_PATH}journal/${id}/`;

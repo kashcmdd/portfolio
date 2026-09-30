@@ -31,7 +31,7 @@ if (!(await exists(distDir))) {
 
 // The checked-in manifest is written against this prefix. Swapping it for the
 // resolved base is what makes the two unable to drift.
-const SOURCE_PREFIX = '/portfolio-dev/';
+const SOURCE_PREFIX = '/portfolio/';
 
 const manifestPath = path.join(distDir, 'manifest.json');
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));

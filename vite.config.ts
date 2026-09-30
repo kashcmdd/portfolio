@@ -131,7 +131,7 @@ function devStaticArtifacts(): Plugin {
 
 export default defineConfig(() => {
   return {
-    base: '/portfolio-dev/',
+    base: '/portfolio/',
     plugins: [react(), tailwindcss(), devStaticArtifacts()],
     resolve: {
       alias: {

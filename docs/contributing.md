@@ -16,7 +16,7 @@ npm install
 npm run dev      # dev server on http://localhost:3001
 npm run lint     # tsc --noEmit — the only type check, and what CI runs
 npm run build    # vite build, then the static generators, into dist/
-npm run preview  # serve dist/ at the /portfolio-dev/ base path
+npm run preview  # serve dist/ at the /portfolio/ base path
 npm run check:static   # the build's final assertion, on its own
 npm run clean    # rm -rf dist (fails on Windows cmd.exe — see README Notes)
 ```
@@ -40,8 +40,8 @@ There is no test framework here, by design. A change is checked three ways:
    alone with `npm run check:static` after a build.
 
 CI (`.github/workflows/deploy.yml`) runs `npm ci`, `npm run lint` and
-`npm run build`. In this repository the Pages deploy is deliberately switched
-off — see the README's "Deployment" section. Do not enable it as a "fix".
+`npm run build`, then deploys `dist/` to GitHub Pages. A push to `main` is a
+deploy.
 
 ## House style
 
@@ -77,12 +77,8 @@ These look like gaps but are on purpose. Do not "fix" them:
 - **No reaction or view counters.** There is no client persistence for social
   engagement.
 - **No light theme.** The design is dark-only; `<meta name="color-scheme" content="dark">`.
-- **This repo is `noindex, nofollow` with `robots.txt: Disallow: /`**, and sets
-  `base: '/portfolio-dev/'`. Both are intentional for the development repo;
-  production is a separate repository and publishes the same code with different
-  settings.
-- **GitHub Pages is disabled here.** The deploy workflow is present and correct
-  in shape but intentionally not enabled.
+- **The site is meant to be indexed.** `robots.txt` is `Allow: /`, `base` is
+  `/portfolio/`, and every generated page carries an `index, follow` robots meta.
 
 ## Common changes
 
