@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type HlsType from 'hls.js';
+import { useMotionPref } from './MotionPrefProvider';
 
 interface HlsVideoBackgroundProps {
   hlsSource?: string;
@@ -19,6 +20,7 @@ export const HlsVideoBackground: React.FC<HlsVideoBackgroundProps> = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { reduced } = useMotionPref();
 
   useEffect(() => {
     const target = containerRef.current;
@@ -37,7 +39,10 @@ export const HlsVideoBackground: React.FC<HlsVideoBackgroundProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!isVisible) return;
+    // Reduced motion: never start the stream. The footer keeps its own backdrop,
+    // and pulling 580 kB of HLS to play a clip the visitor asked not to see is
+    // exactly the waste this component was written to avoid elsewhere.
+    if (!isVisible || reduced) return;
 
     const video = videoRef.current;
     if (!video) return;
@@ -96,21 +101,23 @@ export const HlsVideoBackground: React.FC<HlsVideoBackgroundProps> = ({
         hls.destroy();
       }
     };
-  }, [isVisible, hlsSource, fallbackSource]);
+  }, [isVisible, hlsSource, fallbackSource, reduced]);
 
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className={`absolute min-w-full min-h-full object-cover pointer-events-none transform-gpu ${
-          flipVertical ? 'scale-y-[-1]' : ''
-        } ${className}`}
-        style={style}
-      />
+      {!reduced && (
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className={`absolute min-w-full min-h-full object-cover pointer-events-none transform-gpu ${
+            flipVertical ? 'scale-y-[-1]' : ''
+          } ${className}`}
+          style={style}
+        />
+      )}
     </div>
   );
 };

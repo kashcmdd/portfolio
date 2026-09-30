@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Maximize2, Minimize2, ExternalLink } from 'lucide-react';
+import { useFocusTrap } from '../utils/useFocusTrap';
 
 interface DemoPlayerProps {
   isOpen: boolean;
@@ -22,17 +23,28 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    // This demo opens on top of the project modal, which listens for Escape on
+    // the document too. Listening in the capture phase and stopping the event
+    // makes Escape close the demo first, instead of the bubble-phase listener
+    // behind it tearing both dialogs down at once.
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      onClose();
     };
-  }, [isOpen]);
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown, true);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -59,6 +71,11 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${title} interactive demo`}
+        tabIndex={-1}
         className={`liquid-glass-strong w-full max-w-6xl flex flex-col overflow-hidden rounded-3xl border border-white/20 text-white shadow-2xl transition-all duration-300 ${
           isFullscreen ? 'h-[95vh]' : 'h-[80vh]'
         }`}

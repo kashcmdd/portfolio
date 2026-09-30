@@ -3,6 +3,7 @@ import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
 import { ArrowUpRight, MessageSquare, BookOpen, FileDown, FileText, LayoutGrid } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
+import { useMotionPref } from './MotionPrefProvider';
 
 interface ContactFooterProps {
   onOpenContactModal: () => void;
@@ -14,13 +15,15 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
   onNavigateTop,
 }) => {
   const marqueeRef = useRef<HTMLDivElement | null>(null);
+  const { reduced } = useMotionPref();
 
   // The marquee is below the fold, so GSAP is not imported until the footer is
   // near the viewport. A visitor who never scrolls this far never downloads it,
-  // and one who does gets the animation as the footer slides in.
+  // and one who does gets the animation as the footer slides in. Under reduced
+  // motion the row is simply left static, which is the whole point.
   useEffect(() => {
     const target = marqueeRef.current;
-    if (!target) return;
+    if (!target || reduced) return;
 
     let cancelled = false;
     let ctx: { revert: () => void } | undefined;
@@ -55,7 +58,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
       observer.disconnect();
       ctx?.revert();
     };
-  }, []);
+  }, [reduced]);
 
   return (
     <footer id="contact" className="relative w-full bg-[#0a0a0a] text-white overflow-hidden pt-20 pb-10">

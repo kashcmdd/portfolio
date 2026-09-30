@@ -20,6 +20,17 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
+
+  /* One visible focus ring for anything that does not draw its own. It lives in
+     the base layer on purpose: components that style focus with a Tailwind ring
+     also set `outline-none`, and a layered utility beats a base rule, so those
+     keep their own ring and are not marked twice — while everything without one
+     still gets a ring instead of the low-contrast browser default that the dark
+     background swallows. */
+  :focus-visible {
+    outline: 2px solid #89AACC;
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {
@@ -191,8 +202,31 @@
   background-size: 200% 100%;
   animation: skeleton-sweep 1.4s ease-in-out infinite;
 }
+/* One place for the site's reduced-motion behaviour rather than a rule per
+   animation. It covers both routes a visitor can take — the OS setting (media
+   query) and the in-app toggle (the attribute the provider mirrors onto <html>)
+   — and removes movement while leaving colour and position changes intact, so
+   state that is conveyed by a colour shift still reads. GSAP and the autoplaying
+   videos are not CSS, so they check the provider's `reduced` flag directly. */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
   .skeleton-shimmer { animation: none; }
+}
+
+:root[data-reduced-motion='true'] *,
+:root[data-reduced-motion='true'] *::before,
+:root[data-reduced-motion='true'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* Printing a portfolio is a real thing to do - a recruiter prints it, or saves
