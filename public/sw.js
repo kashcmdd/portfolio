@@ -2,19 +2,19 @@
 // installs a worker with new cache names, and the activate step below clears
 // the old ones instead of serving last deploy's HTML, CSS and JS forever.
 const BUILD = '__BUILD_VERSION__';
-const CACHE_NAME = `kashcmd-portfolio-dev-${BUILD}`;
-const STATIC_CACHE = `kashcmd-static-dev-${BUILD}`;
-const DYNAMIC_CACHE = `kashcmd-dynamic-dev-${BUILD}`;
+const CACHE_NAME = `kashcmd-portfolio-${BUILD}`;
+const STATIC_CACHE = `kashcmd-static-${BUILD}`;
+const DYNAMIC_CACHE = `kashcmd-dynamic-${BUILD}`;
 
 // Cache Storage is scoped to the origin, not to this worker's scope, so the
 // activate step must only remove this app's own old caches. Deleting everything
 // unmatched would also wipe any other app installed on the same origin — on
-// kashcmdd.github.io that includes the production portfolio, whose offline
-// cache this dev worker has no business touching.
+// kashcmdd.github.io that could be another project's offline cache this worker
+// has no business touching.
 const OWN_CACHE_PREFIXES = [
-  'kashcmd-portfolio-dev-',
-  'kashcmd-static-dev-',
-  'kashcmd-dynamic-dev-',
+  'kashcmd-portfolio-',
+  'kashcmd-static-',
+  'kashcmd-dynamic-',
 ];
 
 // The worker is served from the Vite base, so its own location is the source of
