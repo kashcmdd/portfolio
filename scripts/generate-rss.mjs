@@ -12,7 +12,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
-import { esc, toPubDate, renderBlock, requireBase } from './lib/journal-blocks.mjs';
+import { esc, toPubDate, renderBlock, requireBase, slug } from './lib/journal-blocks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_ORIGIN = 'https://kashcmdd.github.io';
@@ -42,7 +42,7 @@ try {
 
   const items = journalEntriesData
     .map((entry) => {
-      const url = `${site}journal/${entry.id}/`;
+      const url = `${site}journal/${slug(entry.id)}/`;
       // Feed items carry no surrounding document, so blocks stay unstyled and
       // headings drop to h3 to sit under the item title.
       const content = entry.content

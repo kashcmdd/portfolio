@@ -64,14 +64,25 @@ function devStaticArtifacts(): Plugin {
       }
     }));
 
+  // Every resolved path is confined to dist/. The `..` check below already
+  // rejects the obvious traversal, but this resolved-prefix assertion is the one
+  // that actually matters: it fails closed even for a path the string check did
+  // not anticipate, and it cannot be talked out of the dist/ root.
+  const distRoot = path.resolve(dist);
+  const withinDist = (file: string) => {
+    const resolved = path.resolve(file);
+    if (resolved !== distRoot && !resolved.startsWith(distRoot + path.sep)) return null;
+    return resolved;
+  };
+
   const resolveFile = (requestPath: string) => {
     if (requestPath.includes('..')) return null;
     const clean = requestPath.endsWith('/') ? requestPath.slice(0, -1) : requestPath;
-    if (staticFiles.has(clean)) return path.join(dist, clean);
+    if (staticFiles.has(clean)) return withinDist(path.join(dist, clean));
     const [first] = clean.split('/');
     if (staticDirs.includes(first)) {
       const relative = path.extname(clean) ? clean : path.join(clean, 'index.html');
-      return path.join(dist, relative);
+      return withinDist(path.join(dist, relative));
     }
     return null;
   };

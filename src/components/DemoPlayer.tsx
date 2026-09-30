@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Maximize2, Minimize2, ExternalLink } from 'lucide-react';
 import { useFocusTrap } from '../utils/useFocusTrap';
+import { safeHref } from '../utils/url';
 
 interface DemoPlayerProps {
   isOpen: boolean;
@@ -68,23 +69,31 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
     return demoUrl;
   };
 
-  const embedUrl = getEmbedUrl();
+  // Only http(s) embeds are rendered at all. A javascript: or data: URL has the
+  // origin "null", which would otherwise fall into the permissive branch below
+  // and run script in a frame that can still reach this document.
+  const embedUrl = (() => {
+    const raw = getEmbedUrl();
+    if (!raw) return null;
+    try {
+      const parsed = new URL(raw, window.location.href);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed : null;
+    } catch {
+      return null;
+    }
+  })();
   // A frame that is both same-origin and allowed to run scripts can reach into
   // the parent document and strip its own sandbox, so the two flags are not given
   // to a same-origin demo URL. Cross-origin embeds (CodePen, CodeSandbox) keep
   // allow-same-origin so their previews can use storage; a different origin
   // cannot reach this document regardless.
-  const sameOriginEmbed = (() => {
-    if (!embedUrl) return false;
-    try {
-      return new URL(embedUrl, window.location.href).origin === window.location.origin;
-    } catch {
-      return false;
-    }
-  })();
-  const sandbox = sameOriginEmbed
-    ? 'allow-forms allow-modals allow-popups allow-presentation allow-scripts'
-    : 'allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts';
+  const sandbox =
+    embedUrl && embedUrl.origin === window.location.origin
+      ? 'allow-forms allow-modals allow-popups allow-presentation allow-scripts'
+      : 'allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts';
+  // Scheme-checked too, since a content-supplied demoUrl also feeds the
+  // "open in new tab" anchor.
+  const externalUrl = safeHref(getExternalUrl());
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
@@ -116,7 +125,7 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
 
           <div className="flex items-center gap-2">
             <a
-              href={getExternalUrl()}
+              href={externalUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-full liquid-glass hover:bg-white/20 transition-colors cursor-pointer text-white/80 hover:text-white"
@@ -146,7 +155,7 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
           {embedUrl ? (
             <iframe
               ref={iframeRef}
-              src={embedUrl}
+              src={embedUrl.href}
               title={`${title} Demo`}
               className="w-full h-full border-0"
               allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; xr-spatial-tracking"
@@ -170,9 +179,9 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
                   An interactive demo for this project is currently being developed. 
                   Check back soon or explore the live project link.
                 </p>
-                {getExternalUrl() && (
+                {externalUrl && (
                   <a
-                    href={getExternalUrl()}
+                    href={externalUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full accent-gradient text-black font-semibold text-sm font-body hover:opacity-90 transition-opacity cursor-pointer"

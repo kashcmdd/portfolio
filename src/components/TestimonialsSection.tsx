@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { testimonialsData } from '../data/portfolioData';
+import { safeHref } from '../utils/url';
 import { Quote } from 'lucide-react';
 
 /**
@@ -54,11 +55,11 @@ export const TestimonialsSection: React.FC = () => {
               <figcaption className="mt-5 text-xs font-body text-neutral-400">
                 <span className="font-semibold text-white">{testimonial.author}</span>
                 {testimonial.role ? ` — ${testimonial.role}` : ''}
-                {testimonial.url && (
+                {safeHref(testimonial.url) && (
                   <>
                     {' · '}
                     <a
-                      href={testimonial.url}
+                      href={safeHref(testimonial.url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#89AACC] hover:underline"

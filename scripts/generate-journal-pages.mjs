@@ -12,7 +12,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
-import { esc, toIso, renderBlocks, articleOutline, blocksToMarkdown, requireBase } from './lib/journal-blocks.mjs';
+import { esc, toIso, renderBlocks, articleOutline, blocksToMarkdown, requireBase, slug, safeHref } from './lib/journal-blocks.mjs';
 import { PRISM_TOKEN_CSS } from './lib/prism.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -556,7 +556,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png" />
     <meta property="og:type" content="${type}" />
     <meta property="og:site_name" content="KashhCMD (Dev)" />
-    <meta property="og:url" content="${canonical}" />
+    <meta property="og:url" content="${esc(canonical)}" />
     <meta property="og:title" content="${esc(title)}" />
     <meta property="og:description" content="${esc(description)}" />
     <meta property="og:image" content="${esc(image)}" />
@@ -697,6 +697,12 @@ function projectPage(project, base, all) {
   // Edges are stored as ids; the reader wants the human labels.
   const nodeLabel = (id) =>
     project.architecture?.nodes.find((node) => node.id === id)?.label || id;
+  // Content-supplied links are scheme-checked, so a javascript: value becomes no
+  // link rather than a live payload.
+  const inviteUrl = safeHref(project.inviteUrl);
+  const supportUrl = safeHref(project.supportUrl);
+  const githubUrl = safeHref(project.githubUrl);
+  const liveUrl = safeHref(project.liveUrl);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -814,12 +820,12 @@ function projectPage(project, base, all) {
           : ''
         }
 
-        ${project.githubUrl || project.liveUrl || project.inviteUrl || project.supportUrl
+        ${githubUrl || liveUrl || inviteUrl || supportUrl
           ? `<div class="links">
-          ${project.inviteUrl ? `<a href="${esc(project.inviteUrl)}" rel="noopener noreferrer">Add to Discord</a>` : ''}
-          ${project.supportUrl ? `<a href="${esc(project.supportUrl)}" rel="noopener noreferrer">Support server</a>` : ''}
-          ${project.githubUrl ? `<a href="${esc(project.githubUrl)}" rel="noopener noreferrer">Source code</a>` : ''}
-          ${project.liveUrl ? `<a href="${esc(project.liveUrl)}" rel="noopener noreferrer">Live site</a>` : ''}
+          ${inviteUrl ? `<a href="${esc(inviteUrl)}" rel="noopener noreferrer">Add to Discord</a>` : ''}
+          ${supportUrl ? `<a href="${esc(supportUrl)}" rel="noopener noreferrer">Support server</a>` : ''}
+          ${githubUrl ? `<a href="${esc(githubUrl)}" rel="noopener noreferrer">Source code</a>` : ''}
+          ${liveUrl ? `<a href="${esc(liveUrl)}" rel="noopener noreferrer">Live site</a>` : ''}
         </div>`
           : ''
         }
@@ -830,7 +836,7 @@ function projectPage(project, base, all) {
           ? `<nav class="more">
         <h3>More projects</h3>
         ${others
-          .map((p) => `<a href="../${p.id}/">${esc(p.title)}<span>${esc(p.category)}</span></a>`)
+          .map((p) => `<a href="../${esc(p.id)}/">${esc(p.title)}<span>${esc(p.category)}</span></a>`)
           .join('\n        ')}
       </nav>`
           : ''
@@ -987,7 +993,7 @@ function indexPage(all, base) {
         ${all
           .map(
             (e) =>
-              `<a href="./${e.id}/">${esc(e.title)}<span>${esc(e.date)} · ${esc(e.readTime)}</span></a>`
+              `<a href="./${esc(e.id)}/">${esc(e.title)}<span>${esc(e.date)} · ${esc(e.readTime)}</span></a>`
           )
           .join('\n        ')}
       </nav>
@@ -1307,8 +1313,8 @@ function resumePage({ skills, projects, details }, base) {
               .map((tag) => `<span class="p-tag">${esc(tag)}</span>`)
               .join('')}</div>
             <div class="p-links">
-              ${project.githubUrl ? `<a href="${esc(project.githubUrl)}">Source</a>` : ''}
-              ${project.liveUrl ? `<a href="${esc(project.liveUrl)}">Live</a>` : ''}
+              ${safeHref(project.githubUrl) ? `<a href="${esc(safeHref(project.githubUrl))}">Source</a>` : ''}
+              ${safeHref(project.liveUrl) ? `<a href="${esc(safeHref(project.liveUrl))}">Live</a>` : ''}
             </div>
           </article>`
             )
@@ -1565,11 +1571,17 @@ function articleMarkdown(entry, base) {
 }
 
 function projectMarkdown(project, base) {
+  // Content-supplied links are scheme-checked, so a javascript: value in the
+  // data becomes no link rather than a live payload in the mirror.
+  const inviteUrl = safeHref(project.inviteUrl);
+  const supportUrl = safeHref(project.supportUrl);
+  const githubUrl = safeHref(project.githubUrl);
+  const liveUrl = safeHref(project.liveUrl);
   const links = [
-    project.inviteUrl ? `Add to Discord: ${project.inviteUrl}` : '',
-    project.supportUrl ? `Support: ${project.supportUrl}` : '',
-    project.githubUrl ? `Source: ${project.githubUrl}` : '',
-    project.liveUrl ? `Live: ${project.liveUrl}` : '',
+    inviteUrl ? `Add to Discord: ${inviteUrl}` : '',
+    supportUrl ? `Support: ${supportUrl}` : '',
+    githubUrl ? `Source: ${githubUrl}` : '',
+    liveUrl ? `Live: ${liveUrl}` : '',
   ]
     .filter(Boolean)
     .join('  \n');
@@ -1733,10 +1745,25 @@ const server = await createServer({
 });
 
 try {
-  const { journalEntriesData, projectsData, techSkillsData, warriorDetails, experienceData } =
-    await server.ssrLoadModule('/src/data/portfolioData.ts');
+  const data = await server.ssrLoadModule('/src/data/portfolioData.ts');
   const base = requireBase(server.config, 'generate-journal-pages');
   const dist = path.join(root, 'dist');
+
+  // Ids become URL segments, href values and directory names, so they are
+  // normalised to the slug alphabet once here. Every canonical, link and
+  // path.join downstream then inherits a value that cannot break out of an
+  // attribute or climb out of dist/.
+  const journalEntriesData = (data.journalEntriesData ?? []).map((entry) => ({
+    ...entry,
+    id: slug(entry.id),
+  }));
+  const projectsData = (data.projectsData ?? []).map((project) => ({
+    ...project,
+    id: slug(project.id),
+  }));
+  const experienceData = data.experienceData ?? [];
+  const techSkillsData = data.techSkillsData;
+  const warriorDetails = data.warriorDetails;
 
   if (!journalEntriesData?.length) throw new Error('no journal entries loaded');
 

@@ -6,6 +6,17 @@ const CACHE_NAME = `kashcmd-portfolio-dev-${BUILD}`;
 const STATIC_CACHE = `kashcmd-static-dev-${BUILD}`;
 const DYNAMIC_CACHE = `kashcmd-dynamic-dev-${BUILD}`;
 
+// Cache Storage is scoped to the origin, not to this worker's scope, so the
+// activate step must only remove this app's own old caches. Deleting everything
+// unmatched would also wipe any other app installed on the same origin — on
+// kashcmdd.github.io that includes the production portfolio, whose offline
+// cache this dev worker has no business touching.
+const OWN_CACHE_PREFIXES = [
+  'kashcmd-portfolio-dev-',
+  'kashcmd-static-dev-',
+  'kashcmd-dynamic-dev-',
+];
+
 // The worker is served from the Vite base, so its own location is the source of
 // truth for it. Deriving the prefix here keeps the site working on any base
 // without a build step rewriting this file.
@@ -36,13 +47,13 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((cacheName) => {
-            return (
+          .filter(
+            (cacheName) =>
+              OWN_CACHE_PREFIXES.some((prefix) => cacheName.startsWith(prefix)) &&
               cacheName !== STATIC_CACHE &&
               cacheName !== DYNAMIC_CACHE &&
               cacheName !== CACHE_NAME
-            );
-          })
+          )
           .map((cacheName) => {
             return caches.delete(cacheName);
           })

@@ -30,6 +30,37 @@ export const esc = (value = '') =>
     (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
   );
 
+/**
+ * Restricts an id to the slug alphabet every route already assumes.
+ *
+ * Ids become URL segments, href values and directory names, so a stray character
+ * is not cosmetic: it can break out of an attribute, or climb out of dist/ when
+ * the value is joined into a path. Content is authored in this repo today, but
+ * normalising once at the data boundary means a future contribution cannot turn
+ * a slug into markup or a path traversal.
+ */
+export const slug = (value) => String(value ?? '').replace(/[^a-z0-9-]/g, '');
+
+/**
+ * Allows only the schemes a portfolio link can legitimately use.
+ *
+ * esc() stops an attribute breakout but not `javascript:` inside an href, so
+ * content-supplied URLs pass through here first and anything unexpected becomes
+ * an empty string — which callers treat as "no link" — rather than a live
+ * payload. Relative URLs resolve against a placeholder origin and are allowed,
+ * since they only ever point back into this site.
+ */
+export const safeHref = (value) => {
+  const url = String(value ?? '').trim();
+  if (!url) return '';
+  try {
+    const protocol = new URL(url, 'https://example.invalid').protocol;
+    return protocol === 'http:' || protocol === 'https:' || protocol === 'mailto:' ? url : '';
+  } catch {
+    return '';
+  }
+};
+
 // "SEP 25, 2026" is not a format Date.parse accepts everywhere, so convert
 // before constructing. Feeding it straight in yields an Invalid Date.
 export const toIso = (date) => {

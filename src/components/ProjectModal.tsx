@@ -7,6 +7,7 @@ import { SmartImage } from './SmartImage';
 import { ArchitectureDiagram } from './ArchitectureDiagram';
 import { ShareBar } from './ShareBar';
 import { projectUrl } from '../utils/share';
+import { safeHref } from '../utils/url';
 import { useFocusTrap } from '../utils/useFocusTrap';
 
 interface ProjectModalProps {
@@ -40,6 +41,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   }, [project, onClose]);
 
   if (!project) return null;
+
+  // Content-supplied links are scheme-checked for the same reason the generated
+  // pages check them: React stops a quote breakout, not a javascript: value.
+  const inviteHref = safeHref(project.inviteUrl);
+  const supportHref = safeHref(project.supportUrl);
+  const liveHref = safeHref(project.liveUrl);
+  const githubHref = safeHref(project.githubUrl);
 
   return (
     <AnimatePresence>
@@ -283,9 +291,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               {/* Bot projects lead with the action a visitor actually wants:
                   adding the bot, not reading about it. Rendered only when a real
                   invite exists, so there is never a dead "Add to server" button. */}
-              {project.inviteUrl && (
+              {inviteHref && (
                 <a
-                  href={project.inviteUrl}
+                  href={inviteHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
@@ -293,9 +301,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                   <span>Add to Discord</span>
                 </a>
               )}
-              {project.supportUrl && (
+              {supportHref && (
                 <a
-                  href={project.supportUrl}
+                  href={supportHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2"
@@ -311,9 +319,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               >
                 Read full case study
               </a>
-              {project.liveUrl && (
+              {liveHref && (
                 <a
-                  href={project.liveUrl}
+                  href={liveHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
@@ -326,13 +334,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                   Visit Live Site
                 </a>
               )}
-              {project.githubUrl && (
+              {githubHref && (
                 <a
-                  href={project.githubUrl}
+                  href={githubHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={
-                    project.liveUrl
+                    liveHref
                       ? 'liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2'
                       : 'flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2'
                   }
