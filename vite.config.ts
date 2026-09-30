@@ -27,12 +27,14 @@ function devStaticArtifacts(): Plugin {
     'robots.txt',
     '404.html',
     'KashhCMD-Resume.pdf',
+    'llms.txt',
   ]);
-  const staticDirs = ['journal', 'projects', 'resume'];
+  const staticDirs = ['journal', 'projects', 'resume', 'uses'];
   const contentTypes: Record<string, string> = {
     '.html': 'text/html; charset=utf-8',
     '.xml': 'application/xml; charset=utf-8',
     '.txt': 'text/plain; charset=utf-8',
+    '.md': 'text/markdown; charset=utf-8',
     '.pdf': 'application/pdf',
     '.json': 'application/json; charset=utf-8',
     '.js': 'text/javascript; charset=utf-8',

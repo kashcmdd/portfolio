@@ -8,7 +8,7 @@ interface AnalyticsProps {
   domain?: string;
 }
 
-export const Analytics: React.FC<AnalyticsProps> = ({ domain = 'kashcmdd-dev.github.io' }) => {
+export const Analytics: React.FC<AnalyticsProps> = ({ domain = 'kashcmdd.github.io' }) => {
   const [hasConsent, setHasConsent] = useState(false);
 
   useEffect(() => {

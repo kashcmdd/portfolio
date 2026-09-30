@@ -57,8 +57,7 @@ export function renderBlocks(blocks = [], opts = {}) {
   return blocks.map((block, i) => renderBlock(block, { ...opts, slug: slugs[i] || '' }));
 }
 
-export function renderBlock(block, { headingLevel = 2, rich = false, slug = '' } = {}) {
-  switch (block.type) {
+export function renderBlock(block, { headingLevel = 2, rich = false, slug = '' } = {}) {  switch (block.type) {
     case 'heading': {
       const tag = `h${headingLevel}`;
       return `<${tag}${slug ? ` id="${esc(slug)}"` : ''}>${esc(block.text)}</${tag}>`;
@@ -128,3 +127,52 @@ export const requireBase = (config, label) => {
   }
   return base;
 };
+
+/**
+ * Renders the same typed blocks as Markdown.
+ *
+ * The HTML pages are for humans and crawlers; this is for everything else that
+ * reads the site without a browser — an LLM assistant, a docs tool, a script.
+ * It is a third renderer over one union, so it lives beside the other two: if a
+ * block type is added, it is added here in the same commit or the generated
+ * .md silently loses a section. No HTML escaping: the output is text, not a
+ * document, and escaping there would corrupt the code samples it is meant to
+ * preserve.
+ */
+export function blocksToMarkdown(blocks = []) {
+  return blocks
+    .map((block) => {
+      switch (block.type) {
+        case 'heading':
+          return `## ${block.text}`;
+        case 'code':
+          return [
+            '```' + (block.language || ''),
+            block.code,
+            '```',
+            block.caption ? `_${block.caption}_` : '',
+          ]
+            .filter(Boolean)
+            .join('\n');
+        case 'list':
+          return block.items
+            .map((item, i) => (block.ordered ? `${i + 1}. ${item}` : `- ${item}`))
+            .join('\n');
+        case 'quote':
+          return [
+            `> ${block.text}`,
+            block.attribution ? `>\n> — ${block.attribution}` : '',
+          ]
+            .filter(Boolean)
+            .join('\n');
+        case 'image':
+          return [`![${block.alt}](${block.src})`, block.caption ? `_${block.caption}_` : '']
+            .filter(Boolean)
+            .join('\n');
+        case 'paragraph':
+        default:
+          return block.text;
+      }
+    })
+    .join('\n\n');
+}

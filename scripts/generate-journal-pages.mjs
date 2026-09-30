@@ -12,7 +12,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
-import { esc, toIso, renderBlocks, articleOutline, requireBase } from './lib/journal-blocks.mjs';
+import { esc, toIso, renderBlocks, articleOutline, blocksToMarkdown, requireBase } from './lib/journal-blocks.mjs';
 import { PRISM_TOKEN_CSS } from './lib/prism.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -439,8 +439,83 @@ const cssFor = (prefix) => `
     padding-top: 2px;
   }
   .decision dd { margin: 0; font-size: .9rem; color: #e5e5e5; }
+  /* Uses / colophon: a definition list reads like the "spec sheet" the page is
+     pretending to be, which a stack of paragraphs does not. */
+  .uses dl { margin: 0; }
+  .uses dt {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #89aacc;
+    margin: 18px 0 4px;
+  }
+  .uses dd { margin: 0; color: #d4d4d4; font-size: .98rem; }
+  .uses dd a { color: #89aacc; }
+  /* The archive is the scannable counterpart to the card grid: year, project,
+     stack, link on one line each, which is how the reference portfolios present
+     everything they have ever built. */
+  .archive-wrap { overflow-x: auto; }
+  table.archive { width: 100%; border-collapse: collapse; margin: 0 0 44px; font-size: .9rem; }
+  table.archive th, table.archive td {
+    text-align: left;
+    padding: 11px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    vertical-align: top;
+  }
+  table.archive th {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    font-weight: 500;
+  }
+  table.archive td { color: #c4c4c4; }
+  table.archive .y {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #89aacc;
+    white-space: nowrap;
+  }
+  table.archive a { color: #f5f5f5; text-decoration: none; }
+  table.archive a:hover { color: #89aacc; }
+  /* Bot-project proof, mirrored from the modal. Rendered only when the data is
+     present, so a non-bot project simply never shows these headings. */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0 0 30px; }
+  .stats div {
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+    background: rgba(255, 255, 255, .02);
+  }
+  .stats b { display: block; font-size: 1.25rem; color: #fff; font-weight: 600; }
+  .stats span {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: #8a8a8a;
+  }
+  .commands { margin: 0 0 30px; padding: 0; list-style: none; }
+  .commands li {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+    font-size: .92rem;
+  }
+  .commands .g {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #89aacc;
+  }
   @media (max-width: 640px) {
     .more a { flex-direction: column; gap: 4px; }
+    .commands li { grid-template-columns: 1fr; gap: 2px; }
   }
 `;
 
@@ -486,10 +561,16 @@ const jsonLd = (entry, canonical, published) =>
     publisher: { '@type': 'Person', name: 'KashhCMD' },
   }).replace(/</g, '\\u003c');
 
-function projectsIndexPage(all, base) {
+function projectsIndexPage(all, base, experience = []) {
   const canonical = `${SITE_ORIGIN}${base}projects/`;
   const description =
     'Selected work: web apps, Discord bots and frontend experiments by KashhCMD.';
+  // The period comes from the same experience data the timeline renders, keyed
+  // by project id, so the archive and the timeline cannot disagree about when
+  // something shipped.
+  const periodById = Object.fromEntries(
+    experience.filter((entry) => entry.projectId).map((entry) => [entry.projectId, entry.period])
+  );
   return `<!DOCTYPE html>
 <html lang="en">
   <head>${head({
@@ -509,6 +590,28 @@ function projectsIndexPage(all, base) {
     <main>
       <h1>Projects</h1>
       <p class="sub">Web apps, Discord bots and frontend work. Each one has its own page.</p>
+
+      <div class="archive-wrap">
+        <table class="archive">
+          <thead>
+            <tr><th>Year</th><th>Project</th><th>Built with</th><th>Link</th></tr>
+          </thead>
+          <tbody>
+            ${all
+              .map(
+                (p) => `<tr>
+              <td class="y">${esc(periodById[p.id] || '—')}</td>
+              <td><a href="./${esc(p.id)}/">${esc(p.title)}</a></td>
+              <td>${esc((p.tags || []).slice(0, 3).join(', '))}</td>
+              <td><a href="./${esc(p.id)}/">Case study</a></td>
+            </tr>`
+              )
+              .join('\n            ')}
+          </tbody>
+        </table>
+      </div>
+
+      <h2>All projects</h2>
       <nav class="more">
         ${all
           .map(
@@ -625,8 +728,31 @@ function projectPage(project, base, all) {
         <ul class="tags">
           ${project.tags.map((t) => `<li>${esc(t)}</li>`).join('\n          ')}
         </ul>`
-          : ''
+            : ''
         }
+
+        ${
+          project.stats?.length
+            ? `<h2>By the numbers</h2>
+        <div class="stats">
+          ${project.stats
+            .map((stat) => `<div><b>${esc(stat.value)}</b><span>${esc(stat.label)}</span></div>`)
+            .join('\n          ')}
+        </div>`
+            : ''
+        }
+
+        ${
+          project.commands?.length
+            ? `<h2>Command surface</h2>
+        <ul class="commands">
+          ${project.commands
+            .map((command) => `<li><span class="g">${esc(command.group)}</span><span>${esc(command.detail)}</span></li>`)
+            .join('\n          ')}
+        </ul>`
+            : ''
+        }
+
 
         ${project.architecture && project.architecture.summary
           ? `<h2>How It Fits Together</h2>
@@ -665,8 +791,10 @@ function projectPage(project, base, all) {
           : ''
         }
 
-        ${project.githubUrl || project.liveUrl
+        ${project.githubUrl || project.liveUrl || project.inviteUrl || project.supportUrl
           ? `<div class="links">
+          ${project.inviteUrl ? `<a href="${esc(project.inviteUrl)}" rel="noopener noreferrer">Add to Discord</a>` : ''}
+          ${project.supportUrl ? `<a href="${esc(project.supportUrl)}" rel="noopener noreferrer">Support server</a>` : ''}
           ${project.githubUrl ? `<a href="${esc(project.githubUrl)}" rel="noopener noreferrer">Source code</a>` : ''}
           ${project.liveUrl ? `<a href="${esc(project.liveUrl)}" rel="noopener noreferrer">Live site</a>` : ''}
         </div>`
@@ -1249,7 +1377,89 @@ function notFoundPage(base) {
         <a href="${esc(`${base}journal/`)}">Journal</a>
         <a href="${esc(`${base}projects/`)}">Projects</a>
         <a href="${esc(`${base}resume/`)}">Resume</a>
+        <a href="${esc(`${base}uses/`)}">Uses</a>
       </div>
+    </div>
+  </body>
+</html>
+`;
+}
+
+/**
+ * The /uses page.
+ *
+ * Unlike the resume, this is not a second copy of the stack section. It is a
+ * colophon: what this site is actually built with and how it is generated, all
+ * of it traceable to vite.config.ts, package.json and the scripts in this
+ * directory. The tooling list is read from the same tech data the site renders,
+ * so it cannot advertise a tool the rest of the portfolio does not.
+ */
+function usesPage({ skills, details }, base) {
+  const canonical = `${SITE_ORIGIN}${base}uses/`;
+  const namesIn = (category) => skills.filter((s) => s.category === category).map((s) => s.name);
+  const group = (label, names) =>
+    names.length ? `<dt>${esc(label)}</dt><dd>${names.map(esc).join(' · ')}</dd>` : '';
+
+  return `<!doctype html>
+<html lang="en">
+  <head>${head({
+    title: 'Uses',
+    description:
+      'The tools and setup behind KashhCMD — the editor, the stack this site is built with, and how its static pages are generated.',
+    canonical,
+    image: `${SITE_ORIGIN}${base}og-image.jpg`,
+    imageAlt: 'KashhCMD — Discord bots and web apps, built end to end.',
+    prefix: '../',
+    type: 'website',
+  })}
+    <style>${cssFor('../')}</style>
+  </head>
+  <body>
+    <div class="top"><a href="../">KashhCMD</a> / Uses</div>
+    <main class="uses">
+      <h1>Uses</h1>
+      <p class="sub">The setup behind the work — what I build with, and what this site is made of.</p>
+
+      <p>
+        ${esc(details.name)} builds web apps and Discord bots. This page is the honest inventory:
+        the tools I reach for, and the technologies this portfolio itself is assembled from.
+      </p>
+
+      <h2>Everyday tools</h2>
+      <dl>
+        ${group('Tools', namesIn('Tools'))}
+        ${group('Frontend', namesIn('Frontend'))}
+        ${group('Backend', namesIn('Backend'))}
+        ${group('Databases', namesIn('Databases'))}
+        ${group('DevOps', namesIn('DevOps'))}
+      </dl>
+
+      <h2>This site</h2>
+      <dl>
+        <dt>Framework</dt><dd>React 19 · TypeScript (strict) · Vite 6</dd>
+        <dt>Styling</dt><dd>Tailwind CSS v4 (CSS-first, no config file)</dd>
+        <dt>Motion</dt><dd>GSAP for scroll timelines · Motion for component transitions</dd>
+        <dt>Media</dt><dd>HLS video backgrounds via hls.js, loaded on demand</dd>
+        <dt>Content</dt><dd>A typed block model in one data file — no Markdown parser</dd>
+        <dt>Type</dt><dd>Inter and Instrument Serif, self-hosted</dd>
+      </dl>
+
+      <h2>How it is generated</h2>
+      <p>
+        <code>npm run build</code> runs Vite and then the scripts in
+        <code>scripts/</code>, which write a plain HTML page for every journal entry and project,
+        the <a href="${esc(`${base}resume/`)}">resume</a>, a sitemap, an RSS feed and the service
+        worker. Those pages read with JavaScript disabled, which is the point.
+      </p>
+      <div class="links">
+        <a href="${esc(`${base}projects/`)}">Project pages</a>
+        <a href="${esc(`${base}journal/`)}">Journal</a>
+        <a href="${esc(`${base}resume/`)}">Resume</a>
+      </div>
+    </main>
+    <div class="end">
+      <a href="../">← Back to the portfolio</a>
+      A · Every page here is static HTML. No JavaScript, no server.
     </div>
   </body>
 </html>
@@ -1273,6 +1483,7 @@ function sitemapXml(base, entries, projects = []) {
       priority: '0.7',
     })),
     { loc: `${SITE_ORIGIN}${base}resume/`, lastmod: today, priority: '0.6' },
+    { loc: `${SITE_ORIGIN}${base}uses/`, lastmod: today, priority: '0.6' },
   ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -1300,6 +1511,154 @@ User-agent: *
 Disallow: /
 `;
 
+/**
+ * Machine-readable mirrors of everything above.
+ *
+ * Every HTML route also gets a sibling .md, plus a root llms.txt index, so an
+ * assistant or a script can read the whole site as text without a browser and
+ * without scraping rendered markup. They cost nothing: the data is already in
+ * memory here, and the Markdown renderer walks the same typed blocks the HTML
+ * pages do.
+ */
+const absUrl = (base, suffix) => `${SITE_ORIGIN}${base}${suffix}`;
+
+function articleMarkdown(entry, base) {
+  return [
+    `# ${entry.title}`,
+    `> ${entry.subtitle}`,
+    `${entry.date} · ${entry.readTime} · ${entry.category}`,
+    blocksToMarkdown(entry.content),
+    `Canonical: ${absUrl(base, `journal/${entry.id}/`)}`,
+  ].join('\n\n') + '\n';
+}
+
+function projectMarkdown(project, base) {
+  const links = [
+    project.inviteUrl ? `Add to Discord: ${project.inviteUrl}` : '',
+    project.githubUrl ? `Source: ${project.githubUrl}` : '',
+    project.liveUrl ? `Live: ${project.liveUrl}` : '',
+  ]
+    .filter(Boolean)
+    .join('  \n');
+
+  return [
+    `# ${project.title}`,
+    `> ${project.subtitle}`,
+    project.description,
+    project.outcome ? `**Outcome:** ${project.outcome}` : '',
+    project.highlights?.length
+      ? `## Highlights\n\n${project.highlights.map((h) => `- ${h}`).join('\n')}`
+      : '',
+    project.tags?.length ? `## Built with\n\n${project.tags.join(', ')}` : '',
+    project.stats?.length
+      ? `## By the numbers\n\n${project.stats.map((s) => `- ${s.label}: ${s.value}`).join('\n')}`
+      : '',
+    project.commands?.length
+      ? `## Command surface\n\n${project.commands.map((c) => `- **${c.group}**: ${c.detail}`).join('\n')}`
+      : '',
+    project.architecture?.summary ? `## Architecture\n\n${project.architecture.summary}` : '',
+    links,
+    `Canonical: ${absUrl(base, `projects/${project.id}/`)}`,
+  ]
+    .filter(Boolean)
+    .join('\n\n') + '\n';
+}
+
+function journalIndexMarkdown(all, base) {
+  return (
+    `# Journal\n\nArticles on algorithms, performance and architecture by KashhCMD.\n\n` +
+    all
+      .map((e) => `- [${e.title}](${absUrl(base, `journal/${e.id}/`)}): ${e.subtitle}`)
+      .join('\n') +
+    '\n'
+  );
+}
+
+function projectsIndexMarkdown(all, base, experience = []) {
+  const periodById = Object.fromEntries(
+    experience.filter((entry) => entry.projectId).map((entry) => [entry.projectId, entry.period])
+  );
+  return (
+    `# Projects\n\nSelected work by KashhCMD.\n\n` +
+    all
+      .map(
+        (p) =>
+          `- [${p.title}](${absUrl(base, `projects/${p.id}/`)}) — ${periodById[p.id] || ''} ${
+            p.subtitle
+          }`
+      )
+      .join('\n') +
+    '\n'
+  );
+}
+
+// The colophon as text, generated from the same skill data the page uses so the
+// two cannot list different tools.
+function usesMarkdown({ skills, details }, base) {
+  const namesIn = (category) => skills.filter((s) => s.category === category).map((s) => s.name);
+  const section = (label, names) =>
+    names.length ? `### ${label}\n\n${names.join(' · ')}` : '';
+  return (
+    `# Uses\n\n> The setup behind the work — what ${details.name} builds with, and what this site is made of.\n\n` +
+    [
+      section('Tools', namesIn('Tools')),
+      section('Frontend', namesIn('Frontend')),
+      section('Backend', namesIn('Backend')),
+      section('Databases', namesIn('Databases')),
+      section('DevOps', namesIn('DevOps')),
+    ]
+      .filter(Boolean)
+      .join('\n\n') +
+    `\n\n## This site\n\nReact 19 · TypeScript (strict) · Vite 6 · Tailwind CSS v4 · GSAP · Motion · hls.js\n\nCanonical: ${absUrl(
+      base,
+      'uses/'
+    )}\n`
+  );
+}
+
+function resumeMarkdown({ skills, projects, details }, base) {
+  const namesIn = (category) => skills.filter((s) => s.category === category).map((s) => s.name);
+  const section = (label, names) => (names.length ? `### ${label}\n\n${names.join(', ')}` : '');
+  return (
+    `# ${details.name}\n\n${details.title}\n\n> ${details.bio}\n\n` +
+    `## Skills\n\n` +
+    [
+      section('Frontend', namesIn('Frontend')),
+      section('Backend', namesIn('Backend')),
+      section('Databases', namesIn('Databases')),
+      section('DevOps', namesIn('DevOps')),
+      section('Tools', namesIn('Tools')),
+    ]
+      .filter(Boolean)
+      .join('\n\n') +
+    `\n\n## Selected projects\n\n` +
+    projects.map((p) => `- **${p.title}** — ${p.subtitle}`).join('\n') +
+    `\n\nCanonical: ${absUrl(base, 'resume/')}\n`
+  );
+}
+
+function llmsTxt({ details, entries, projects, base }) {
+  return [
+    `# ${details.name}`,
+    `> ${details.title}. ${details.bio}`,
+    '',
+    '## Journal',
+    entries.map((e) => `- [${e.title}](${absUrl(base, `journal/${e.id}/`)}): ${e.subtitle}`).join('\n'),
+    '',
+    '## Projects',
+    projects
+      .map((p) => `- [${p.title}](${absUrl(base, `projects/${p.id}/`)}): ${p.subtitle}`)
+      .join('\n'),
+    '',
+    '## Pages',
+    `- [Resume](${absUrl(base, 'resume/')})`,
+    `- [Uses](${absUrl(base, 'uses/')})`,
+    `- [Journal index](${absUrl(base, 'journal/')})`,
+    `- [Projects index](${absUrl(base, 'projects/')})`,
+    '',
+  ].join('\n');
+}
+
 const server = await createServer({
   root,
   configFile: path.join(root, 'vite.config.ts'),
@@ -1312,7 +1671,7 @@ const server = await createServer({
 });
 
 try {
-  const { journalEntriesData, projectsData, techSkillsData, warriorDetails } =
+  const { journalEntriesData, projectsData, techSkillsData, warriorDetails, experienceData } =
     await server.ssrLoadModule('/src/data/portfolioData.ts');
   const base = requireBase(server.config, 'generate-journal-pages');
   const dist = path.join(root, 'dist');
@@ -1323,6 +1682,7 @@ try {
     const dir = path.join(dist, 'journal', entry.id);
     await mkdir(dir, { recursive: true });
     await writeFile(path.join(dir, 'index.html'), articlePage(entry, base, journalEntriesData));
+    await writeFile(path.join(dir, 'index.md'), articleMarkdown(entry, base));
     console.log(`  journal/${entry.id}/  ${entry.title}`);
   }
 
@@ -1334,31 +1694,59 @@ try {
         path.join(dir, 'index.html'),
         projectPage(project, base, projectsData)
       );
+      await writeFile(path.join(dir, 'index.md'), projectMarkdown(project, base));
       console.log(`  projects/${project.id}/  ${project.title}`);
     }
     await mkdir(path.join(dist, 'projects'), { recursive: true });
     await writeFile(
       path.join(dist, 'projects', 'index.html'),
-      projectsIndexPage(projectsData, base)
+      projectsIndexPage(projectsData, base, experienceData ?? [])
+    );
+    await writeFile(
+      path.join(dist, 'projects', 'index.md'),
+      projectsIndexMarkdown(projectsData, base, experienceData ?? [])
     );
     console.log(`  projects/  index over ${projectsData.length} projects`);
   }
 
   await mkdir(path.join(dist, 'journal'), { recursive: true });
   await writeFile(path.join(dist, 'journal', 'index.html'), indexPage(journalEntriesData, base));
+  await writeFile(
+    path.join(dist, 'journal', 'index.md'),
+    journalIndexMarkdown(journalEntriesData, base)
+  );
 
   if (techSkillsData?.length && warriorDetails) {
+    const resumeData = { skills: techSkillsData, projects: projectsData ?? [], details: warriorDetails };
+
     const dir = path.join(dist, 'resume');
     await mkdir(dir, { recursive: true });
-    await writeFile(
-      path.join(dir, 'index.html'),
-      resumePage(
-        { skills: techSkillsData, projects: projectsData ?? [], details: warriorDetails },
-        base
-      )
-    );
+    await writeFile(path.join(dir, 'index.html'), resumePage(resumeData, base));
+    await writeFile(path.join(dir, 'index.md'), resumeMarkdown(resumeData, base));
     console.log(`  resume/  skills-based resume for ${warriorDetails.name}`);
+
+    const uses = path.join(dist, 'uses');
+    await mkdir(uses, { recursive: true });
+    await writeFile(
+      path.join(uses, 'index.html'),
+      usesPage({ skills: techSkillsData, details: warriorDetails }, base)
+    );
+    await writeFile(
+      path.join(uses, 'index.md'),
+      usesMarkdown({ skills: techSkillsData, details: warriorDetails }, base)
+    );
+    console.log(`  uses/  colophon for ${warriorDetails.name}`);
   }
+
+  await writeFile(
+    path.join(dist, 'llms.txt'),
+    llmsTxt({
+      details: warriorDetails,
+      entries: journalEntriesData,
+      projects: projectsData ?? [],
+      base,
+    })
+  );
 
   await writeFile(path.join(dist, 'robots.txt'), robotsTxt());
   await writeFile(path.join(dist, '404.html'), notFoundPage(base));
@@ -1370,6 +1758,7 @@ try {
 
   console.log(`\n${journalEntriesData.length} article pages + journal index -> dist/journal/`);
   console.log(`sitemap.xml + robots.txt (Disallow: /) -> dist/`);
+  console.log(`llms.txt + .md mirrors -> dist/`);
 } finally {
   await server.close();
 }

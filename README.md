@@ -52,8 +52,11 @@ src/data/portfolioData.ts
 ```
 
 Identity and links (`warriorDetails`), projects (including their architecture
-diagrams), journal entries (including their decision logs), the tech grid,
-explorations, the "currently building" line and the dated changelog beneath it.
+diagrams, bot command surfaces and outcome copy), the experience timeline
+(`experienceData`, derived from the projects so it cannot drift), journal entries
+(including their decision logs), the tech grid, explorations, testimonials
+(`testimonialsData`, empty until real quotes exist — the section hides itself),
+the "currently building" line and the dated changelog beneath it.
 The shape of each of those is declared in `src/types.ts`.
 
 Journal prose is a typed block list rather than markdown — a block is a paragraph,
@@ -68,10 +71,12 @@ Edit it, then run `npm run lint` and `npm run build`.
 `npm run build` is more than a bundle. Once Vite finishes, four scripts run:
 
 - `scripts/generate-journal-pages.mjs` — `/journal/` (index plus one page per
-  article), `/projects/` (index plus one page per project), `/resume/`,
+  article), `/projects/` (index plus one page per project), `/resume/`, `/uses/`,
   `404.html`, `sitemap.xml` and `robots.txt`. Each generated page carries its own
   title, description, canonical, Open Graph and Twitter tags and JSON-LD, and code
-  samples are highlighted with Prism during the same pass.
+  samples are highlighted with Prism during the same pass. Every route also gets a
+  sibling `index.md`, and a root `llms.txt` indexes the whole site for tools and
+  assistants that read text rather than HTML.
 - `scripts/generate-rss.mjs` — `rss.xml`.
 - `scripts/copy-sw.mjs` — the service worker.
 - `scripts/generate-resume-pdf.mjs` — `KashhCMD-Resume.pdf`. It prints the

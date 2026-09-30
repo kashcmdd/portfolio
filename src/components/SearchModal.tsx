@@ -6,13 +6,22 @@ import {
   journalEntriesData,
   techSkillsData,
   explorationItemsData,
+  experienceData,
   warriorDetails,
 } from '../data/portfolioData';
 import { entryPlainText } from '../utils/journalText';
 import { useMotionPref } from './MotionPrefProvider';
 import { useFocusTrap } from '../utils/useFocusTrap';
 
-type ResultType = 'project' | 'journal' | 'skill' | 'exploration' | 'action' | 'nav' | 'external';
+type ResultType =
+  | 'project'
+  | 'journal'
+  | 'skill'
+  | 'exploration'
+  | 'experience'
+  | 'action'
+  | 'nav'
+  | 'external';
 
 interface SearchResult {
   type: ResultType;
@@ -42,6 +51,10 @@ const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
     letter: 'E',
     className: 'bg-neutral-700/60 border border-neutral-500/40 text-neutral-200',
   },
+  experience: {
+    letter: 'X',
+    className: 'bg-[#89AACC]/20 border border-[#89AACC]/30 text-[#89AACC]',
+  },
   action: {
     letter: 'A',
     className: 'bg-[#e0af68]/15 border border-[#e0af68]/30 text-[#e0af68]',
@@ -60,6 +73,7 @@ const SECTION_LINKS: { id: string; label: string }[] = [
   { id: 'about', label: 'Go to About' },
   { id: 'skills', label: 'Go to Skills' },
   { id: 'work', label: 'Go to Projects' },
+  { id: 'experience', label: 'Go to Experience' },
   { id: 'stack', label: 'Go to Stack' },
   { id: 'journal', label: 'Go to Journal' },
   { id: 'explorations', label: 'Go to Explorations' },
@@ -197,6 +211,20 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
         keywords: 'journal article static page full no app rss feed',
       },
       {
+        type: 'action',
+        title: 'Download the resume PDF',
+        description: 'One-page resume, generated from this site',
+        url: 'KashhCMD-Resume.pdf',
+        keywords: 'resume cv pdf download hire work history',
+      },
+      {
+        type: 'action',
+        title: 'Read the uses page',
+        description: 'The tools and setup behind the work',
+        url: 'uses/',
+        keywords: 'uses setup tools stack gear editor how i work',
+      },
+      {
         type: 'external',
         title: 'Open GitHub',
         description: warriorDetails.githubUrl,
@@ -286,10 +314,35 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
       }
     });
 
+    // The experience timeline reuses each project's `outcome` sentence, which is
+    // not in the project haystack above. It is indexed on its own so a search for
+    // the impact ("conflict-safe", "audited") reaches the timeline entry. A query
+    // that already matches the project title is skipped here to avoid emitting
+    // the same work twice under two result types.
+    experienceData.forEach((entry) => {
+      const titleMatch = matches(entry.title.toLowerCase());
+      const summaryMatch = matches(entry.summary.toLowerCase());
+      const orgMatch = matches(entry.org.toLowerCase());
+      const stackMatch = (entry.stack || []).some((tech) => matches(tech.toLowerCase()));
+
+      if (!titleMatch && (summaryMatch || orgMatch || stackMatch)) {
+        scored.push({
+          score: (summaryMatch ? 3 : 0) + (orgMatch ? 1.5 : 0) + (stackMatch ? 1 : 0),
+          result: {
+            type: 'experience',
+            title: entry.title,
+            description: entry.summary,
+            url: `#experience`,
+            category: entry.period,
+            tags: entry.stack?.slice(0, 3),
+          },
+        });
+      }
+    });
+
     journalEntriesData.forEach((entry) => {
       const titleMatch = matches(entry.title.toLowerCase());
-      const descMatch = matches(entry.subtitle.toLowerCase());
-      const categoryMatch = matches(entry.category.toLowerCase());
+      const descMatch = matches(entry.subtitle.toLowerCase());      const categoryMatch = matches(entry.category.toLowerCase());
       // The body is what makes a specific word findable, and it is a much
       // larger haystack, so it is checked on its own and reported separately
       // rather than folded into the title match.

@@ -6,6 +6,8 @@ import { HeroSection } from './components/HeroSection';
 import { AboutSection } from './components/AboutSection';
 import { SkillsSection } from './components/SkillsSection';
 import { SelectedWorksSection } from './components/SelectedWorksSection';
+import { ExperienceSection } from './components/ExperienceSection';
+import { TestimonialsSection } from './components/TestimonialsSection';
 import { TechStackSection } from './components/TechStackSection';
 import { JournalSection } from './components/JournalSection';
 import { NowBuildingStrip } from './components/NowBuildingStrip';
@@ -160,7 +162,7 @@ export default function App() {
   useEffect(() => {
     if (isLoading) return;
 
-    const sectionIds = ['hero', 'about', 'skills', 'work', 'stack', 'journal', 'explorations', 'contact'];
+    const sectionIds = ['hero', 'about', 'skills', 'work', 'experience', 'stack', 'journal', 'explorations', 'testimonials', 'contact'];
 
     let bounds: { id: string; top: number; bottom: number }[] = [];
     const measure = () => {
@@ -305,6 +307,11 @@ export default function App() {
               onSelectProject={(project) => setSelectedProject(project)}
             />
 
+            {/* Experience timeline — self-directed work, newest first */}
+            <ExperienceSection
+              onSelectProject={(project) => setSelectedProject(project)}
+            />
+
             {/* Tech Stack & Skills */}
             <TechStackSection />
 
@@ -318,6 +325,9 @@ export default function App() {
 
             {/* Key Metrics / Stats */}
             <StatsSection />
+
+            {/* Testimonials — renders only once real quotes exist */}
+            <TestimonialsSection />
           </main>
 
           {/* 4. Footer & Contact */}

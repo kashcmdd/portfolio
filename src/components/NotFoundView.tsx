@@ -6,6 +6,7 @@ const LINKS = [
   { href: `${import.meta.env.BASE_URL}journal/`, label: 'Journal' },
   { href: `${import.meta.env.BASE_URL}projects/`, label: 'Projects' },
   { href: `${import.meta.env.BASE_URL}resume/`, label: 'Resume' },
+  { href: `${import.meta.env.BASE_URL}uses/`, label: 'Uses' },
 ];
 
 // Rendered when the app is reached at a path it does not recognise, which

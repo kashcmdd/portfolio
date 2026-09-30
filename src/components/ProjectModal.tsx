@@ -5,6 +5,8 @@ import { X, CheckCircle2, Target } from 'lucide-react';
 import { DemoPlayer } from './DemoPlayer';
 import { SmartImage } from './SmartImage';
 import { ArchitectureDiagram } from './ArchitectureDiagram';
+import { ShareBar } from './ShareBar';
+import { projectUrl } from '../utils/share';
 import { useFocusTrap } from '../utils/useFocusTrap';
 
 interface ProjectModalProps {
@@ -156,6 +158,56 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </div>
             )}
 
+            {/* Live numbers, only when there are real ones to show. A bot case
+                study is the one place a generic portfolio has no proof; a stat
+                with no source would be worse than no stat. */}
+            {project.stats && project.stats.length > 0 && (
+              <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {project.stats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-white/10 bg-white/[0.02] p-3 text-center"
+                  >
+                    <div className="text-lg font-body font-semibold text-white">{stat.value}</div>
+                    <div className="mt-0.5 text-[11px] font-body uppercase tracking-wider text-neutral-400">
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* The command surface. For a bot, this is the closest thing to a
+                feature list a user can actually act on, and unlike a screenshot
+                it says whether the bot does anything useful in a server. */}
+            {project.commands && project.commands.length > 0 && (
+              <details className="group mt-6 rounded-2xl border border-white/10 bg-white/[0.02]">
+                <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-xs font-body font-medium uppercase tracking-wider text-neutral-400">
+                  Command surface
+                  <svg
+                    className="h-4 w-4 transition-transform group-open:rotate-180"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden="true"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </summary>
+                <dl className="space-y-2 px-4 pb-4">
+                  {project.commands.map((command) => (
+                    <div key={command.group} className="flex gap-3 text-xs font-body">
+                      <dt className="w-32 shrink-0 font-mono uppercase tracking-wider text-[#89AACC]">
+                        {command.group}
+                      </dt>
+                      <dd className="text-neutral-300">{command.detail}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </details>
+            )}
+
             {/* Interactive Demo Section (only shown if project has a demo source) */}
             {(project.demoUrl || project.codePenId || project.codeSandboxId) && (
               <div className="p-4 rounded-2xl bg-[#89AACC]/10 border border-[#89AACC]/30">
@@ -222,6 +274,29 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
             {/* Action Buttons */}
             <div className="shrink-0 flex flex-wrap gap-3 px-6 py-4 sm:px-8 border-t border-white/10">
+              {/* Bot projects lead with the action a visitor actually wants:
+                  adding the bot, not reading about it. Rendered only when a real
+                  invite exists, so there is never a dead "Add to server" button. */}
+              {project.inviteUrl && (
+                <a
+                  href={project.inviteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 accent-gradient text-black font-semibold rounded-full py-2.5 px-5 text-sm hover:opacity-90 transition-opacity font-body cursor-pointer shadow-lg text-center inline-flex items-center justify-center gap-2"
+                >
+                  <span>Add to Discord</span>
+                </a>
+              )}
+              {project.supportUrl && (
+                <a
+                  href={project.supportUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2"
+                >
+                  <span>Support server</span>
+                </a>
+              )}
               {/* The modal is a quick read; the generated page is the permalink a
                   reader can quote or open without JavaScript. */}
               <a
@@ -268,6 +343,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               >
                 Close Case Study
               </button>
+            </div>
+
+            {/* The project has its own canonical static page, so sharing points
+                there rather than at the SPA hash. projectUrl() is the same helper
+                the article pages use, so the shared link cannot drift from the
+                URL the generator writes. */}
+            <div className="border-t border-white/10 pt-4 mt-2">
+              <ShareBar url={projectUrl(project.id)} title={project.title} />
             </div>
           </div>
         </motion.div>

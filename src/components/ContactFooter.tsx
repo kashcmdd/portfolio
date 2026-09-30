@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
-import { ArrowUpRight, MessageSquare, BookOpen, FileDown, FileText, LayoutGrid } from 'lucide-react';
+import { ArrowUpRight, MessageSquare, BookOpen, FileDown, FileText, LayoutGrid, Compass, Rss } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { useMotionPref } from './MotionPrefProvider';
 
@@ -168,6 +168,20 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               <FileDown className="w-4 h-4" />
               <span>PDF</span>
             </a>
+            <a
+              href={`${import.meta.env.BASE_URL}uses/`}
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <Compass className="w-4 h-4" />
+              <span>Uses</span>
+            </a>
+            <a
+              href={`${import.meta.env.BASE_URL}rss.xml`}
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <Rss className="w-4 h-4" />
+              <span>RSS</span>
+            </a>
             <button
               onClick={onOpenContactModal}
               className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
@@ -177,6 +191,13 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             </button>
           </div>
         </div>
+
+        {/* Credits, the way the portfolios this one is measured against close:
+            small, human, and specific about what it is made of. */}
+        <p className="mt-6 text-center text-[11px] font-body text-neutral-600">
+          Designed and built by {warriorDetails.name} · React, TypeScript, Vite and Tailwind CSS ·
+          Static pages generated at build time
+        </p>
       </div>
     </footer>
   );

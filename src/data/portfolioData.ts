@@ -6,6 +6,8 @@ import {
   CurrentlyBuilding,
   RecentWork,
   Architecture,
+  ExperienceEntry,
+  Testimonial,
 } from '../types';
 
 // Files in public/ are served from the Vite base, not the domain root, and a
@@ -185,6 +187,16 @@ export const projectsData: Project[] = [
     colSpanDesktop: 5,
     aspectRatio: "aspect-[4/3]",
     architecture: musicBotArchitecture,
+    // The command surface, grouped the way the bot's own description already
+    // groups it. inviteUrl / supportUrl / stats are left unset on purpose: there
+    // is no public invite or live count to cite yet, and the modal renders each
+    // of those only when it is present, so nothing false ships in the meantime.
+    commands: [
+      { group: "Queue", detail: "Add, remove, move, shuffle and loop tracks in the active queue" },
+      { group: "Playback filters", detail: "Live audio filters applied to the current track" },
+      { group: "Lyrics", detail: "Fetch the lyrics for whatever is playing" },
+      { group: "Saved playlists", detail: "Save and reload per-guild playlists" },
+    ],
   },
   {
     id: "melon",
@@ -201,6 +213,11 @@ export const projectsData: Project[] = [
     colSpanDesktop: 5,
     aspectRatio: "aspect-[4/3]",
     architecture: melonArchitecture,
+    commands: [
+      { group: "Moderation", detail: "Antinuke protection and automod" },
+      { group: "Community", detail: "Tickets, giveaways and join-to-create voice" },
+      { group: "Engagement", detail: "AI chat and autopost" },
+    ],
   },
   {
     id: "kashhcmd-portfolio",
@@ -232,6 +249,59 @@ export const projectsData: Project[] = [
     ],
   },
 ];
+
+/**
+ * The experience timeline.
+ *
+ * A recruiter scans for "what, with whom, when". With a self-directed body of
+ * work there is no employer to name, so the milestones are the projects
+ * themselves and the summary is each project's own `outcome` line — the same
+ * sentence the card and the case study already show, so the three can never
+ * drift apart.
+ *
+ * The periods are real. The months come from the repositories' own first
+ * commits; a project whose history was not available carries the bare year
+ * instead of a made-up month, because a timeline that invents detail is worse
+ * than one that admits the limit of what it knows.
+ */
+const experiencePeriods: Record<string, string> = {
+  'kashhcmd-portfolio': 'Sep 2026',
+  'rainbow-leaderboard': 'Jun 2026',
+  melon: 'Jun 2026',
+  scriptforge: '2026',
+  'discord-music-bot': '2026',
+};
+
+// Newest first, which is the order the timeline reads top to bottom.
+const experienceOrder = [
+  'kashhcmd-portfolio',
+  'rainbow-leaderboard',
+  'melon',
+  'scriptforge',
+  'discord-music-bot',
+];
+
+export const experienceData: ExperienceEntry[] = experienceOrder
+  .map((id) => projectsData.find((project) => project.id === id))
+  .filter((project): project is Project => Boolean(project))
+  .map((project) => ({
+    id: `work-${project.id}`,
+    period: experiencePeriods[project.id] ?? '2026',
+    title: project.title,
+    org: project.kind === 'Discord' ? 'Discord bot — independent' : 'Web app — independent',
+    summary: project.outcome ?? project.subtitle,
+    stack: project.tags.slice(0, 6),
+    projectId: project.id,
+  }));
+
+/**
+ * Quotes from real people. Intentionally empty.
+ *
+ * The section that consumes this returns null while the list is empty, so there
+ * is no invented praise to remember to delete later. Add objects shaped like
+ * { quote, author, role?, url? } and the section appears on its own.
+ */
+export const testimonialsData: Testimonial[] = [];
 
 export const techSkillsData: TechSkill[] = [
   // Frontend

@@ -31,6 +31,10 @@ export interface Project {
   codeSandboxId?: string; // CodeSandbox embed ID
   demoDescription?: string; // Description for the demo player
   architecture?: Architecture; // Layered system diagram, when the project has one
+  inviteUrl?: string; // Bot projects: public OAuth2 invite
+  supportUrl?: string; // Bot projects: support server or docs
+  stats?: ProjectStat[]; // Bot projects: live, sourced numbers only
+  commands?: ProjectCommand[]; // Bot projects: the command surface, grouped
 }
 
 export type JournalBlock =
@@ -140,4 +144,56 @@ export interface RecentWork {
   date: string;
   title: string;
   kind: 'Feature' | 'Fix' | 'Refactor' | 'Content';
+}
+
+/**
+ * Bot-only surface data, kept on Project instead of inferred from the prose.
+ *
+ * These exist because a bot case study is the one place a generic portfolio has
+ * nothing to show: a screenshot proves a UI exists, not that anyone can invite
+ * the bot. Every field is optional and renders only when present, so a project
+ * with no public invite or no live numbers simply shows nothing rather than a
+ * placeholder stat or a dead link.
+ */
+export interface ProjectStat {
+  label: string;
+  value: string;
+}
+
+/** A named group of slash commands, e.g. "Queue" -> "add, skip, move, shuffle". */
+export interface ProjectCommand {
+  group: string;
+  detail: string;
+}
+
+/**
+ * One milestone on the experience timeline (#new).
+ *
+ * Deliberately a flat list rather than a nested "roles with projects": this is a
+ * self-directed body of work, so the meaningful unit is the thing that shipped,
+ * not an employer. `period` carries a real date taken from the work itself —
+ * never a placeholder year invented to fill the column.
+ */
+export interface ExperienceEntry {
+  id: string;
+  /** Short display period, e.g. "Jun 2026". */
+  period: string;
+  title: string;
+  org: string;
+  summary: string;
+  stack?: string[];
+  /** When set, the entry can open the matching project case study. */
+  projectId?: string;
+}
+
+/**
+ * A quote from a real person. The array ships empty and the section renders
+ * nothing until it is filled: a portfolio that invents praise is worse than one
+ * that admits it has none yet.
+ */
+export interface Testimonial {
+  quote: string;
+  author: string;
+  role?: string;
+  url?: string;
 }

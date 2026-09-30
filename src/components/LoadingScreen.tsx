@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { activateOnKey } from '../utils/keyboard';
 
@@ -11,8 +11,6 @@ const ROTATING_WORDS = ["Design", "Create", "Inspire", "Build"];
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [count, setCount] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
-  const startTimeRef = useRef<number | null>(null);
-  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     const wordInterval = setInterval(() => {
@@ -22,31 +20,51 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   }, []);
 
   useEffect(() => {
-    const duration = 1000;
+    // The intro used to run a fixed one-second countdown regardless of whether
+    // anything was still loading, which made every visitor wait on a number
+    // rather than on the page. It now finishes when the document has actually
+    // loaded, with a short floor so the word animation is not a flash, and a
+    // hard ceiling so a slow or dead asset cannot hold the page hostage.
+    const MIN_MS = 420;
+    const MAX_MS = 1600;
+    const start = performance.now();
+    let done = false;
+    let raf = 0;
+    let minTimer = 0;
+    let ceiling = 0;
+    let completeTimer = 0;
 
-    const animateCounter = (timestamp: number) => {
-      if (!startTimeRef.current) startTimeRef.current = timestamp;
-      const elapsed = timestamp - startTimeRef.current;
-      const progress = Math.min(elapsed / duration, 1);
-      const currentVal = Math.floor(progress * 100);
-
-      setCount(currentVal);
-
-      if (progress < 1) {
-        animationFrameRef.current = requestAnimationFrame(animateCounter);
-      } else {
-        setTimeout(() => {
-          onComplete();
-        }, 150);
-      }
+    const finish = () => {
+      if (done) return;
+      done = true;
+      setCount(100);
+      completeTimer = window.setTimeout(onComplete, 120);
     };
 
-    animationFrameRef.current = requestAnimationFrame(animateCounter);
+    const ready = () => {
+      const elapsed = performance.now() - start;
+      minTimer = window.setTimeout(finish, Math.max(0, MIN_MS - elapsed));
+    };
+
+    if (document.readyState === 'complete') ready();
+    else window.addEventListener('load', ready, { once: true });
+    ceiling = window.setTimeout(finish, MAX_MS);
+
+    const animate = (now: number) => {
+      if (done) return;
+      const progress = Math.min((now - start) / MAX_MS, 1);
+      setCount(Math.min(99, Math.floor(progress * 100)));
+      raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
 
     return () => {
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      done = true;
+      window.clearTimeout(minTimer);
+      window.clearTimeout(ceiling);
+      window.clearTimeout(completeTimer);
+      window.removeEventListener('load', ready);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, [onComplete]);
 
