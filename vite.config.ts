@@ -13,11 +13,17 @@ import {defineConfig, type Plugin} from 'vite';
 // it looks like the link did nothing. This plugin runs the same scripts on the
 // first matching request and serves the result out of dist/, so those links
 // behave the same in dev as they do on a static host.
+//
+// copy-sw.mjs is deliberately not in the list: it rewrites dist/manifest.json
+// and hashes dist/assets, neither of which exists until `vite build` has run.
+// Including it made generation throw on a clean checkout and the request fall
+// back to the SPA shell — the exact failure this plugin exists to prevent. In
+// dev, Vite already serves manifest.json and sw.js from public/, and the
+// build-hash rewrite only matters for a real deploy.
 function devStaticArtifacts(): Plugin {
   const dist = path.resolve(__dirname, 'dist');
   const scripts = [
     'generate-journal-pages.mjs',
-    'copy-sw.mjs',
     'generate-rss.mjs',
     'generate-resume-pdf.mjs',
   ];

@@ -134,10 +134,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
           break;
         case 'ArrowDown':
           event.preventDefault();
+          // With no results, `(prev + 1) % 0` is NaN; leave the index alone.
+          if (results.length === 0) break;
           setSelectedIndex((prev) => (prev + 1) % results.length);
           break;
         case 'ArrowUp':
           event.preventDefault();
+          if (results.length === 0) break;
           setSelectedIndex((prev) => (prev - 1 + results.length) % results.length);
           break;
         case 'Enter':

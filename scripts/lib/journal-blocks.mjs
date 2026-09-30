@@ -70,7 +70,7 @@ export function renderBlock(block, { headingLevel = 2, rich = false, slug = '' }
             // The raw source never has to be embedded: the highlighted <code>
             // element's textContent is the original text, since token spans
             // add only markup. The article page script copies from there.
-            '<button type="button" class="copy" data-copy>Copy</button>',
+            '<button type="button" class="copy" data-copy-code>Copy</button>',
             '</div>',
             `<pre class="prism-code"><code>${highlightCode(block.code, block.language)}</code></pre>`,
             block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '',

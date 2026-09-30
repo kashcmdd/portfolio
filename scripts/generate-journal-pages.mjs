@@ -551,7 +551,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <meta name="author" content="KashhCMD" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0a0a0a" />
-    <link rel="canonical" href="${canonical}" />
+    <link rel="canonical" href="${esc(canonical)}" />
     <link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg" />
     <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png" />
     <meta property="og:type" content="${type}" />
@@ -928,11 +928,14 @@ function articlePage(entry, base, all) {
       // One delegated listener for every copy button on the page. The code to
       // copy is read back out of the highlighted <code> element rather than
       // embedded separately, so there is no second copy of the source to keep
-      // in sync and no raw text to escape into a data attribute.
+      // in sync and no raw text to escape into a data attribute. The hook is
+      // data-copy-code, distinct from the share bar's data-copy: both use one
+      // delegated document listener, and a shared selector made the share
+      // handler treat a code button as a share button and blank the clipboard.
       (function () {
         var reset;
         document.addEventListener('click', function (event) {
-          var button = event.target.closest('[data-copy]');
+          var button = event.target.closest('[data-copy-code]');
           if (!button) return;
           var code = button.closest('figure.code') && button.closest('figure.code').querySelector('code');
           if (!code || !navigator.clipboard) return;
@@ -1550,6 +1553,12 @@ function articleMarkdown(entry, base) {
     `# ${entry.title}`,
     `> ${entry.subtitle}`,
     `${entry.date} · ${entry.readTime} · ${entry.category}`,
+    // The HTML page renders the decision card, so the mirror has to as well or
+    // an assistant reading the .md loses the one part that says why a choice was
+    // made. Kept to the same two fields the type carries.
+    entry.decision
+      ? `## Decision\n\n**Chose:** ${entry.decision.chose}\n\n**Over:** ${entry.decision.over}`
+      : '',
     blocksToMarkdown(entry.content),
     `Canonical: ${absUrl(base, `journal/${entry.id}/`)}`,
   ].join('\n\n') + '\n';
@@ -1558,11 +1567,41 @@ function articleMarkdown(entry, base) {
 function projectMarkdown(project, base) {
   const links = [
     project.inviteUrl ? `Add to Discord: ${project.inviteUrl}` : '',
+    project.supportUrl ? `Support: ${project.supportUrl}` : '',
     project.githubUrl ? `Source: ${project.githubUrl}` : '',
     project.liveUrl ? `Live: ${project.liveUrl}` : '',
   ]
     .filter(Boolean)
     .join('  \n');
+
+  // Edges are stored as ids; the reader wants the human labels. Same lookup the
+  // HTML project page does, so the two cannot describe different diagrams.
+  const label = (id) => project.architecture?.nodes.find((node) => node.id === id)?.label || id;
+  const arch = project.architecture;
+  const architecture = arch?.summary
+    ? [
+        `## Architecture`,
+        arch.summary,
+        arch.layers?.length
+          ? `### Layers\n\n${arch.layers.map((layer) => `- ${layer.title}`).join('\n')}`
+          : '',
+        arch.nodes?.length
+          ? `### Components\n\n${arch.nodes
+              .map((node) => `- **${node.label}**${node.detail ? ` — ${node.detail}` : ''}`)
+              .join('\n')}`
+          : '',
+        arch.edges?.length
+          ? `### Connections\n\n${arch.edges
+              .map(
+                (edge) =>
+                  `- ${label(edge.from)} → ${label(edge.to)}${edge.label ? ` (${edge.label})` : ''}`
+              )
+              .join('\n')}`
+          : '',
+      ]
+        .filter(Boolean)
+        .join('\n\n')
+    : '';
 
   return [
     `# ${project.title}`,
@@ -1579,7 +1618,7 @@ function projectMarkdown(project, base) {
     project.commands?.length
       ? `## Command surface\n\n${project.commands.map((c) => `- **${c.group}**: ${c.detail}`).join('\n')}`
       : '',
-    project.architecture?.summary ? `## Architecture\n\n${project.architecture.summary}` : '',
+    architecture,
     links,
     `Canonical: ${absUrl(base, `projects/${project.id}/`)}`,
   ]

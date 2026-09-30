@@ -14,7 +14,7 @@
  * Runs automatically at the end of `npm run build`; can also be run alone as
  * `npm run check:static` after a build.
  */
-import { access, readdir, readFile } from 'node:fs/promises';
+import { access, readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -46,9 +46,15 @@ const requireFile = async (relative) => {
 
 const requireRoute = async (relative) => {
   for (const name of ['index.html', 'index.md']) {
-    if (!(await exists(path.join(dist, relative, name)))) {
+    const file = path.join(dist, relative, name);
+    if (!(await exists(file))) {
       failures.push(`missing ${relative}/${name}`);
+      continue;
     }
+    // A zero-byte file passes a presence-only check and is still a broken route,
+    // so the cheapest assertion that it was actually written is that it is not
+    // empty.
+    if ((await stat(file)).size === 0) failures.push(`empty ${relative}/${name}`);
   }
 };
 

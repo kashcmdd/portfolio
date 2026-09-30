@@ -53,6 +53,12 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           role="dialog"
           aria-modal="true"
           aria-label={project.title}
+          // While the demo player is open it is a second, topmost dialog. The
+          // project dialog stays mounted beneath it, so it is hidden from assistive
+          // tech and made inert to keep one dialog in the tree at a time. Escape
+          // precedence between the two is handled in DemoPlayer's capture listener.
+          aria-hidden={demoPlayerOpen || undefined}
+          inert={demoPlayerOpen || undefined}
           tabIndex={-1}
           className="liquid-glass-strong my-auto flex max-h-[calc(100dvh_-_1.5rem)] sm:max-h-[calc(100dvh_-_3rem)] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/20 text-white shadow-2xl"
         >

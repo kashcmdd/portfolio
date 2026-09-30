@@ -68,6 +68,24 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
     return demoUrl;
   };
 
+  const embedUrl = getEmbedUrl();
+  // A frame that is both same-origin and allowed to run scripts can reach into
+  // the parent document and strip its own sandbox, so the two flags are not given
+  // to a same-origin demo URL. Cross-origin embeds (CodePen, CodeSandbox) keep
+  // allow-same-origin so their previews can use storage; a different origin
+  // cannot reach this document regardless.
+  const sameOriginEmbed = (() => {
+    if (!embedUrl) return false;
+    try {
+      return new URL(embedUrl, window.location.href).origin === window.location.origin;
+    } catch {
+      return false;
+    }
+  })();
+  const sandbox = sameOriginEmbed
+    ? 'allow-forms allow-modals allow-popups allow-presentation allow-scripts'
+    : 'allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts';
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
       <div
@@ -125,14 +143,14 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
 
         {/* Demo Content */}
         <div className="flex-1 bg-[#0a0a0a] relative overflow-hidden">
-          {getEmbedUrl() ? (
+          {embedUrl ? (
             <iframe
               ref={iframeRef}
-              src={getEmbedUrl()}
+              src={embedUrl}
               title={`${title} Demo`}
               className="w-full h-full border-0"
               allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; xr-spatial-tracking"
-              sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+              sandbox={sandbox}
               loading="lazy"
             />
           ) : (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Check, Copy, Linkedin, Share2 } from 'lucide-react';
 import { shareTargets } from '../utils/share';
 
@@ -12,6 +12,15 @@ interface ShareBarProps {
 // links out to the generated static page rather than to the SPA hash route.
 export const ShareBar: React.FC<ShareBarProps> = ({ url, title, className = '' }) => {
   const [copied, setCopied] = useState(false);
+  // The "Copied" label resets on a timer; clearing it on unmount stops a state
+  // update on a dialog that has already closed.
+  const resetTimer = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (resetTimer.current !== null) window.clearTimeout(resetTimer.current);
+    },
+    []
+  );
   const targets = shareTargets(url, title);
 
   const copyLink = async () => {
@@ -33,7 +42,8 @@ export const ShareBar: React.FC<ShareBarProps> = ({ url, title, className = '' }
       if (!ok) return;
     }
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (resetTimer.current !== null) window.clearTimeout(resetTimer.current);
+    resetTimer.current = window.setTimeout(() => setCopied(false), 2000);
   };
 
   const buttonClass =

@@ -52,7 +52,7 @@ const entryForId = (id: string | null): JournalEntry | null =>
 // the homepage and quietly pretend the bad URL was fine. The generated routes
 // are whitelisted so those still resolve normally, and only a genuinely
 // unknown path renders the not-found view.
-const STATIC_ROUTE_PREFIXES = ['journal/', 'projects/', 'resume/'];
+const STATIC_ROUTE_PREFIXES = ['journal/', 'projects/', 'resume/', 'uses/'];
 
 const isUnknownRoute = (): boolean => {
   const base = import.meta.env.BASE_URL;

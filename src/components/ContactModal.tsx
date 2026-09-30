@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { warriorDetails } from '../data/portfolioData';
 import { X, Sparkles, Github } from 'lucide-react';
@@ -14,6 +14,14 @@ export const ContactModal: React.FC<ContactModalProps> = ({
   onClose,
 }) => {
   const [copied, setCopied] = useState(false);
+  // Cleared on unmount so the reset does not fire on a closed modal.
+  const copyTimer = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
+    },
+    []
+  );
 
   useEffect(() => {
     if (!isOpen) return;
@@ -97,9 +105,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  navigator.clipboard.writeText(warriorDetails.githubHandle);
+                  // Best-effort copy: a refused clipboard should not throw, and the
+                  // label still confirms the intent either way.
+                  navigator.clipboard?.writeText(warriorDetails.githubHandle).catch(() => {});
                   setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
+                  if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
+                  copyTimer.current = window.setTimeout(() => setCopied(false), 2000);
                 }}
                 className="text-xs font-mono text-[#89AACC] hover:underline cursor-pointer flex items-center gap-1.5"
               >

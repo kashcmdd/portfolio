@@ -63,7 +63,7 @@ the "currently building" line and the dated changelog beneath it.
 The shape of each of those is declared in `src/types.ts`.
 
 Journal prose is a typed block list rather than markdown — a block is a paragraph,
-heading, list, quote or code sample. That is deliberate: with no parser to keep in
+heading, list, quote, code sample or image. That is deliberate: with no parser to keep in
 sync, an entry cannot render one way on the site and another way in its generated
 page.
 

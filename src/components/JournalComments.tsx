@@ -21,19 +21,25 @@ export const JournalComments: React.FC<JournalCommentsProps> = ({ entryId }) => 
 
   // Load comments from localStorage
   useEffect(() => {
-    const storedComments = localStorage.getItem(`journal_comments_${entryId}`);
-    if (storedComments) {
-      try {
-        setComments(JSON.parse(storedComments));
-      } catch (e) {
-        console.error('Failed to parse comments:', e);
-      }
+    // Storage access throws rather than returning null when it is blocked, so
+    // the read is guarded the same way analyticsConsent and MotionPrefProvider
+    // guard theirs. A missing history is not worth taking the dialog down for.
+    try {
+      const storedComments = localStorage.getItem(`journal_comments_${entryId}`);
+      if (storedComments) setComments(JSON.parse(storedComments));
+    } catch (e) {
+      console.error('Failed to load comments:', e);
     }
   }, [entryId]);
 
-  // Save comments to localStorage
+  // Save comments to localStorage. Persisting is best-effort: if the write is
+  // refused, the comment still appears for the session instead of vanishing.
   const saveComments = (updatedComments: Comment[]) => {
-    localStorage.setItem(`journal_comments_${entryId}`, JSON.stringify(updatedComments));
+    try {
+      localStorage.setItem(`journal_comments_${entryId}`, JSON.stringify(updatedComments));
+    } catch (e) {
+      console.error('Failed to save comments:', e);
+    }
     setComments(updatedComments);
   };
 

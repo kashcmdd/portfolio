@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { techSkillsData } from '../data/portfolioData';
 import {
@@ -77,6 +77,14 @@ const levelBarClass = (level: string) =>
 export const TechStackSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [copied, setCopied] = useState(false);
+  // Cleared on unmount so the reset does not fire after the section is gone.
+  const copyTimer = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
+    },
+    []
+  );
 
   const categories = ['All', 'Frontend', 'Backend', 'Databases', 'DevOps', 'Tools'];
 
@@ -104,9 +112,14 @@ export const TechStackSection: React.FC = () => {
   );
 
   const handleCopyInstallCommand = () => {
-    navigator.clipboard.writeText('npm install react express discord.js typescript tailwindcss');
+    // Best-effort copy; a refused clipboard must not surface as an unhandled
+    // rejection, and the label still confirms the intent.
+    navigator.clipboard
+      ?.writeText('npm install react express discord.js typescript tailwindcss')
+      .catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
+    copyTimer.current = window.setTimeout(() => setCopied(false), 2000);
   };
 
   return (

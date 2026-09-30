@@ -275,8 +275,9 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
             ))}
           </div>
 
-          {/* Interactive Demo Badge (only shown if project has a demoUrl) */}
-          {project.demoUrl && (
+          {/* Interactive Demo Badge. Keyed on any demo source, not just a custom
+              demoUrl, so a CodePen/CodeSandbox-only project still shows it. */}
+          {(project.demoUrl || project.codePenId || project.codeSandboxId) && (
             <div className="absolute top-3 right-3 flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-green-500/60" title="Interactive Demo Available"></div>
               <span className="text-[10px] font-mono text-neutral-500">Live Demo</span>
