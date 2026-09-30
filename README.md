@@ -2,7 +2,7 @@
 
 # KashhCMD Portfolio (Development Version)
 
-> **⚠️ This is the development version for testing with AI assistants.**
+> **⚠️ This is the development build of the portfolio — a preview of new work before it reaches the live site.**
 > **For the production site, visit [kashcmdd/portfolio](https://github.com/kashcmdd/portfolio)**
 
 A cinematic dark portfolio: liquid glass visuals, GSAP and Motion animation, HLS video backgrounds, a typed technical journal, and project case studies that exist as real HTML as well as in-app modals.
