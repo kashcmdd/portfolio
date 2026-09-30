@@ -110,6 +110,10 @@ const cssFor = (prefix) => `
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
   }
+  /* No generated page is wider than its viewport. Without this the project
+     images in the "All projects" list render at their intrinsic width and push
+     a horizontal scrollbar onto every phone. */
+  img { max-width: 100%; height: auto; }
   a { color: #89aacc; }
   .top {
     max-width: 760px;
@@ -516,6 +520,25 @@ const cssFor = (prefix) => `
   @media (max-width: 640px) {
     .more a { flex-direction: column; gap: 4px; }
     .commands li { grid-template-columns: 1fr; gap: 2px; }
+    /* A four-column table cannot fit a phone, and the horizontal scrollbar it
+       grows lands on the main way into the case studies. Each row becomes a
+       labelled block instead, using the data-label the table writes. */
+    .archive-wrap { overflow-x: visible; }
+    table.archive thead { display: none; }
+    table.archive, table.archive tbody, table.archive tr, table.archive td { display: block; width: 100%; }
+    table.archive tr { padding: 14px 0; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+    table.archive td { padding: 0; border: 0; }
+    table.archive td + td { margin-top: 4px; }
+    table.archive td::before {
+      content: attr(data-label);
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #8a8a8a;
+    }
+    table.archive td.y { white-space: normal; margin-bottom: 2px; }
   }
 `;
 
@@ -600,10 +623,10 @@ function projectsIndexPage(all, base, experience = []) {
             ${all
               .map(
                 (p) => `<tr>
-              <td class="y">${esc(periodById[p.id] || '—')}</td>
-              <td><a href="./${esc(p.id)}/">${esc(p.title)}</a></td>
-              <td>${esc((p.tags || []).slice(0, 3).join(', '))}</td>
-              <td><a href="./${esc(p.id)}/">Case study</a></td>
+              <td class="y" data-label="Year">${esc(periodById[p.id] || '—')}</td>
+              <td data-label="Project"><a href="./${esc(p.id)}/">${esc(p.title)}</a></td>
+              <td data-label="Built with">${esc((p.tags || []).slice(0, 3).join(', '))}</td>
+              <td data-label="Link"><a href="./${esc(p.id)}/">Case study</a></td>
             </tr>`
               )
               .join('\n            ')}

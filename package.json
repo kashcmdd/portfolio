@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3001 --host=0.0.0.0",
-    "build": "vite build && node scripts/generate-journal-pages.mjs && node scripts/copy-sw.mjs && node scripts/generate-rss.mjs && node scripts/generate-resume-pdf.mjs",
+    "build": "vite build && node scripts/generate-journal-pages.mjs && node scripts/copy-sw.mjs && node scripts/generate-rss.mjs && node scripts/generate-resume-pdf.mjs && node scripts/check-static-output.mjs",
     "preview": "vite preview",
     "clean": "rm -rf dist",
+    "check:static": "node scripts/check-static-output.mjs",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

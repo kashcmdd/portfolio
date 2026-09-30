@@ -170,6 +170,16 @@ export const projectsData: Project[] = [
     featured: true,
     colSpanDesktop: 7,
     aspectRatio: "aspect-[16/10]",
+    // Real bullets, written from the project's own description. The modal and the
+    // generated page both fall back to a generic trio when this is absent, and a
+    // generic "liquid glass UI" line on a server-rendered Next.js app reads as
+    // filler, so every project carries its own.
+    highlights: [
+      "Transactional script editing with conflict-safe versions",
+      "Self-serve accounts with session invalidation and account deletion",
+      "CSRF-protected APIs and a GPC script parser",
+      "75 unit and end-to-end tests across the routes and the version service",
+    ],
     architecture: scriptforgeArchitecture,
   },
   {
@@ -186,6 +196,12 @@ export const projectsData: Project[] = [
     featured: true,
     colSpanDesktop: 5,
     aspectRatio: "aspect-[4/3]",
+    highlights: [
+      "YouTube, Spotify and SoundCloud playback through a Lavalink audio pipeline",
+      "25+ slash commands covering queue, filters, lyrics and saved playlists",
+      "Free / Pro / VIP tiers enforced by DJ roles and per-guild overrides",
+      "OAuth2 web dashboard and a one-command Docker image",
+    ],
     architecture: musicBotArchitecture,
     // The command surface, grouped the way the bot's own description already
     // groups it. inviteUrl / supportUrl / stats are left unset on purpose: there
@@ -212,6 +228,11 @@ export const projectsData: Project[] = [
     featured: true,
     colSpanDesktop: 5,
     aspectRatio: "aspect-[4/3]",
+    highlights: [
+      "Hybrid prefix and slash commands behind a single router",
+      "Antinuke, automod, tickets, giveaways and join-to-create voice modules",
+      "Sequelize over PostgreSQL, so feature modules never touch the database directly",
+    ],
     architecture: melonArchitecture,
     commands: [
       { group: "Moderation", detail: "Antinuke protection and automod" },

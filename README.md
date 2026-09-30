@@ -40,8 +40,11 @@ There is no test framework here, so a change is checked three ways:
 2. `npm run build` — must pass. The ">500 kB chunk" warning is expected and
    non-fatal: that chunk is `hls.js`, which is fetched on demand rather than at
    first paint.
-3. Inspecting `dist/` for the generated artifacts listed under
-   [Static output](#static-output).
+3. The build's final step asserts the generated output. `scripts/check-static-output.mjs`
+   fails the build if any route, `.md` mirror, `sitemap.xml`, `llms.txt` or the
+   resume PDF is missing from `dist/`, which is what catches a generator that
+   half-ran while Vite still exited green. Run it alone with
+   `npm run check:static`.
 
 ## Content
 
@@ -68,7 +71,8 @@ Edit it, then run `npm run lint` and `npm run build`.
 
 ## Static output
 
-`npm run build` is more than a bundle. Once Vite finishes, four scripts run:
+`npm run build` is more than a bundle. Once Vite finishes, four generator scripts
+run, followed by the assertion that they produced what they should:
 
 - `scripts/generate-journal-pages.mjs` — `/journal/` (index plus one page per
   article), `/projects/` (index plus one page per project), `/resume/`, `/uses/`,
@@ -84,6 +88,8 @@ Edit it, then run `npm run lint` and `npm run build`.
   real Inter and Instrument Serif faces, and falls back to a small hand-written
   PDF when no browser is installed. `RESUME_PDF_BROWSER` overrides the browser
   path.
+- `scripts/check-static-output.mjs` — writes nothing. It reads `dist/` and fails
+  the build when a page the four above should have produced is missing.
 
 Those pages are plain HTML, so they read with JavaScript disabled; the
 `<noscript>` block in `index.html` points at the journal for exactly that reason.

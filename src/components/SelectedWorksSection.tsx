@@ -163,9 +163,8 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
             user hears the list actually changed after activating a chip. */}
         <p aria-live="polite" className="sr-only">
           Showing {visible.length} {visible.length === 1 ? 'project' : 'projects'}
-          {kind === 'All' ? '' : ` in ${kind}`}, sorted by ${
-            SORTS.find((s) => s.id === sort)?.label
-          }.
+          {kind === 'All' ? '' : ` in ${kind}`}, sorted by{' '}
+          {SORTS.find((s) => s.id === sort)?.label}.
         </p>
 
         {visible.length === 0 ? (
