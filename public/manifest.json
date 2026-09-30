@@ -1,7 +1,7 @@
 {
   "name": "KashhCMD Portfolio",
-  "short_name": "KashhCMD Dev",
-  "description": "Web Designer & Discord Bot Developer Portfolio — development build",
+  "short_name": "KashhCMD",
+  "description": "Web Designer & Discord Bot Developer Portfolio",
   "start_url": "/portfolio/",
   "display": "standalone",
   "background_color": "#0a0a0a",

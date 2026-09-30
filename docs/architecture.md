@@ -220,9 +220,12 @@ All 34 files under `src/components/`, grouped by how they are reached:
   `SkillsRadar`, `NewsletterSignup`, `DemoPlayer`, `JournalCodeBlock`,
   `JournalComments`, `ShareBar`, `NotFoundView`.
 
-## Dev-only behaviour that is deliberate
+## Local development behaviour that is deliberate
 
-These are not bugs and should not be "fixed":
+This repository deploys the live site at
+`https://kashcmdd.github.io/portfolio/`. The items below describe the local dev
+server (`npm run dev`) and local preview only; they are not bugs and should not
+be "fixed":
 
 - `vite.config.ts` sets `base: '/portfolio/'`, so `dist/index.html` opened
   straight off disk will not find its assets — use `npm run preview`.

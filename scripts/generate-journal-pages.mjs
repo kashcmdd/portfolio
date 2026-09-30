@@ -1390,8 +1390,8 @@ function notFoundPage(base) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>404 — Page not found</title>
     <meta name="description" content="That page does not exist. Head back to the portfolio, the journal, or the project index." />
-    <!-- A 404 must never be indexed, even though the rest of the generated
-         pages here are deliberately noindex too. -->
+    <!-- A 404 must never be indexed, even though every other generated page
+         carries "index, follow" and is meant to be found. -->
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="${esc(`${base}favicon.svg`)}" type="image/svg+xml" />
     <style>${NOT_FOUND_CSS}</style>
