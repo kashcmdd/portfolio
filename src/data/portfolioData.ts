@@ -317,7 +317,10 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/kashcmdd/nebula",
     repoUrl: "https://github.com/kashcmdd/nebula-cogs",
     featured: true,
-    colSpanDesktop: 5,
+    // Full width: six featured cards cannot tile 12-wide rows unless the spans
+    // sum to a multiple of 12, and a bookend pairs the newest project with the
+    // hero-width first card.
+    colSpanDesktop: 12,
     aspectRatio: "aspect-[16/10]",
     highlights: [
       "Custom deepseek cog exposes 70+ tools, so the model can read and change the server rather than only talk about it",
