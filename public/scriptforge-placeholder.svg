@@ -2,16 +2,16 @@
   <title>ScriptForge</title>
   <defs>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#89AACC"/>
-      <stop offset="100%" stop-color="#4E85BF"/>
+      <stop offset="0%" stop-color="#FF8C42"/>
+      <stop offset="100%" stop-color="#B23A0F"/>
     </linearGradient>
     <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#89AACC" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="#89AACC" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#FF8C42" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#FF8C42" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#89AACC" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#89AACC" stop-opacity="0.04"/>
+      <stop offset="0%" stop-color="#FF8C42" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#FF8C42" stop-opacity="0.04"/>
     </linearGradient>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
@@ -54,10 +54,10 @@
       <path d="M330 300h70c26 0 30 18 30 34v0"/>
       <path d="M400 300h-70c-26 0-30 18-30 34v0"/>
     </g>
-    <circle cx="330" cy="300" r="7" fill="#89AACC"/>
-    <circle cx="400" cy="300" r="7" fill="#4E85BF"/>
+    <circle cx="330" cy="300" r="7" fill="#FF8C42"/>
+    <circle cx="400" cy="300" r="7" fill="#B23A0F"/>
     <rect x="240" y="334" width="126" height="18" rx="9" fill="#ffffff" fill-opacity="0.10"/>
-    <rect x="384" y="334" width="126" height="18" rx="9" fill="#89AACC" fill-opacity="0.30"/>
+    <rect x="384" y="334" width="126" height="18" rx="9" fill="#FF8C42" fill-opacity="0.30"/>
   </g>
 
   <g font-family="Inter, system-ui, sans-serif">

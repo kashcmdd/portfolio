@@ -6,7 +6,7 @@ interface LoadingScreenProps {
   onComplete: () => void;
 }
 
-const ROTATING_WORDS = ["Design", "Create", "Inspire", "Build"];
+const ROTATING_WORDS = ["Haunt", "Carve", "Beware", "Summon"];
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [count, setCount] = useState(0);
@@ -77,7 +77,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       role="button"
       tabIndex={0}
       aria-label="Enter the portfolio"
-      className="fixed inset-0 z-[9999] bg-[#0a0a0a] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#89AACC]"
+      className="fixed inset-0 z-[9999] bg-[#0a0a0a] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FF8C42]"
     >
       <div className="flex items-center justify-between">
         <motion.div
@@ -95,8 +95,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           transition={{ duration: 0.3, delay: 0.05 }}
           className="text-xs text-neutral-500 uppercase tracking-[0.2em] font-body flex items-center gap-2"
         >
-          <span className="w-2 h-2 rounded-full bg-[#89AACC] animate-pulse" />
-          Tap to enter
+          <span className="w-2 h-2 rounded-full bg-[#FF8C42] animate-pulse" />
+          Enter if you dare
         </motion.div>
       </div>
 

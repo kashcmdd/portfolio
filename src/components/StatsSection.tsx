@@ -46,7 +46,7 @@ export const StatsSection: React.FC = () => {
                 className="liquid-glass rounded-3xl p-6 border border-white/10 flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#89AACC]">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#FF8C42]">
                     <IconComp className="w-5 h-5" />
                   </div>
                   <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider">Metric 0{idx + 1}</span>

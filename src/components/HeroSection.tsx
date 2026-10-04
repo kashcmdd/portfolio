@@ -168,7 +168,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="blur-in opacity-0 translate-y-4 filter blur-md w-full max-w-xl">
           <div className="liquid-glass rounded-full p-1.5 border border-white/15 bg-black/40 backdrop-blur-xl flex items-center justify-between gap-1 shadow-2xl overflow-x-auto">
             <div className="hidden sm:flex items-center gap-1.5 pl-3 pr-1 text-[10px] font-mono text-neutral-400 uppercase tracking-wider shrink-0">
-              <Eye className="w-3.5 h-3.5 text-[#89AACC]" />
+              <Eye className="w-3.5 h-3.5 text-[#FF8C42]" />
               <span>ATMOSPHERE</span>
             </div>
 

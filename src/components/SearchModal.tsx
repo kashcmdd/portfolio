@@ -41,7 +41,7 @@ const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
   project: { letter: 'P', className: 'accent-gradient text-black' },
   journal: {
     letter: 'J',
-    className: 'bg-[#89AACC]/20 border border-[#89AACC]/30 text-[#89AACC]',
+    className: 'bg-[#FF8C42]/20 border border-[#FF8C42]/30 text-[#FF8C42]',
   },
   skill: {
     letter: 'S',
@@ -53,7 +53,7 @@ const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
   },
   experience: {
     letter: 'X',
-    className: 'bg-[#89AACC]/20 border border-[#89AACC]/30 text-[#89AACC]',
+    className: 'bg-[#FF8C42]/20 border border-[#FF8C42]/30 text-[#FF8C42]',
   },
   action: {
     letter: 'A',
@@ -454,7 +454,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
         >
           {/* Search Header */}
           <div className="flex items-center gap-3 px-6 py-4 border-b border-white/10">
-            <Search className="w-5 h-5 text-[#89AACC]" />
+            <Search className="w-5 h-5 text-[#FF8C42]" />
             <input
               ref={inputRef}
               type="text"
@@ -532,7 +532,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
                     onClick={() => activate(result)}
                     className={`w-full text-left p-4 rounded-xl transition-colors cursor-pointer ${
                       index === selectedIndex
-                        ? 'bg-white/20 border border-[#89AACC]'
+                        ? 'bg-white/20 border border-[#FF8C42]'
                         : 'hover:bg-white/10 border border-transparent'
                     }`}
                   >
@@ -550,7 +550,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
                             {result.title}
                           </h4>
                           {result.category && (
-                            <span className="text-xs text-[#89AACC] font-body">
+                            <span className="text-xs text-[#FF8C42] font-body">
                               {result.category}
                             </span>
                           )}

@@ -56,7 +56,7 @@ export const AboutSection: React.FC = () => {
 
             <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 mb-6">
               <div className="text-xs uppercase tracking-wider text-neutral-400 font-body mb-2 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#89AACC]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#FF8C42]" />
                 Development Philosophy
               </div>
               <p className="text-sm font-body font-light text-neutral-300 italic">
@@ -91,24 +91,24 @@ export const AboutSection: React.FC = () => {
               className="liquid-glass rounded-3xl p-6 border border-white/10 shadow-xl"
             >
               <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-neutral-400 font-body mb-4 font-semibold">
-                <Target className="w-4 h-4 text-[#89AACC]" />
+                <Target className="w-4 h-4 text-[#FF8C42]" />
                 Long-Term Aspirations
               </div>
               <ul className="space-y-3 font-body text-xs sm:text-sm text-neutral-300">
                 <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#89AACC] mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF8C42] mt-1.5 shrink-0" />
                   <span>Building high-quality, impactful software products.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#89AACC] mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF8C42] mt-1.5 shrink-0" />
                   <span>Creating robust developer tools & open-source packages.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#89AACC] mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF8C42] mt-1.5 shrink-0" />
                   <span>Mastering advanced cloud system design & distributed databases.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#89AACC] mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF8C42] mt-1.5 shrink-0" />
                   <span>Scaling Discord bots and REST API services for thousands of active users.</span>
                 </li>
               </ul>
@@ -123,7 +123,7 @@ export const AboutSection: React.FC = () => {
               className="liquid-glass rounded-3xl p-6 border border-white/10 shadow-xl"
             >
               <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-neutral-400 font-body mb-3 font-semibold">
-                <Compass className="w-4 h-4 text-[#4E85BF]" />
+                <Compass className="w-4 h-4 text-[#B23A0F]" />
                 Beyond Coding
               </div>
               <p className="text-xs sm:text-sm font-body font-light text-neutral-300 leading-relaxed">

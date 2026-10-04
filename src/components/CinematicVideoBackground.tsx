@@ -10,12 +10,12 @@ export interface VideoOption {
 export const VIDEO_SOURCES: VideoOption[] = [
   {
     id: 'golden-hour',
-    label: 'Golden Hour',
+    label: 'Witching Hour',
     url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081127_0992a171-d3c6-4978-8213-0ec5df8b6d63.mp4',
   },
   {
     id: 'still-water',
-    label: 'Still Water',
+    label: 'Black Water',
     url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4',
   },
   {
@@ -25,7 +25,7 @@ export const VIDEO_SOURCES: VideoOption[] = [
   },
   {
     id: 'quiet-dawn',
-    label: 'Quiet Dawn',
+    label: 'Blood Moon',
     url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4',
   },
 ];
@@ -122,7 +122,7 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
             preload={isActive ? 'auto' : 'metadata'}
             onError={() => handleVideoError(index)}
             onLoadedData={() => handleVideoLoad(index)}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out transform-gpu ${
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out transform-gpu halloween-video ${
               isActive && !hasError ? 'opacity-100 z-[1]' : 'opacity-0 z-0'
             }`}
             style={{
@@ -135,7 +135,7 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
 
       {/* Fallback gradient when videos fail */}
       {!hasActiveVideo && (
-        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#89AACC]/20 via-[#4E85BF]/10 to-[#0a0a0a] animate-pulse" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#FF8C42]/20 via-[#B23A0F]/10 to-[#0a0a0a] animate-pulse" />
       )}
 
       {showOverlayImage && (

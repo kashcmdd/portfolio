@@ -112,7 +112,7 @@ export const HlsVideoBackground: React.FC<HlsVideoBackgroundProps> = ({
           muted
           loop
           playsInline
-          className={`absolute min-w-full min-h-full object-cover pointer-events-none transform-gpu ${
+          className={`absolute min-w-full min-h-full object-cover pointer-events-none transform-gpu halloween-video ${
             flipVertical ? 'scale-y-[-1]' : ''
           } ${className}`}
           style={style}

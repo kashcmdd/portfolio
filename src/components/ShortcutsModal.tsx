@@ -64,7 +64,7 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose 
           </button>
 
           <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 text-[#89AACC]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 text-[#FF8C42]">
               <Keyboard className="w-5 h-5" />
             </div>
             <div>

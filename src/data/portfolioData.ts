@@ -833,6 +833,67 @@ if (match) openEntry(match[1]);`,
       },
     ],
   },
+  {
+    id: "seasonal-theme",
+    title: "A Seasonal Theme Without a Rewrite",
+    subtitle: "Turning the whole site orange for October with two colours and one CSS filter, and reverting it in a single commit on the first of November.",
+    date: "OCT 04, 2026",
+    readTime: "4 MIN READ",
+    category: "FRONTEND",
+    decision: {
+      chose: "A branch that swaps the accent ramp globally",
+      over: "A themed component layer with a second design system",
+    },
+    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80",
+    content: [
+      {
+        type: "paragraph",
+        text: "Every seasonal redesign starts with the same temptation: build a theme system. Tokens, a provider, a second palette, a toggle. It is the correct answer for a product that ships themes to customers, and the wrong answer for a personal site that wants to be orange for four weeks a year.",
+      },
+      { type: "heading", text: "Two colours, not a design system" },
+      {
+        type: "paragraph",
+        text: "The accent on this site is one short ramp: a light blue that fades into a darker one. It is written literally in the Tailwind classes, the gradients, the focus ring, the code-highlight theme and the static page generator, about a hundred and forty times in total. Swapping those two hex values recolours the buttons, links, rings, glows and gradients everywhere at once, because every one of them already pointed at the same pair.",
+      },
+      {
+        type: "code",
+        language: "css",
+        caption: "src/index.css — the whole palette change, in one rule",
+        code: `.accent-gradient {
+  background: linear-gradient(90deg, #FF8C42 0%, #B23A0F 100%);
+}`,
+      },
+      { type: "heading", text: "Recolour the footage, do not film new footage" },
+      {
+        type: "paragraph",
+        text: "The hero plays ambient landscape clips and the footer plays a streamed one. Commissioning matching seasonal footage, licensing it and re-encoding it is a week of work for a background nobody looks at directly. One CSS filter does the same job: it pushes the existing clips toward ember, which is enough to change the mood without touching a single video file.",
+      },
+      {
+        type: "code",
+        language: "css",
+        caption: "One class, applied to the background videos only",
+        code: `.halloween-video {
+  filter: sepia(0.5) hue-rotate(-15deg) saturate(1.4) brightness(0.8) contrast(1.1);
+}`,
+      },
+      {
+        type: "list",
+        items: [
+          "Changed: the accent ramp, the loading screen words, a filter on the background videos, a pumpkin favicon and this entry.",
+          "Unchanged: the layout, the components, the data model, the build, and every piece of copy that is not seasonal.",
+        ],
+      },
+      { type: "heading", text: "The revert is the whole point" },
+      {
+        type: "paragraph",
+        text: "Because the work lives on one branch and touches only colours, copy, one class and one asset, undoing it is a revert, not an archaeology project. A seasonal theme that takes a week to remove is worse than no seasonal theme at all, and the calendar is the only thing that decides when this goes away.",
+      },
+      {
+        type: "quote",
+        text: "If you cannot undo a theme in one commit, you did not build a theme. You built a second site.",
+      },
+    ],
+  },
 ];
 
 export const explorationItemsData: ExplorationItem[] = [
@@ -890,7 +951,7 @@ export const explorationItemsData: ExplorationItem[] = [
 export const currentlyBuildingData: CurrentlyBuilding = {
   name: 'KashhCMD Portfolio',
   description:
-    'Architecture diagrams and decision logs now ship as static pages; search ranks by relevance.',
+    'A seasonal Halloween recolour ships this month; the whole palette swaps back on the first of November.',
   status: 'In progress',
 };
 
@@ -899,6 +960,11 @@ export const currentlyBuildingData: CurrentlyBuilding = {
  * changes worth a stranger's attention, newest first, and keep the dates real.
  */
 export const recentWorkData: RecentWork[] = [
+  {
+    date: 'Oct 2026',
+    title: 'Seasonal Halloween theme',
+    kind: 'Feature',
+  },
   {
     date: 'Sep 2026',
     title: 'Architecture diagrams on project pages',

@@ -143,7 +143,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 id="project-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortId)}
-                className="appearance-none rounded-full bg-[#141414] border border-white/10 text-neutral-200 text-xs font-body pl-4 pr-9 py-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+                className="appearance-none rounded-full bg-[#141414] border border-white/10 text-neutral-200 text-xs font-body pl-4 pr-9 py-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
               >
                 {SORTS.map((option) => (
                   <option key={option.id} value={option.id} className="bg-[#141414]">
@@ -190,7 +190,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 role="button"
                 tabIndex={0}
                 aria-label={`Open case study: ${project.title}`}
-                className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] ${project.aspectRatio}`}
+                className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42] ${project.aspectRatio}`}
               >
                     {/* Background Image */}
                     <SmartImage

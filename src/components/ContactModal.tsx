@@ -125,7 +125,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
             />
             <div>
               <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-widest mb-1">
-                <Sparkles className="w-3.5 h-3.5 text-[#89AACC]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#FF8C42]" />
                 <span>Get in Touch</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-display italic text-white">
@@ -165,7 +165,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
                   if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
                   copyTimer.current = window.setTimeout(() => setCopied(false), 2000);
                 }}
-                className="text-xs font-mono text-[#89AACC] hover:underline cursor-pointer flex items-center gap-1.5"
+                className="text-xs font-mono text-[#FF8C42] hover:underline cursor-pointer flex items-center gap-1.5"
               >
                 {copied ? <span>Copied!</span> : <span>Copy handle</span>}
               </button>
@@ -174,7 +174,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
 
           <div className="mt-6">
             <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-widest mb-4">
-              <Send className="w-3.5 h-3.5 text-[#89AACC]" aria-hidden="true" />
+              <Send className="w-3.5 h-3.5 text-[#FF8C42]" aria-hidden="true" />
               <span>Or send a message</span>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -186,7 +186,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
                 placeholder="Your name"
                 aria-label="Your name"
                 required
-                className="w-full px-4 py-3 rounded-xl liquid-glass text-white placeholder-neutral-500 text-sm font-body focus:outline-none focus:ring-2 focus:ring-[#89AACC]/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl liquid-glass text-white placeholder-neutral-500 text-sm font-body focus:outline-none focus:ring-2 focus:ring-[#FF8C42]/50 transition-all"
               />
               <input
                 type="email"
@@ -196,7 +196,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
                 placeholder="Your email"
                 aria-label="Your email"
                 required
-                className="w-full px-4 py-3 rounded-xl liquid-glass text-white placeholder-neutral-500 text-sm font-body focus:outline-none focus:ring-2 focus:ring-[#89AACC]/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl liquid-glass text-white placeholder-neutral-500 text-sm font-body focus:outline-none focus:ring-2 focus:ring-[#FF8C42]/50 transition-all"
               />
               <textarea
                 name="message"
@@ -206,7 +206,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
                 aria-label="Your message"
                 required
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl liquid-glass text-white placeholder-neutral-500 text-sm font-body focus:outline-none focus:ring-2 focus:ring-[#89AACC]/50 transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl liquid-glass text-white placeholder-neutral-500 text-sm font-body focus:outline-none focus:ring-2 focus:ring-[#FF8C42]/50 transition-all resize-none"
               />
               {submitStatus === 'success' && (
                 <div className="flex items-center gap-2 text-xs text-green-400 font-body" role="status">

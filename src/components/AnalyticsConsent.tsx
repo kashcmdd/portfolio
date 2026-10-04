@@ -27,8 +27,8 @@ export const AnalyticsConsent: React.FC = () => {
     <div className="fixed bottom-4 right-4 z-50 max-w-sm">
       <div className="liquid-glass-strong rounded-2xl p-4 border border-white/20 text-white shadow-2xl">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#89AACC]/20 flex items-center justify-center shrink-0">
-            <Info className="w-4 h-4 text-[#89AACC]" />
+          <div className="w-8 h-8 rounded-full bg-[#FF8C42]/20 flex items-center justify-center shrink-0">
+            <Info className="w-4 h-4 text-[#FF8C42]" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-body text-white mb-2">

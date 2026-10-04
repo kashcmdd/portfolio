@@ -114,7 +114,7 @@ const cssFor = (prefix) => `
      images in the "All projects" list render at their intrinsic width and push
      a horizontal scrollbar onto every phone. */
   img { max-width: 100%; height: auto; }
-  a { color: #89aacc; }
+  a { color: #FF8C42; }
   .top {
     max-width: 760px;
     margin: 0 auto;
@@ -124,7 +124,7 @@ const cssFor = (prefix) => `
     text-transform: uppercase;
     color: #8a8a8a;
   }
-  .top a { color: #89aacc; text-decoration: none; }
+  .top a { color: #FF8C42; text-decoration: none; }
   main { max-width: 760px; margin: 0 auto; padding: 46px 24px 96px; }
   .meta {
     display: flex;
@@ -136,7 +136,7 @@ const cssFor = (prefix) => `
     color: #8a8a8a;
     margin-bottom: 20px;
   }
-  .meta .cat { color: #89aacc; font-weight: 600; }
+  .meta .cat { color: #FF8C42; font-weight: 600; }
   h1 {
     font-family: 'Instrument Serif', Georgia, serif;
     font-style: italic;
@@ -172,7 +172,7 @@ const cssFor = (prefix) => `
   p { margin: 0 0 18px; color: #d4d4d4; font-size: 1.02rem; }
   ul, ol { margin: 0 0 20px; padding-left: 22px; color: #d4d4d4; }
   li { margin-bottom: 9px; }
-  li::marker { color: #89aacc; }
+  li::marker { color: #FF8C42; }
   blockquote {
     margin: 28px 0;
     padding-left: 18px;
@@ -212,10 +212,10 @@ const cssFor = (prefix) => `
     list-style: none;
   }
   .toc summary::-webkit-details-marker { display: none; }
-  .toc summary::after { content: '+'; float: right; color: #89AACC; }
+  .toc summary::after { content: '+'; float: right; color: #FF8C42; }
   .toc details[open] summary::after { content: '\u2013'; }
   .toc summary:hover { color: #fff; }
-  .toc summary:focus-visible { outline: 2px solid #89AACC; outline-offset: -2px; }
+  .toc summary:focus-visible { outline: 2px solid #FF8C42; outline-offset: -2px; }
   .toc ol {
     margin: 0;
     padding: 0 18px 16px 34px;
@@ -255,7 +255,7 @@ const cssFor = (prefix) => `
     cursor: pointer;
   }
   .share-btn:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .2); color: #fff; }
-  .share-btn:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .share-btn:focus-visible { outline: 2px solid #FF8C42; outline-offset: 2px; }
   .sr-only {
     position: absolute;
     width: 1px;
@@ -306,7 +306,7 @@ const cssFor = (prefix) => `
     transition: background .15s, border-color .15s;
   }
   .links a:hover { background: rgba(255, 255, 255, .09); border-color: rgba(255, 255, 255, .28); }
-  .links a:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .links a:focus-visible { outline: 2px solid #FF8C42; outline-offset: 2px; }
   .codebar {
     padding: 8px 16px;
     border-bottom: 1px solid rgba(255, 255, 255, .1);
@@ -332,7 +332,7 @@ const cssFor = (prefix) => `
     transition: color .15s, background .15s;
   }
   .codebar .copy:hover { color: #fff; background: rgba(255, 255, 255, .1); }
-  .codebar .copy:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .codebar .copy:focus-visible { outline: 2px solid #FF8C42; outline-offset: 2px; }
   .codebar .copy[data-copied] { color: #9ece6a; border-color: rgba(158, 206, 106, .4); }
   figure.code pre { margin: 0; padding: 16px; overflow-x: auto; }
   figure.code code {
@@ -379,7 +379,7 @@ const cssFor = (prefix) => `
     color: #f5f5f5;
     text-decoration: none;
   }
-  .more a:hover { color: #89aacc; }
+  .more a:hover { color: #FF8C42; }
   .more a span { color: #8a8a8a; font-size: .8rem; white-space: nowrap; }
   .end { max-width: 760px; margin: 0 auto; padding: 0 24px 60px; color: #6a6a6a; font-size: .82rem; }
   .end a { color: #8a8a8a; }
@@ -402,9 +402,9 @@ const cssFor = (prefix) => `
     list-style: none;
   }
   .arch-details summary::-webkit-details-marker { display: none; }
-  .arch-details summary::after { content: '+'; float: right; color: #89AACC; }
+  .arch-details summary::after { content: '+'; float: right; color: #FF8C42; }
   .arch-details[open] summary::after { content: '\u2013'; }
-  .arch-details summary:focus-visible { outline: 2px solid #89AACC; outline-offset: -2px; }
+  .arch-details summary:focus-visible { outline: 2px solid #FF8C42; outline-offset: -2px; }
   .arch-details p { padding: 0 16px; margin: 14px 0 6px; color: #b4b4b4; font-size: .85rem; }
   .arch-layers { margin: 0; padding: 0 16px 4px; list-style: none; }
   .arch-nodes, .arch-edges { margin: 0; padding: 0 16px 4px 34px; color: #b4b4b4; font-size: .85rem; }
@@ -431,7 +431,7 @@ const cssFor = (prefix) => `
     font-weight: 600;
     letter-spacing: .22em;
     text-transform: uppercase;
-    color: #89AACC;
+    color: #FF8C42;
   }
   .decision dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; }
   .decision dt {
@@ -451,11 +451,11 @@ const cssFor = (prefix) => `
     font-size: 11px;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: #89aacc;
+    color: #FF8C42;
     margin: 18px 0 4px;
   }
   .uses dd { margin: 0; color: #d4d4d4; font-size: .98rem; }
-  .uses dd a { color: #89aacc; }
+  .uses dd a { color: #FF8C42; }
   /* The archive is the scannable counterpart to the card grid: year, project,
      stack, link on one line each, which is how the reference portfolios present
      everything they have ever built. */
@@ -478,11 +478,11 @@ const cssFor = (prefix) => `
   table.archive td { color: #c4c4c4; }
   table.archive .y {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #89aacc;
+    color: #FF8C42;
     white-space: nowrap;
   }
   table.archive a { color: #f5f5f5; text-decoration: none; }
-  table.archive a:hover { color: #89aacc; }
+  table.archive a:hover { color: #FF8C42; }
   /* Bot-project proof, mirrored from the modal. Rendered only when the data is
      present, so a non-bot project simply never shows these headings. */
   .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0 0 30px; }
@@ -515,7 +515,7 @@ const cssFor = (prefix) => `
     font-size: 11px;
     letter-spacing: .08em;
     text-transform: uppercase;
-    color: #89aacc;
+    color: #FF8C42;
   }
   @media (max-width: 640px) {
     .more a { flex-direction: column; gap: 4px; }
@@ -1034,7 +1034,7 @@ const RESUME_CSS = `
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 
-  :root { --accent: #89AACC; --line: rgba(255, 255, 255, .1); --muted: #9a9a9a; }
+  :root { --accent: #FF8C42; --line: rgba(255, 255, 255, .1); --muted: #9a9a9a; }
   body {
     margin: 0;
     background: #0a0a0a;
@@ -1090,7 +1090,7 @@ const RESUME_CSS = `
     border-radius: 22px; color: #0a0a0a;
     font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
     font-size: 36px;
-    background: linear-gradient(135deg, #89AACC, #4E85BF);
+    background: linear-gradient(135deg, #FF8C42, #B23A0F);
     box-shadow: 0 12px 30px rgba(137, 170, 204, .25);
   }
   header.masthead h1 {
@@ -1356,7 +1356,7 @@ const NOT_FOUND_CSS = `
   .code {
     margin: 0; font-size: clamp(72px, 18vw, 132px); line-height: 1;
     font-weight: 700; letter-spacing: -.04em;
-    background: linear-gradient(120deg, #89AACC, #4E85BF);
+    background: linear-gradient(120deg, #FF8C42, #B23A0F);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   h1 { margin: 12px 0 10px; font-size: 22px; font-weight: 600; color: #fff; }
@@ -1364,7 +1364,7 @@ const NOT_FOUND_CSS = `
   code.path {
     display: inline-block; margin-top: 4px;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 12.5px; color: #89AACC;
+    font-size: 12.5px; color: #FF8C42;
     background: rgba(137, 170, 204, .1);
     border: 1px solid rgba(137, 170, 204, .25);
     border-radius: 6px; padding: 4px 10px;
@@ -1377,7 +1377,7 @@ const NOT_FOUND_CSS = `
     border-radius: 999px; padding: 9px 18px; font-size: 13.5px; text-decoration: none;
   }
   .links a:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .28); color: #fff; }
-  .links a:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .links a:focus-visible { outline: 2px solid #FF8C42; outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 `;
 

@@ -76,7 +76,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               role="button"
               tabIndex={0}
               aria-label={`Read journal entry: ${entry.title}`}
-              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-4 md:p-5 rounded-[28px] sm:rounded-full bg-[#141414]/50 hover:bg-[#141414] border border-neutral-800 hover:border-neutral-700 transition-all duration-300 cursor-pointer shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-4 md:p-5 rounded-[28px] sm:rounded-full bg-[#141414]/50 hover:bg-[#141414] border border-neutral-800 hover:border-neutral-700 transition-all duration-300 cursor-pointer shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
             >
               {/* Image + Info */}
               <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
@@ -91,7 +91,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                 </div>
                 <div>
                   <div className="flex items-center gap-2 text-[10px] font-body uppercase text-neutral-400 tracking-wider mb-1">
-                    <span className="text-[#89AACC] font-semibold">{entry.category}</span>
+                    <span className="text-[#FF8C42] font-semibold">{entry.category}</span>
                     <span aria-hidden="true">&middot;</span>
                     <span>{entry.readTime}</span>
                   </div>

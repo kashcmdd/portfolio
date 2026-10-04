@@ -123,7 +123,7 @@ const SkillsRadar: React.FC<{ skills: TechSkill[] }> = ({ skills }) => {
           <motion.polygon
             points={dataPath}
             fill="rgba(137, 170, 204, 0.18)"
-            stroke="#89AACC"
+            stroke="#FF8C42"
             strokeWidth={2}
             strokeLinejoin="round"
             initial={{ scale: 0, opacity: 0 }}
@@ -141,7 +141,7 @@ const SkillsRadar: React.FC<{ skills: TechSkill[] }> = ({ skills }) => {
                 cx={p.x}
                 cy={p.y}
                 r={3.5}
-                fill="#89AACC"
+                fill="#FF8C42"
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true, margin: '-60px' }}
@@ -167,7 +167,7 @@ const SkillsRadar: React.FC<{ skills: TechSkill[] }> = ({ skills }) => {
                 style={{ fontSize: 11 }}
               >
                 {axis.label}
-                <tspan x={p.x} dy={13} className="fill-[#89AACC]">
+                <tspan x={p.x} dy={13} className="fill-[#FF8C42]">
                   {axis.score}
                 </tspan>
               </text>

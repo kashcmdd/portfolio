@@ -90,7 +90,7 @@ export const PRISM_TOKEN_CSS = `
 .prism-code .token.symbol,
 .prism-code .token.deleted,
 .prism-code .token.selector,
-.prism-code .token.attr-name { color: #89AACC; }
+.prism-code .token.attr-name { color: #FF8C42; }
 .prism-code .token.boolean,
 .prism-code .token.number,
 .prism-code .token.constant { color: #ff9e64; }

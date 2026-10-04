@@ -48,7 +48,7 @@ export const TestimonialsSection: React.FC = () => {
               transition={{ duration: 0.7, delay: Math.min(idx * 0.1, 0.3), ease: 'easeOut' }}
               className="liquid-glass flex flex-col rounded-3xl border border-white/10 p-6 sm:p-8"
             >
-              <Quote className="h-6 w-6 text-[#89AACC]" aria-hidden="true" />
+              <Quote className="h-6 w-6 text-[#FF8C42]" aria-hidden="true" />
               <blockquote className="mt-4 flex-1 text-sm sm:text-base font-body font-light leading-relaxed text-neutral-200">
                 {testimonial.quote}
               </blockquote>
@@ -62,7 +62,7 @@ export const TestimonialsSection: React.FC = () => {
                       href={safeHref(testimonial.url)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#89AACC] hover:underline"
+                      className="text-[#FF8C42] hover:underline"
                     >
                       Source
                     </a>

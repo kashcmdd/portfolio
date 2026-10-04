@@ -128,7 +128,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={onNavigateTop}
-              className="group flex items-center gap-1.5 text-white hover:text-[#89AACC] transition-colors cursor-pointer"
+              className="group flex items-center gap-1.5 text-white hover:text-[#FF8C42] transition-colors cursor-pointer"
             >
               <span className="font-display italic font-bold text-sm">{warriorDetails.name}</span>
               <span className="text-[10px] text-neutral-500 font-mono">© 2026</span>

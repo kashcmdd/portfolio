@@ -83,7 +83,7 @@ export const JournalComments: React.FC<JournalCommentsProps> = ({ entryId }) => 
   return (
     <div className="mt-8 pt-8 border-t border-white/10">
       <div className="flex items-center gap-2 mb-6">
-        <MessageSquare className="w-5 h-5 text-[#89AACC]" />
+        <MessageSquare className="w-5 h-5 text-[#FF8C42]" />
         <h3 className="text-lg font-display italic font-semibold text-white">
           Discussion ({comments.length})
         </h3>
@@ -98,7 +98,7 @@ export const JournalComments: React.FC<JournalCommentsProps> = ({ entryId }) => 
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
               placeholder="Your name"
-              className="w-full bg-[#0a0a0a]/50 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-[#89AACC] transition-colors font-body text-sm"
+              className="w-full bg-[#0a0a0a]/50 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF8C42] transition-colors font-body text-sm"
               required
               maxLength={50}
             />
@@ -108,7 +108,7 @@ export const JournalComments: React.FC<JournalCommentsProps> = ({ entryId }) => 
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Share your thoughts..."
-              className="w-full bg-[#0a0a0a]/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-[#89AACC] transition-colors font-body text-sm resize-none"
+              className="w-full bg-[#0a0a0a]/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF8C42] transition-colors font-body text-sm resize-none"
               rows={3}
               required
               maxLength={500}

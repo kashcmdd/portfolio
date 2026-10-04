@@ -18,7 +18,7 @@ import { RecentWork } from '../types';
  * title attribute.
  */
 const KIND_DOTS: Record<RecentWork['kind'], string> = {
-  Feature: 'bg-[#89AACC]',
+  Feature: 'bg-[#FF8C42]',
   Fix: 'bg-[#9ECE6A]',
   Refactor: 'bg-[#C099FF]',
   Content: 'bg-[#E0AF68]',
@@ -38,7 +38,7 @@ export const NowBuildingStrip: React.FC = () => {
     <div className="border-y border-white/10 bg-white/[0.02]">
       <div className="mx-auto flex max-w-6xl flex-col px-6 py-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-          <span className={`${LABEL} text-[#89AACC]`}>
+          <span className={`${LABEL} text-[#FF8C42]`}>
             <Hammer className="h-3 w-3" />
             Currently building
           </span>
@@ -60,7 +60,7 @@ export const NowBuildingStrip: React.FC = () => {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-1 self-start text-sm text-[#89AACC] transition-colors hover:text-white sm:self-auto"
+              className="flex shrink-0 items-center gap-1 self-start text-sm text-[#FF8C42] transition-colors hover:text-white sm:self-auto"
             >
               Take a look
               <ArrowUpRight className="h-3.5 w-3.5" />
@@ -94,7 +94,7 @@ export const NowBuildingStrip: React.FC = () => {
               href="https://github.com/kashcmdd/portfolio/commits/main"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-1 self-start whitespace-nowrap font-body text-xs text-[#89AACC] transition-colors hover:text-white sm:self-auto"
+              className="flex shrink-0 items-center gap-1 self-start whitespace-nowrap font-body text-xs text-[#FF8C42] transition-colors hover:text-white sm:self-auto"
             >
               Full changelog
               <ArrowUpRight className="h-3 w-3" />

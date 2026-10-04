@@ -51,7 +51,7 @@ export const NotFoundView: React.FC = () => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.28, ease: 'easeOut' }}
-        className="mt-6 font-mono text-xs text-[#89AACC] break-all"
+        className="mt-6 font-mono text-xs text-[#FF8C42] break-all"
       >
         {typeof window !== 'undefined' ? window.location.pathname : ''}
       </motion.p>

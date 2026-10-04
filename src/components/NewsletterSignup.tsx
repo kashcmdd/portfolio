@@ -56,11 +56,11 @@ const NewsletterSignup: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="flex-1 min-w-0 rounded-full bg-[#0f0f0f] border border-white/10 px-4 py-2.5 text-sm font-body text-white placeholder:text-neutral-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+              className="flex-1 min-w-0 rounded-full bg-[#0f0f0f] border border-white/10 px-4 py-2.5 text-sm font-body text-white placeholder:text-neutral-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
             />
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white text-black px-5 py-2.5 text-sm font-body font-medium hover:bg-[#89AACC] transition-colors cursor-pointer shrink-0"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-white text-black px-5 py-2.5 text-sm font-body font-medium hover:bg-[#FF8C42] transition-colors cursor-pointer shrink-0"
             >
               <span>Subscribe</span>
               <ArrowUpRight className="w-3.5 h-3.5" />

@@ -39,7 +39,7 @@ const renderBlock = (block: JournalBlock, key: number, slug: string | null) => {
       return (
         <ListTag
           key={key}
-          className={`my-4 space-y-2 pl-5 text-neutral-200 marker:text-[#89AACC] ${
+          className={`my-4 space-y-2 pl-5 text-neutral-200 marker:text-[#FF8C42] ${
             block.ordered ? 'list-decimal' : 'list-disc'
           }`}
         >
@@ -56,7 +56,7 @@ const renderBlock = (block: JournalBlock, key: number, slug: string | null) => {
       return (
         <blockquote
           key={key}
-          className="my-6 pl-4 border-l-2 border-[#89AACC]/60 italic text-neutral-300"
+          className="my-6 pl-4 border-l-2 border-[#FF8C42]/60 italic text-neutral-300"
         >
           <p>{block.text}</p>
           {block.attribution && (
@@ -215,7 +215,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
           {/* Reading progress: how far through the article you are */}
           <div className="h-0.5 shrink-0 bg-white/5" aria-hidden="true">
             <div
-              className="h-full bg-[#89AACC] transition-[width] duration-150 ease-out"
+              className="h-full bg-[#FF8C42] transition-[width] duration-150 ease-out"
               style={{ width: `${Math.round(progress * 100)}%` }}
             />
           </div>
@@ -234,7 +234,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
             {/* Category & Meta */}
             <div className="flex flex-wrap items-center gap-3 text-xs font-body text-neutral-400 mb-3">
               <span className="liquid-glass px-3 py-1 rounded-full text-white font-medium flex items-center gap-1.5">
-                <Tag className="w-3 h-3 text-[#89AACC]" /> {entry.category}
+                <Tag className="w-3 h-3 text-[#FF8C42]" /> {entry.category}
               </span>
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" /> {entry.date}
@@ -249,7 +249,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                 className="ml-auto flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1 hover:bg-white/20 transition-colors text-white"
                 aria-label="Open this post as a full page in a new tab"
               >
-                <ExternalLink className="w-3 h-3 text-[#89AACC]" />
+                <ExternalLink className="w-3 h-3 text-[#FF8C42]" />
                 Read full page
               </a>
             </div>
@@ -275,7 +275,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                   aria-controls="journal-toc"
                   className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-neutral-400 transition-colors hover:text-white hover:bg-white/10 cursor-pointer"
                 >
-                  <List className="w-3 h-3 text-[#89AACC]" />
+                  <List className="w-3 h-3 text-[#FF8C42]" />
                   Contents
                   <ChevronDown
                     className={`w-3 h-3 transition-transform ${showToc ? 'rotate-180' : ''}`}
@@ -346,7 +346,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                       key={item.id}
                       type="button"
                       onClick={() => onSelectEntry(item)}
-                      className="group flex flex-col gap-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-left transition-colors hover:border-[#89AACC]/40 hover:bg-white/[0.05] cursor-pointer"
+                      className="group flex flex-col gap-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-left transition-colors hover:border-[#FF8C42]/40 hover:bg-white/[0.05] cursor-pointer"
                     >
                       <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
                         {item.category}
@@ -355,7 +355,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                       </span>
                       <span className="flex items-start justify-between gap-2 text-sm leading-snug text-white">
                         {item.title}
-                        <ArrowRight className="mt-0.5 w-4 h-4 shrink-0 text-neutral-600 transition-transform group-hover:translate-x-0.5 group-hover:text-[#89AACC]" />
+                        <ArrowRight className="mt-0.5 w-4 h-4 shrink-0 text-neutral-600 transition-transform group-hover:translate-x-0.5 group-hover:text-[#FF8C42]" />
                       </span>
                     </button>
                   ))}

@@ -47,7 +47,7 @@ export const ExplorationsSection: React.FC = () => {
               role="button"
               tabIndex={0}
               aria-label={`View ${item.title}`}
-              className="group relative aspect-square rounded-3xl bg-[#141414] border border-neutral-800/80 overflow-hidden cursor-pointer shadow-xl hover:border-neutral-700 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+              className="group relative aspect-square rounded-3xl bg-[#141414] border border-neutral-800/80 overflow-hidden cursor-pointer shadow-xl hover:border-neutral-700 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
             >
                 <SmartImage
                   src={item.image}

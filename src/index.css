@@ -28,7 +28,7 @@
      still gets a ring instead of the low-contrast browser default that the dark
      background swallows. */
   :focus-visible {
-    outline: 2px solid #89AACC;
+    outline: 2px solid #FF8C42;
     outline-offset: 2px;
   }
 }
@@ -47,11 +47,11 @@
   }
 
   .accent-gradient {
-    background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%);
+    background: linear-gradient(90deg, #FF8C42 0%, #B23A0F 100%);
   }
 
   .accent-text-gradient {
-    background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%);
+    background: linear-gradient(90deg, #FF8C42 0%, #B23A0F 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -71,6 +71,13 @@
 
   .animate-train-bob {
     animation: train-bob 3s ease-in-out infinite;
+  }
+
+  /* Halloween: push the ambient background footage toward ember without
+     swapping the source clips. Only the section background <video> elements
+     carry this class. */
+  .halloween-video {
+    filter: sepia(0.5) hue-rotate(-15deg) saturate(1.4) brightness(0.8) contrast(1.1);
   }
 }
 

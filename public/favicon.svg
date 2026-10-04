@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KashhCMD">
-  <defs>
-    <linearGradient id="a" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#89AACC"/>
-      <stop offset="1" stop-color="#4E85BF"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#0a0a0a"/>
-  <rect x="1.5" y="1.5" width="61" height="61" rx="12.5" fill="none" stroke="#1f1f1f" stroke-width="1.5"/>
-  <text x="32" y="46" font-family="Georgia,'Times New Roman',serif" font-style="italic"
-        font-size="42" fill="url(#a)" text-anchor="middle">K</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Jack-o'-lantern">
+  <path d="M30 16c0-4 2-7 5-9-1 4 0 6 1 7-2 1-4 2-6 2z" fill="#5B8C3A"/>
+  <ellipse cx="32" cy="38" rx="25" ry="21" fill="#FF8C42"/>
+  <ellipse cx="32" cy="38" rx="19" ry="21" fill="#F2741B"/>
+  <ellipse cx="32" cy="38" rx="10" ry="21" fill="#FF9A57"/>
+  <path d="M18 31h8l-4 9z" fill="#1A0F05"/>
+  <path d="M38 31h8l-4 9z" fill="#1A0F05"/>
+  <path d="M30 42h4l-2 4z" fill="#1A0F05"/>
+  <path d="M20 45h24c0 6-5 10-12 10s-12-4-12-10z" fill="#1A0F05"/>
+  <path d="M23 45l3 5 3-5z" fill="#F2741B"/>
+  <path d="M35 45l3 5 3-5z" fill="#F2741B"/>
 </svg>

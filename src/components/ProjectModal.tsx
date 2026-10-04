@@ -113,8 +113,8 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               {/* What the project is worth, stated before the feature list so a
                   skimming reader gets the point even if they read nothing else. */}
               {project.outcome && (
-                <p className="mt-3 flex items-start gap-2 rounded-xl border border-[#89AACC]/25 bg-[#89AACC]/10 px-3 py-2 text-xs font-body text-neutral-200 sm:text-sm">
-                  <Target className="mt-0.5 h-4 w-4 shrink-0 text-[#89AACC]" aria-hidden="true" />
+                <p className="mt-3 flex items-start gap-2 rounded-xl border border-[#FF8C42]/25 bg-[#FF8C42]/10 px-3 py-2 text-xs font-body text-neutral-200 sm:text-sm">
+                  <Target className="mt-0.5 h-4 w-4 shrink-0 text-[#FF8C42]" aria-hidden="true" />
                   <span>{project.outcome}</span>
                 </p>
               )}
@@ -123,7 +123,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           {/* Tech Stack Tags */}
             <div className="mb-6">
               <div className="text-xs uppercase tracking-wider text-neutral-400 font-body mb-2.5 font-medium flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5 text-[#89AACC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg className="w-3.5 h-3.5 text-[#FF8C42]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="16 18 22 12 16 6"/>
                   <polyline points="8 6 2 12 8 18"/>
                 </svg>
@@ -153,7 +153,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                   'Responsive, fluid UI with liquid glass visual tokens',
                 ]).map((highlight) => (
                   <li key={highlight} className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#89AACC] shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF8C42] shrink-0" />
                     <span>{highlight}</span>
                   </li>
                 ))}
@@ -212,7 +212,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                 <dl className="space-y-2 px-4 pb-4">
                   {project.commands.map((command) => (
                     <div key={command.group} className="flex gap-3 text-xs font-body">
-                      <dt className="w-32 shrink-0 font-mono uppercase tracking-wider text-[#89AACC]">
+                      <dt className="w-32 shrink-0 font-mono uppercase tracking-wider text-[#FF8C42]">
                         {command.group}
                       </dt>
                       <dd className="text-neutral-300">{command.detail}</dd>
@@ -224,20 +224,20 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
             {/* Interactive Demo Section (only shown if project has a demo source) */}
             {(project.demoUrl || project.codePenId || project.codeSandboxId) && (
-              <div className="p-4 rounded-2xl bg-[#89AACC]/10 border border-[#89AACC]/30">
-                <div className="text-xs uppercase tracking-wider text-[#89AACC] font-body mb-2 font-medium flex items-center gap-1.5">
+              <div className="p-4 rounded-2xl bg-[#FF8C42]/10 border border-[#FF8C42]/30">
+                <div className="text-xs uppercase tracking-wider text-[#FF8C42] font-body mb-2 font-medium flex items-center gap-1.5">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                     <polyline points="9.9 9.9 9.9 14.1 14.1 14.1 14.1 9.9"/>
                   </svg>
                   Interactive Demo
                 </div>
-                <div className="relative aspect-video rounded-xl bg-[#0a0a0a] border border-[#89AACC]/20 overflow-hidden group cursor-pointer hover:border-[#89AACC]/50 transition-colors">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#89AACC]/20 to-[#0a0a0a]">
+                <div className="relative aspect-video rounded-xl bg-[#0a0a0a] border border-[#FF8C42]/20 overflow-hidden group cursor-pointer hover:border-[#FF8C42]/50 transition-colors">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#FF8C42]/20 to-[#0a0a0a]">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <button
                         onClick={() => setDemoPlayerOpen(true)}
-                        className="w-16 h-16 rounded-full liquid-glass flex items-center justify-center text-[#89AACC] hover:bg-[#89AACC]/20 transition-all duration-300 group-hover:scale-110"
+                        className="w-16 h-16 rounded-full liquid-glass flex items-center justify-center text-[#FF8C42] hover:bg-[#FF8C42]/20 transition-all duration-300 group-hover:scale-110"
                         aria-label="Launch Interactive Demo"
                       >
                         <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -261,9 +261,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                   {project.demoFeatures?.map((feature) => (
                     <div
                       key={feature}
-                      className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
+                      className="text-center p-2 rounded-lg bg-[#FF8C42]/10 border border-[#FF8C42]/20"
                     >
-                      <div className="text-xs font-body text-[#89AACC] font-semibold">
+                      <div className="text-xs font-body text-[#FF8C42] font-semibold">
                         {feature}
                       </div>
                     </div>
@@ -275,9 +275,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                   ].slice(0, 4).map((feature) => (
                     <div
                       key={feature}
-                      className="text-center p-2 rounded-lg bg-[#89AACC]/10 border border-[#89AACC]/20"
+                      className="text-center p-2 rounded-lg bg-[#FF8C42]/10 border border-[#FF8C42]/20"
                     >
-                      <div className="text-xs font-body text-[#89AACC] font-semibold">
+                      <div className="text-xs font-body text-[#FF8C42] font-semibold">
                         {feature}
                       </div>
                     </div>

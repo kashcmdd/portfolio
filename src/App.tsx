@@ -251,7 +251,7 @@ export default function App() {
   }, [unknownRoute]);
 
   return (
-    <div className="bg-[#0a0a0a] text-white font-body selection:bg-[#89AACC]/30 selection:text-white relative min-h-screen">
+    <div className="bg-[#0a0a0a] text-white font-body selection:bg-[#FF8C42]/30 selection:text-white relative min-h-screen">
       {/* Analytics */}
       <Analytics />
 
@@ -272,7 +272,7 @@ export default function App() {
               page this long is most of a minute of key presses. */}
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:rounded-full focus:bg-[#89AACC] focus:px-5 focus:py-2.5 focus:text-sm focus:font-medium focus:text-black"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:rounded-full focus:bg-[#FF8C42] focus:px-5 focus:py-2.5 focus:text-sm focus:font-medium focus:text-black"
           >
             Skip to content
           </a>
