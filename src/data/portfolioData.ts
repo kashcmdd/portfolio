@@ -317,7 +317,7 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/kashcmdd/nebula",
     repoUrl: "https://github.com/kashcmdd/nebula-cogs",
     featured: true,
-    colSpanDesktop: 7,
+    colSpanDesktop: 5,
     aspectRatio: "aspect-[16/10]",
     highlights: [
       "Custom deepseek cog exposes 70+ tools, so the model can read and change the server rather than only talk about it",
@@ -350,6 +350,7 @@ export const projectsData: Project[] = [
  * than one that admits the limit of what it knows.
  */
 const experiencePeriods: Record<string, string> = {
+  nebula: 'Oct 2026',
   'kashhcmd-portfolio': 'Sep 2026',
   'rainbow-leaderboard': 'Jun 2026',
   melon: 'Jun 2026',
@@ -359,6 +360,7 @@ const experiencePeriods: Record<string, string> = {
 
 // Newest first, which is the order the timeline reads top to bottom.
 const experienceOrder = [
+  'nebula',
   'kashhcmd-portfolio',
   'rainbow-leaderboard',
   'melon',
