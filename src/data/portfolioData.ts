@@ -315,7 +315,8 @@ export const projectsData: Project[] = [
     image: asset("nebula-placeholder.svg"),
     tags: ["Python", "Red-DiscordBot", "discord.py", "DeepSeek", "Tool Calling", "PowerShell", "Windows"],
     githubUrl: "https://github.com/kashcmdd/nebula",
-    featured: false,
+    repoUrl: "https://github.com/kashcmdd/nebula-cogs",
+    featured: true,
     colSpanDesktop: 7,
     aspectRatio: "aspect-[16/10]",
     highlights: [

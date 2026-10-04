@@ -702,6 +702,7 @@ function projectPage(project, base, all) {
   const inviteUrl = safeHref(project.inviteUrl);
   const supportUrl = safeHref(project.supportUrl);
   const githubUrl = safeHref(project.githubUrl);
+  const repoUrl = safeHref(project.repoUrl);
   const liveUrl = safeHref(project.liveUrl);
 
   return `<!DOCTYPE html>
@@ -820,11 +821,12 @@ function projectPage(project, base, all) {
           : ''
         }
 
-        ${githubUrl || liveUrl || inviteUrl || supportUrl
+        ${githubUrl || repoUrl || liveUrl || inviteUrl || supportUrl
           ? `<div class="links">
           ${inviteUrl ? `<a href="${esc(inviteUrl)}" rel="noopener noreferrer">Add to Discord</a>` : ''}
           ${supportUrl ? `<a href="${esc(supportUrl)}" rel="noopener noreferrer">Support server</a>` : ''}
           ${githubUrl ? `<a href="${esc(githubUrl)}" rel="noopener noreferrer">Source code</a>` : ''}
+          ${repoUrl ? `<a href="${esc(repoUrl)}" rel="noopener noreferrer">Related repository</a>` : ''}
           ${liveUrl ? `<a href="${esc(liveUrl)}" rel="noopener noreferrer">Live site</a>` : ''}
         </div>`
           : ''
@@ -1314,6 +1316,7 @@ function resumePage({ skills, projects, details }, base) {
               .join('')}</div>
             <div class="p-links">
               ${safeHref(project.githubUrl) ? `<a href="${esc(safeHref(project.githubUrl))}">Source</a>` : ''}
+              ${safeHref(project.repoUrl) ? `<a href="${esc(safeHref(project.repoUrl))}">Related</a>` : ''}
               ${safeHref(project.liveUrl) ? `<a href="${esc(safeHref(project.liveUrl))}">Live</a>` : ''}
             </div>
           </article>`
@@ -1576,11 +1579,13 @@ function projectMarkdown(project, base) {
   const inviteUrl = safeHref(project.inviteUrl);
   const supportUrl = safeHref(project.supportUrl);
   const githubUrl = safeHref(project.githubUrl);
+  const repoUrl = safeHref(project.repoUrl);
   const liveUrl = safeHref(project.liveUrl);
   const links = [
     inviteUrl ? `Add to Discord: ${inviteUrl}` : '',
     supportUrl ? `Support: ${supportUrl}` : '',
     githubUrl ? `Source: ${githubUrl}` : '',
+    repoUrl ? `Related: ${repoUrl}` : '',
     liveUrl ? `Live: ${liveUrl}` : '',
   ]
     .filter(Boolean)

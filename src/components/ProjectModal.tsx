@@ -48,6 +48,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   const supportHref = safeHref(project.supportUrl);
   const liveHref = safeHref(project.liveUrl);
   const githubHref = safeHref(project.githubUrl);
+  const repoHref = safeHref(project.repoUrl);
 
   return (
     <AnimatePresence>
@@ -349,6 +350,16 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                     <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 5.94 8.23c-3.07.44-5.66 1.81-7.12 4.27m9 6V9"/>
                   </svg>
                   View Repository
+                </a>
+              )}
+              {repoHref && (
+                <a
+                  href={repoHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="liquid-glass rounded-full py-2.5 px-5 text-sm font-medium text-white hover:bg-white/20 transition-colors font-body cursor-pointer inline-flex items-center justify-center gap-2"
+                >
+                  <span>Related repository</span>
                 </a>
               )}
               <button

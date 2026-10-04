@@ -20,6 +20,7 @@ export interface Project {
   image: string;
   tags: string[];
   githubUrl?: string;
+  repoUrl?: string; // a second repository, e.g. a related repo or cogs repo
   liveUrl?: string;
   featured: boolean;
   colSpanDesktop: number; // 5, 7 or 12 for bento grid
