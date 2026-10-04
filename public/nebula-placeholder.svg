@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="Nebula - self-hosted Discord bot platform">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#4C1D95"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.4" r="0.62">
+      <stop offset="0" stop-color="#C4B5FD" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#C4B5FD" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#bg)"/>
+  <rect width="1200" height="750" fill="url(#glow)"/>
+
+  <g stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1">
+    <path d="M0 150 H1200 M0 300 H1200 M0 450 H1200 M0 600 H1200"/>
+    <path d="M150 0 V750 M300 0 V750 M450 0 V750 M600 0 V750 M750 0 V750 M900 0 V750 M1050 0 V750"/>
+  </g>
+
+  <circle cx="600" cy="330" r="150" fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="3"/>
+  <text x="600" y="405" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="230" font-weight="700" fill="#FFFFFF">N</text>
+
+  <text x="600" y="580" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="66" font-weight="600" fill="#EDE9FE">Nebula</text>
+  <text x="600" y="632" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="30" fill="#DDD6FE">Self-hosted Discord bot platform</text>
+</svg>

@@ -123,6 +123,41 @@ const melonArchitecture: Architecture = {
   ],
 };
 
+const nebulaArchitecture: Architecture = {
+  summary:
+    'Two repositories: a deployment layer that pins Red-DiscordBot as a dependency (no fork) and scripts install, cog selection, backups and updates, and a set of original cogs. The centrepiece is a DeepSeek-backed cog: a mention carries the message text and any images to the model, which replies with tool calls. Those calls run against the live guild through a permission gate that checks the requester\u2019s own Discord permissions and the role hierarchy, and every action is logged. The same cog posts join-time welcome messages and button role menus.',
+  layers: [
+    { title: 'Discord' },
+    { title: 'Entry points' },
+    { title: 'Assistant' },
+    { title: 'Guards' },
+    { title: 'Runtime' },
+    { title: 'State' },
+  ],
+  nodes: [
+    { id: 'guild', label: 'Discord Guild', detail: 'members \u2022 roles \u2022 channels', layer: 0 },
+    { id: 'mention', label: 'Mention / !ai', detail: 'text + images', layer: 1 },
+    { id: 'welcome', label: 'Welcome + Role Menus', detail: 'join + buttons', layer: 1 },
+    { id: 'model', label: 'DeepSeek Flash', detail: 'vision + tools', layer: 2 },
+    { id: 'tools', label: 'Tool Layer', detail: '70+ tools', layer: 2 },
+    { id: 'perms', label: 'Permission Gate', detail: "requester's own perms", layer: 3 },
+    { id: 'red', label: 'Red-DiscordBot', detail: '20 cogs', layer: 4 },
+    { id: 'scripts', label: 'PowerShell Scripts', detail: 'install \u2022 backup', layer: 4 },
+    { id: 'data', label: 'Config + Data', detail: 'gitignored', layer: 5 },
+  ],
+  edges: [
+    { from: 'guild', to: 'mention', label: 'message' },
+    { from: 'guild', to: 'welcome', label: 'member joins' },
+    { from: 'mention', to: 'model', label: 'prompt + image' },
+    { from: 'model', to: 'tools', label: 'tool call' },
+    { from: 'welcome', to: 'tools', label: 'post' },
+    { from: 'tools', to: 'perms', label: 'gated by' },
+    { from: 'perms', to: 'red', label: 'act via' },
+    { from: 'red', to: 'data' },
+    { from: 'scripts', to: 'data' },
+  ],
+};
+
 export const warriorDetails = {
   name: "KashhCMD",
   title: "Web Designer & Discord Bot Developer",
@@ -267,6 +302,34 @@ export const projectsData: Project[] = [
       "Video Backgrounds",
       "Liquid Glass UI",
       "12-Column Grid"
+    ],
+  },
+  {
+    id: "nebula",
+    title: "Nebula",
+    kind: "Discord",
+    category: "Self-Hosted Bot Platform",
+    subtitle: "AI-Operable Discord Bot on a Reproducible Red-DiscordBot Deployment",
+    outcome: "Turns running a server into a conversation: mention the bot and it reads or changes the server itself, with every action gated on the requester's own Discord permissions.",
+    description: "A self-hosted Discord bot built on Red-DiscordBot, split across two repositories — a reproducible deployment layer (a pinned Red dependency rather than a fork, scripted install, cog selection, backups, updates and branding) and a set of original cogs. The centrepiece is a DeepSeek-backed cog that gives the model 70+ tools, so it can read live server state (roles, channels, members, the audit log) and act on it: create, rename, reorder and delete channels and roles, set permission overwrites, kick, ban, timeout and prune members, post and edit embeds, and manage webhooks, emojis, stickers, AutoMod rules, scheduled events, threads and voice state, plus self-assignable role menus posted as buttons. It also reads image attachments (vision) and posts automatic welcome messages. Every action is checked against the requester's permissions at execution time rather than the bot's, applied with role-hierarchy rules, and logged.",
+    image: asset("nebula-placeholder.svg"),
+    tags: ["Python", "Red-DiscordBot", "discord.py", "DeepSeek", "Tool Calling", "PowerShell", "Windows"],
+    githubUrl: "https://github.com/kashcmdd/nebula",
+    featured: false,
+    colSpanDesktop: 7,
+    aspectRatio: "aspect-[16/10]",
+    highlights: [
+      "Custom deepseek cog exposes 70+ tools, so the model can read and change the server rather than only talk about it",
+      "Action tools are gated on the requester's own Discord permissions at execution time, with role-hierarchy checks and logging",
+      "Reproducible Windows deployment: pinned Red dependency (no fork), scripted install, cog selection, backups and updates",
+      "Vision, button role menus, scheduled events, AutoMod and welcome messages, from two repositories",
+    ],
+    architecture: nebulaArchitecture,
+    commands: [
+      { group: "AI assistant", detail: "!ai or @Nebula — ask about, or change, the server; reads image attachments" },
+      { group: "Server tools", detail: "channels, roles, permissions, members, messages, webhooks, emojis, events, AutoMod, voice" },
+      { group: "Community", detail: "button role menus, automatic welcome messages, trivia and economy" },
+      { group: "Moderation", detail: "kick, ban, timeout, prune, warnings, mutes, filters and cleanup" },
     ],
   },
 ];
