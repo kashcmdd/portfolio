@@ -23,7 +23,7 @@ export const DecisionLog: React.FC<DecisionLogProps> = ({ onSelectEntry }) => {
   if (decisions.length === 0) return null;
 
   return (
-    <div className="mt-12 md:mt-16 rounded-[28px] border border-neutral-800 bg-[#141414]/40 p-6 md:p-8">
+    <div className="mt-12 md:mt-16 rounded-[28px] border border-neutral-800 bg-[#150f22]/40 p-6 md:p-8">
       <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.3em] mb-2">
         <span className="w-8 h-px bg-neutral-800" />
         <span>Engineering decisions</span>

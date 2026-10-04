@@ -16,6 +16,7 @@ import { StatsSection } from './components/StatsSection';
 import { ContactFooter } from './components/ContactFooter';
 import { Analytics } from './components/Analytics';
 import { AnalyticsConsent } from './components/AnalyticsConsent';
+import { SpookyAtmosphere } from './components/SpookyAtmosphere';
 import { Project, JournalEntry } from './types';
 import { journalEntriesData } from './data/portfolioData';
 import NotFoundView from './components/NotFoundView';
@@ -251,12 +252,15 @@ export default function App() {
   }, [unknownRoute]);
 
   return (
-    <div className="bg-[#0a0a0a] text-white font-body selection:bg-[#FF8C42]/30 selection:text-white relative min-h-screen">
+    <div className="bg-[#0a0612] text-white font-body selection:bg-[#FF8C42]/30 selection:text-white relative min-h-screen">
       {/* Analytics */}
       <Analytics />
 
       {/* Analytics Consent Banner */}
       <AnalyticsConsent />
+
+      {/* Seasonal Halloween ambience — fixed, decorative, pointer-events-none */}
+      <SpookyAtmosphere />
 
       {/* 1. Loading Screen. The page renders underneath it, so fonts, the hero
           video and the first images are already in flight while the intro

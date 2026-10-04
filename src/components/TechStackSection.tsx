@@ -123,7 +123,7 @@ export const TechStackSection: React.FC = () => {
   };
 
   return (
-    <section id="stack" className="relative w-full bg-[#0a0a0a] text-white py-20 md:py-28 px-6 md:px-12 lg:px-16 overflow-hidden">
+    <section id="stack" className="relative w-full bg-[#0a0612] text-white py-20 md:py-28 px-6 md:px-12 lg:px-16 overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
         {/* Header */}
         <motion.div

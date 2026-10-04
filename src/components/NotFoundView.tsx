@@ -16,7 +16,7 @@ const LINKS = [
 export const NotFoundView: React.FC = () => (
   <section
     id="not-found"
-    className="relative w-full bg-[#0a0a0a] text-white min-h-screen flex items-center justify-center px-6 py-24"
+    className="relative w-full bg-[#0a0612] text-white min-h-screen flex items-center justify-center px-6 py-24"
   >
     <div className="max-w-xl text-center">
       <motion.p
@@ -67,7 +67,7 @@ export const NotFoundView: React.FC = () => (
           <a
             key={link.href}
             href={link.href}
-            className="inline-flex items-center rounded-full border border-white/10 bg-[#141414] px-5 py-2.5 text-xs font-body text-neutral-200 transition-colors hover:bg-[#1f1f1f] hover:border-white/20 hover:text-white"
+            className="inline-flex items-center rounded-full border border-white/10 bg-[#150f22] px-5 py-2.5 text-xs font-body text-neutral-200 transition-colors hover:bg-[#211832] hover:border-white/20 hover:text-white"
           >
             {link.label}
           </a>

@@ -151,7 +151,7 @@ export const DemoPlayer: React.FC<DemoPlayerProps> = ({
         </div>
 
         {/* Demo Content */}
-        <div className="flex-1 bg-[#0a0a0a] relative overflow-hidden">
+        <div className="flex-1 bg-[#0a0612] relative overflow-hidden">
           {embedUrl ? (
             <iframe
               ref={iframeRef}

@@ -12,7 +12,7 @@
   }
 
   html, body {
-    background-color: #0a0a0a;
+    background-color: #0a0612;
     color: hsl(var(--text));
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
@@ -121,6 +121,101 @@
     background-position: 0% 50%;
   }
 }
+
+/* ---- Seasonal Halloween ambience ----------------------------------------
+   All decorative and CSS-only, so there is no runtime JavaScript cost and the
+   site's global reduced-motion rule (animation-duration: 0.01ms) neutralises
+   every one of these for anyone who asked for less motion. */
+@keyframes fog-drift-a {
+  from { transform: translate3d(-6%, 0, 0); }
+  to   { transform: translate3d(6%, 1%, 0); }
+}
+@keyframes fog-drift-b {
+  from { transform: translate3d(6%, 2%, 0); }
+  to   { transform: translate3d(-7%, -1%, 0); }
+}
+@keyframes ember-rise {
+  0%   { transform: translateY(0) scale(1); opacity: 0; }
+  12%  { opacity: .85; }
+  100% { transform: translateY(-110vh) scale(.4); opacity: 0; }
+}
+@keyframes bat-fly {
+  from { transform: translateX(-16vw); }
+  to   { transform: translateX(116vw); }
+}
+@keyframes bat-flap {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(.5); }
+}
+@keyframes hero-ember {
+  0%, 100% { opacity: .4; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: .78; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.fog {
+  position: absolute;
+  inset: -25% -12%;
+  pointer-events: none;
+  filter: blur(34px);
+  background:
+    radial-gradient(42% 34% at 22% 72%, rgba(150, 84, 188, .16), transparent 62%),
+    radial-gradient(46% 36% at 76% 64%, rgba(255, 140, 66, .12), transparent 66%),
+    radial-gradient(52% 42% at 50% 88%, rgba(110, 64, 160, .16), transparent 72%);
+  animation: fog-drift-a 42s ease-in-out infinite alternate;
+}
+.fog-b {
+  animation-name: fog-drift-b;
+  animation-duration: 64s;
+  opacity: .85;
+}
+
+.hero-ember {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: min(92vw, 920px);
+  height: min(70vh, 520px);
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(255, 140, 66, .3), rgba(255, 86, 34, .1) 55%, transparent 76%);
+  filter: blur(12px);
+  animation: hero-ember 7s ease-in-out infinite;
+}
+
+.ember {
+  position: absolute;
+  bottom: -4vh;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: #ffb072;
+  box-shadow: 0 0 6px 1px rgba(255, 140, 66, .75);
+  animation-name: ember-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.bat {
+  position: absolute;
+  width: 26px;
+  color: #2b2145;
+  animation-name: bat-fly;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.bat svg {
+  display: block;
+  animation: bat-flap .5s ease-in-out infinite;
+}
+
+.cobweb {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  color: #c9b6ff;
+  opacity: .13;
+}
+.cobweb-tl { top: -8px; left: -8px; }
+.cobweb-tr { top: -8px; right: -8px; transform: scaleX(-1); }
 
 /* Liquid Glass Utilities - High FPS Hardware-Accelerated */
 .liquid-glass {
@@ -294,7 +389,7 @@
   }
   h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; color: #000 !important; }
   /* Utility-first backgrounds that assume a dark page. */
-  .liquid-glass, .liquid-glass-strong, .bg-black, .bg-neutral-900, .bg-\[\#141414\] {
+  .liquid-glass, .liquid-glass-strong, .bg-black, .bg-neutral-900, .bg-\[\#150f22\] {
     background: #fff !important;
     border-color: #ccc !important;
     backdrop-filter: none !important;

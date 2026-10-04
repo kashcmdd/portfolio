@@ -47,7 +47,7 @@ export const ShareBar: React.FC<ShareBarProps> = ({ url, title, className = '' }
   };
 
   const buttonClass =
-    'inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#141414] px-3.5 py-2 text-xs font-body text-neutral-300 transition-colors hover:bg-[#1f1f1f] hover:border-white/20 hover:text-white cursor-pointer';
+    'inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#150f22] px-3.5 py-2 text-xs font-body text-neutral-300 transition-colors hover:bg-[#211832] hover:border-white/20 hover:text-white cursor-pointer';
 
   return (
     <div className={`flex flex-wrap items-center gap-2 ${className}`}>

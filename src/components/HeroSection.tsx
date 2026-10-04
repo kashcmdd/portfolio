@@ -101,9 +101,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <section
       id="hero"
       ref={heroRef}
-      className="relative w-full min-h-screen bg-[#0a0a0a] text-white overflow-hidden flex flex-col justify-between items-center text-center select-none pt-24 pb-8 md:pb-12"
+      className="relative w-full min-h-screen bg-[#0a0612] text-white overflow-hidden flex flex-col justify-between items-center text-center select-none pt-24 pb-8 md:pb-12"
     >
       <CinematicVideoBackground activeIndex={activeVideo} />
+
+      {/* Halloween ambience: fog, a breathing ember glow and corner cobwebs,
+          layered over the footage but under the copy. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] overflow-hidden">
+        <div className="fog" />
+        <div className="fog fog-b" />
+        <div className="hero-ember" />
+        <svg className="cobweb cobweb-tl" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1">
+          <path d="M0 0 L100 0 M0 0 L70 70 M0 0 L0 100 M0 0 L35 92 M0 0 L92 35" />
+          <path d="M20 0 Q16 16 0 20 M42 0 Q34 34 0 42 M64 0 Q52 52 0 64 M86 0 Q70 70 0 86" />
+        </svg>
+        <svg className="cobweb cobweb-tr" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1">
+          <path d="M0 0 L100 0 M0 0 L70 70 M0 0 L0 100 M0 0 L35 92 M0 0 L92 35" />
+          <path d="M20 0 Q16 16 0 20 M42 0 Q34 34 0 42 M64 0 Q52 52 0 64 M86 0 Q70 70 0 86" />
+        </svg>
+      </div>
 
       <div className="relative z-10 my-auto max-w-5xl px-4 sm:px-6 flex flex-col items-center w-full my-auto">
         <div className="blur-in opacity-0 translate-y-4 filter blur-md mb-4 sm:mb-6">
@@ -147,7 +163,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
             <button
               onClick={onNavigateToWork}
-              className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-semibold px-7 py-3.5 bg-white text-black hover:bg-[#0a0a0a] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer font-body shadow-2xl min-h-[44px]"
+              className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-semibold px-7 py-3.5 bg-white text-black hover:bg-[#0a0612] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer font-body shadow-2xl min-h-[44px]"
             >
               <span>Explore Projects</span>
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -158,7 +174,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
             <button
               onClick={onOpenContactModal}
-              className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-medium px-7 py-3.5 border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-md text-white hover:border-white/40 transition-all duration-300 transform hover:scale-105 cursor-pointer font-body min-h-[44px]"
+              className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-medium px-7 py-3.5 border border-white/20 bg-[#0a0612]/80 backdrop-blur-md text-white hover:border-white/40 transition-all duration-300 transform hover:scale-105 cursor-pointer font-body min-h-[44px]"
             >
               <span>Get in Touch</span>
             </button>

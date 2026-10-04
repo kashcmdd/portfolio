@@ -76,7 +76,7 @@ export const SkillsSection: React.FC = () => {
   return (
     <section
       id="skills"
-      className="relative w-full min-h-screen bg-[#0a0a0a] text-white overflow-hidden flex flex-col justify-between py-24"
+      className="relative w-full min-h-screen bg-[#0a0612] text-white overflow-hidden flex flex-col justify-between py-24"
     >
       {/* Background Video */}
       <HlsVideoBackground

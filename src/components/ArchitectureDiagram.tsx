@@ -171,7 +171,7 @@ export const ArchitectureDiagram: React.FC<{ arch: Architecture }> = ({ arch }) 
                 width={NODE_W}
                 height={NODE_H}
                 rx={9}
-                className="fill-[#141414] stroke-white/15"
+                className="fill-[#150f22] stroke-white/15"
                 strokeWidth={1}
               />
               <text

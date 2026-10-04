@@ -232,8 +232,8 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                   </svg>
                   Interactive Demo
                 </div>
-                <div className="relative aspect-video rounded-xl bg-[#0a0a0a] border border-[#FF8C42]/20 overflow-hidden group cursor-pointer hover:border-[#FF8C42]/50 transition-colors">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#FF8C42]/20 to-[#0a0a0a]">
+                <div className="relative aspect-video rounded-xl bg-[#0a0612] border border-[#FF8C42]/20 overflow-hidden group cursor-pointer hover:border-[#FF8C42]/50 transition-colors">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#FF8C42]/20 to-[#0a0612]">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <button
                         onClick={() => setDemoPlayerOpen(true)}
@@ -247,7 +247,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0a0a0a] to-transparent">
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0a0612] to-transparent">
                     <h4 className="text-sm font-body font-semibold text-white mb-1">
                       Live Project Preview
                     </h4>

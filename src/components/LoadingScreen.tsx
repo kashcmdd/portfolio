@@ -77,7 +77,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       role="button"
       tabIndex={0}
       aria-label="Enter the portfolio"
-      className="fixed inset-0 z-[9999] bg-[#0a0a0a] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FF8C42]"
+      className="fixed inset-0 z-[9999] bg-[#0a0612] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FF8C42]"
     >
       <div className="flex items-center justify-between">
         <motion.div

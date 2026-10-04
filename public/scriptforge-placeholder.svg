@@ -18,7 +18,7 @@
     </pattern>
   </defs>
 
-  <rect width="1200" height="750" fill="#0a0a0a"/>
+  <rect width="1200" height="750" fill="#0a0612"/>
   <rect width="1200" height="750" fill="url(#grid)"/>
   <ellipse cx="430" cy="210" rx="520" ry="380" fill="url(#glow)"/>
   <ellipse cx="960" cy="620" rx="420" ry="320" fill="url(#glow)" opacity="0.6"/>

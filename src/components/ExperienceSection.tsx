@@ -18,7 +18,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ onSelectPr
   return (
     <section
       id="experience"
-      className="relative w-full bg-[#0a0a0a] text-white py-20 md:py-28 px-6 md:px-10 lg:px-16 overflow-hidden"
+      className="relative w-full bg-[#0a0612] text-white py-20 md:py-28 px-6 md:px-10 lg:px-16 overflow-hidden"
     >
       <div className="max-w-[1200px] mx-auto">
         <motion.div
@@ -59,7 +59,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ onSelectPr
                 {/* The marker is decorative; the period beside it carries the
                     same meaning for a screen reader. */}
                 <CircleDot
-                  className="absolute -left-[9px] top-1.5 h-4 w-4 text-[#FF8C42] bg-[#0a0a0a]"
+                  className="absolute -left-[9px] top-1.5 h-4 w-4 text-[#FF8C42] bg-[#0a0612]"
                   aria-hidden="true"
                 />
 
@@ -99,7 +99,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ onSelectPr
                     type="button"
                     onClick={() => onSelectProject(project)}
                     onKeyDown={activateOnKey(() => onSelectProject(project))}
-                    className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-[#141414] px-4 py-2 text-xs font-body font-medium text-white transition-colors hover:bg-[#1f1f1f] hover:border-white/20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
+                    className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-[#150f22] px-4 py-2 text-xs font-body font-medium text-white transition-colors hover:bg-[#211832] hover:border-white/20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
                     aria-label={`Open case study: ${entry.title}`}
                   >
                     <span>View case study</span>

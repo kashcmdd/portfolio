@@ -103,7 +103,7 @@ const cssFor = (prefix) => `
   }
   body {
     margin: 0;
-    background: #0a0a0a;
+    background: #0a0612;
     color: #f5f5f5;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 300;
@@ -244,7 +244,7 @@ const cssFor = (prefix) => `
     align-items: center;
     gap: 6px;
     border: 1px solid rgba(255, 255, 255, .1);
-    background: #141414;
+    background: #150f22;
     color: #d4d4d4;
     border-radius: 999px;
     padding: 6px 14px;
@@ -254,7 +254,7 @@ const cssFor = (prefix) => `
     text-decoration: none;
     cursor: pointer;
   }
-  .share-btn:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .2); color: #fff; }
+  .share-btn:hover { background: #211832; border-color: rgba(255, 255, 255, .2); color: #fff; }
   .share-btn:focus-visible { outline: 2px solid #FF8C42; outline-offset: 2px; }
   .sr-only {
     position: absolute;
@@ -550,7 +550,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <meta name="robots" content="index, follow" />
     <meta name="author" content="KashhCMD" />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#0a0612" />
     <link rel="canonical" href="${esc(canonical)}" />
     <link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg" />
     <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png" />
@@ -714,7 +714,7 @@ function projectPage(project, base, all) {
     <meta name="robots" content="index, follow" />
     <meta name="author" content="KashhCMD" />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#0a0612" />
     <link rel="canonical" href="${esc(canonical)}" />
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
@@ -1037,7 +1037,7 @@ const RESUME_CSS = `
   :root { --accent: #FF8C42; --line: rgba(255, 255, 255, .1); --muted: #9a9a9a; }
   body {
     margin: 0;
-    background: #0a0a0a;
+    background: #0a0612;
     color: #e5e5e5;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 15px;
@@ -1087,7 +1087,7 @@ const RESUME_CSS = `
   .monogram {
     width: 74px; height: 74px; flex: 0 0 74px;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 22px; color: #0a0a0a;
+    border-radius: 22px; color: #0a0612;
     font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
     font-size: 36px;
     background: linear-gradient(135deg, #FF8C42, #B23A0F);
@@ -1349,7 +1349,7 @@ const NOT_FOUND_CSS = `
     margin: 0; min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
     padding: 24px;
-    background: #0a0a0a; color: #e5e5e5;
+    background: #0a0612; color: #e5e5e5;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
   .box { max-width: 560px; width: 100%; text-align: center; }
@@ -1373,10 +1373,10 @@ const NOT_FOUND_CSS = `
   .links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
   .links a {
     display: inline-flex; align-items: center;
-    border: 1px solid rgba(255, 255, 255, .12); background: #141414; color: #e5e5e5;
+    border: 1px solid rgba(255, 255, 255, .12); background: #150f22; color: #e5e5e5;
     border-radius: 999px; padding: 9px 18px; font-size: 13.5px; text-decoration: none;
   }
-  .links a:hover { background: #1f1f1f; border-color: rgba(255, 255, 255, .28); color: #fff; }
+  .links a:hover { background: #211832; border-color: rgba(255, 255, 255, .28); color: #fff; }
   .links a:focus-visible { outline: 2px solid #FF8C42; outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 `;

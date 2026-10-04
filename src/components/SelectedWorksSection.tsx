@@ -69,7 +69,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
         : 'md:col-span-5';
   };
   return (
-    <section id="work" className="relative w-full bg-[#0a0a0a] text-white py-20 md:py-28 px-6 md:px-10 lg:px-16 overflow-hidden">
+    <section id="work" className="relative w-full bg-[#0a0612] text-white py-20 md:py-28 px-6 md:px-10 lg:px-16 overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
         {/* Header */}
         <motion.div
@@ -96,7 +96,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
             <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
             <button
               onClick={() => onSelectProject(projectsData[0])}
-              className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
+              className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#150f22] text-white hover:bg-[#211832] border border-white/10 transition-colors cursor-pointer font-body"
             >
               <span>Explore All Case Studies</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-neutral-300" />
@@ -122,7 +122,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                   className={`rounded-full px-4 py-2 text-xs font-body font-medium border transition-colors cursor-pointer ${
                     active
                       ? 'bg-white text-black border-white'
-                      : 'bg-[#141414] text-neutral-300 border-white/10 hover:bg-[#1f1f1f] hover:border-white/20'
+                      : 'bg-[#150f22] text-neutral-300 border-white/10 hover:bg-[#211832] hover:border-white/20'
                   }`}
                 >
                   {option}
@@ -143,10 +143,10 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 id="project-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortId)}
-                className="appearance-none rounded-full bg-[#141414] border border-white/10 text-neutral-200 text-xs font-body pl-4 pr-9 py-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
+                className="appearance-none rounded-full bg-[#150f22] border border-white/10 text-neutral-200 text-xs font-body pl-4 pr-9 py-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
               >
                 {SORTS.map((option) => (
-                  <option key={option.id} value={option.id} className="bg-[#141414]">
+                  <option key={option.id} value={option.id} className="bg-[#150f22]">
                     {option.label}
                   </option>
                 ))}
@@ -190,7 +190,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 role="button"
                 tabIndex={0}
                 aria-label={`Open case study: ${project.title}`}
-                className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42] ${project.aspectRatio}`}
+                className={`${colClass} group relative bg-[#150f22] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42] ${project.aspectRatio}`}
               >
                     {/* Background Image */}
                     <SmartImage
@@ -250,7 +250,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                     {/* Hover Label Pill */}
                     <div className="inline-flex relative group/pill">
                       <span className="absolute -inset-[1.5px] rounded-full accent-gradient opacity-100 animate-gradient-shift pointer-events-none" />
-                      <div className="relative bg-[#0a0a0a] text-white px-5 py-2.5 rounded-full text-sm font-body font-medium flex items-center gap-2">
+                      <div className="relative bg-[#0a0612] text-white px-5 py-2.5 rounded-full text-sm font-body font-medium flex items-center gap-2">
                         <span>View —</span>
                         <span className="font-display italic text-base font-normal">
                           {project.title}

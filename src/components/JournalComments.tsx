@@ -98,7 +98,7 @@ export const JournalComments: React.FC<JournalCommentsProps> = ({ entryId }) => 
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
               placeholder="Your name"
-              className="w-full bg-[#0a0a0a]/50 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF8C42] transition-colors font-body text-sm"
+              className="w-full bg-[#0a0612]/50 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF8C42] transition-colors font-body text-sm"
               required
               maxLength={50}
             />
@@ -108,7 +108,7 @@ export const JournalComments: React.FC<JournalCommentsProps> = ({ entryId }) => 
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Share your thoughts..."
-              className="w-full bg-[#0a0a0a]/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF8C42] transition-colors font-body text-sm resize-none"
+              className="w-full bg-[#0a0612]/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF8C42] transition-colors font-body text-sm resize-none"
               rows={3}
               required
               maxLength={500}

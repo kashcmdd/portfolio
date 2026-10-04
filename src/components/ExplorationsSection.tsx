@@ -10,7 +10,7 @@ export const ExplorationsSection: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<ExplorationItem | null>(null);
 
   return (
-    <section id="explorations" className="relative w-full bg-[#0a0a0a] text-white py-20 md:py-28 px-6 md:px-12 lg:px-16 overflow-hidden">
+    <section id="explorations" className="relative w-full bg-[#0a0612] text-white py-20 md:py-28 px-6 md:px-12 lg:px-16 overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
         {/* Section Header */}
         <motion.div
@@ -47,7 +47,7 @@ export const ExplorationsSection: React.FC = () => {
               role="button"
               tabIndex={0}
               aria-label={`View ${item.title}`}
-              className="group relative aspect-square rounded-3xl bg-[#141414] border border-neutral-800/80 overflow-hidden cursor-pointer shadow-xl hover:border-neutral-700 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
+              className="group relative aspect-square rounded-3xl bg-[#150f22] border border-neutral-800/80 overflow-hidden cursor-pointer shadow-xl hover:border-neutral-700 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
             >
                 <SmartImage
                   src={item.image}

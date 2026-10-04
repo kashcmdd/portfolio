@@ -45,8 +45,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
       <div
-        className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-xl border border-white/10 bg-[#141414]/80 px-2 py-1.5 transition-all duration-300 max-w-full ${
-          scrolled ? 'shadow-xl shadow-black/40 border-white/15 bg-[#141414]/95' : 'shadow-md shadow-black/10'
+        className={`pointer-events-auto inline-flex items-center rounded-full backdrop-blur-xl border border-white/10 bg-[#150f22]/80 px-2 py-1.5 transition-all duration-300 max-w-full ${
+          scrolled ? 'shadow-xl shadow-black/40 border-white/15 bg-[#150f22]/95' : 'shadow-md shadow-black/10'
         }`}
       >
         {/* Logo circle with GitHub Avatar */}
@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
           <button
             onClick={onOpenContactModal}
-            className="relative inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium rounded-full px-4 py-1.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
+            className="relative inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium rounded-full px-4 py-1.5 bg-[#150f22] text-white hover:bg-[#211832] border border-white/10 transition-colors cursor-pointer font-body"
           >
             <span>Say hi</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-neutral-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -134,7 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="pointer-events-auto absolute top-20 left-4 right-4 bg-[#141414]/95 backdrop-blur-2xl border border-white/15 rounded-3xl p-5 shadow-2xl flex flex-col gap-2 md:hidden">
+        <div className="pointer-events-auto absolute top-20 left-4 right-4 bg-[#150f22]/95 backdrop-blur-2xl border border-white/15 rounded-3xl p-5 shadow-2xl flex flex-col gap-2 md:hidden">
           {navItems.map((item) => (
             <button
               key={item.id}

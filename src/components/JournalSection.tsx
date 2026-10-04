@@ -15,7 +15,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
   onSelectJournal,
 }) => {
   return (
-    <section id="journal" className="relative w-full bg-[#0a0a0a] text-white py-20 md:py-28 px-6 md:px-10 lg:px-16 overflow-hidden">
+    <section id="journal" className="relative w-full bg-[#0a0612] text-white py-20 md:py-28 px-6 md:px-10 lg:px-16 overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
         {/* Header */}
         <motion.div
@@ -53,7 +53,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
               <button
                 onClick={() => onSelectJournal(journalEntriesData[0])}
-                className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
+                className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#150f22] text-white hover:bg-[#211832] border border-white/10 transition-colors cursor-pointer font-body"
               >
                 <span>Read Latest Entry</span>
                 <BookOpen className="w-3.5 h-3.5 text-neutral-300" />
@@ -76,7 +76,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               role="button"
               tabIndex={0}
               aria-label={`Read journal entry: ${entry.title}`}
-              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-4 md:p-5 rounded-[28px] sm:rounded-full bg-[#141414]/50 hover:bg-[#141414] border border-neutral-800 hover:border-neutral-700 transition-all duration-300 cursor-pointer shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
+              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-4 md:p-5 rounded-[28px] sm:rounded-full bg-[#150f22]/50 hover:bg-[#150f22] border border-neutral-800 hover:border-neutral-700 transition-all duration-300 cursor-pointer shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42]"
             >
               {/* Image + Info */}
               <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">

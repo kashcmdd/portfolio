@@ -61,7 +61,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
   }, [reduced]);
 
   return (
-    <footer id="contact" className="relative w-full bg-[#0a0a0a] text-white overflow-hidden pt-20 pb-10">
+    <footer id="contact" className="relative w-full bg-[#0a0612] text-white overflow-hidden pt-20 pb-10">
       {/* Background HLS Video (Vertically flipped) */}
       <HlsVideoBackground flipVertical />
 
@@ -113,7 +113,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
             <button
               onClick={onOpenContactModal}
-              className="relative inline-flex items-center gap-3 text-base sm:text-lg font-body font-medium rounded-full px-8 py-4 bg-white text-black hover:bg-[#0a0a0a] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer shadow-2xl"
+              className="relative inline-flex items-center gap-3 text-base sm:text-lg font-body font-medium rounded-full px-8 py-4 bg-white text-black hover:bg-[#0a0612] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer shadow-2xl"
             >
               <span>Say Hello</span>
               <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
