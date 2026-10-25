@@ -37,7 +37,7 @@ export default defineConfig({
     ...(localChromium ? { launchOptions: { executablePath: localChromium } } : {}),
   },
   webServer: {
-    command: `npm run preview -- --port ${PORT} --strictPort`,
+    command: `npm run preview -- --port ${PORT} --strictPort --host 127.0.0.1`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
