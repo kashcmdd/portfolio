@@ -41,7 +41,7 @@ export const DecisionLog: React.FC<DecisionLogProps> = ({ onSelectEntry }) => {
               onClick={() => onSelectEntry(entry)}
               className="group w-full flex items-start gap-4 md:gap-6 py-4 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42] rounded-lg"
             >
-              <span className="font-mono text-xs text-neutral-600 pt-0.5 shrink-0 tabular-nums">
+              <span className="font-mono text-xs text-neutral-400 pt-0.5 shrink-0 tabular-nums">
                 {String(idx + 1).padStart(2, '0')}
               </span>
 
@@ -50,7 +50,7 @@ export const DecisionLog: React.FC<DecisionLogProps> = ({ onSelectEntry }) => {
                   <span className="text-sm md:text-base font-body font-medium text-white group-hover:text-neutral-200 transition-colors">
                     {entry.title}
                   </span>
-                  <span className="text-[10px] font-body uppercase tracking-wider text-neutral-500">
+                  <span className="text-[10px] font-body uppercase tracking-wider text-neutral-400">
                     {entry.category}
                   </span>
                 </span>

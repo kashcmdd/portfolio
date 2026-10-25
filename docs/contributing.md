@@ -14,18 +14,20 @@ follow. The other docs in this directory:
 ```bash
 npm install
 npm run dev      # dev server on http://localhost:3001
-npm run lint     # tsc --noEmit — the only type check, and what CI runs
+npm run lint     # tsc --noEmit — the type check CI runs
 npm run build    # vite build, then the static generators, into dist/
+npm run test:e2e # Playwright layout + axe checks, against a fresh build
 npm run preview  # serve dist/ at the /portfolio/ base path
 npm run check:static   # the build's final assertion, on its own
 npm run clean    # rm -rf dist (fails on Windows cmd.exe — see README Notes)
 ```
 
-Node 20 is what the workflow pins; newer releases also build.
+Node 24 is what the workflow pins; newer releases also build.
 
 ## The validation loop
 
-There is no test framework here, by design. A change is checked three ways:
+There is no application test framework here, by design. A change is checked
+four ways:
 
 1. **`npm run lint`** must pass. The project is TypeScript `strict` with
    `noUnusedLocals` and `noUnusedParameters`, so an unused import or variable
@@ -38,10 +40,18 @@ There is no test framework here, by design. A change is checked three ways:
    `sitemap.xml`, `llms.txt` or the resume PDF is missing from `dist/`, which is
    what catches a generator that half-ran while Vite still exited green. Run it
    alone with `npm run check:static` after a build.
+4. **`npm run test:e2e`** (after a build) drives the preview server with
+   Playwright. It asserts that the featured bento rows tile the twelve columns
+   without holes, and that axe reports no serious or critical accessibility
+   violations at desktop and mobile widths. Install the browser once with
+   `npx playwright install chromium`; set `PLAYWRIGHT_CHROMIUM_PATH` if the
+   machine cannot run Playwright's bundled build.
 
 CI (`.github/workflows/deploy.yml`) runs `npm ci`, `npm run lint` and
 `npm run build`, then deploys `dist/` to GitHub Pages. A push to `main` is a
-deploy.
+deploy. `.github/workflows/qa.yml` runs the Playwright checks on pushes and pull
+requests; it is deliberately separate so a layout or a11y regression does not
+block publishing an already-merged change.
 
 ## House style
 

@@ -238,5 +238,6 @@ be "fixed":
   invalidates the cached result.
 - `sitemap.xml` is written for crawlers, and doubles as a human-readable route
   list.
-- There is no test framework, no backend, no `react-router`, no light theme and
-  no reaction/view counters — all by design.
+- There is no backend, no `react-router`, no light theme and no reaction/view
+  counters — all by design. The only automated tests are the Playwright layout
+  and axe checks in `tests/`; everything else is validated by the build itself.

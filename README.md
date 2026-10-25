@@ -34,8 +34,9 @@ This README is the entry point. Deeper notes live in [`docs/`](docs/):
 ```bash
 npm install
 npm run dev      # dev server on http://localhost:3001
-npm run lint     # tsc --noEmit — the only validation step, and what CI runs
+npm run lint     # tsc --noEmit — the type check CI runs
 npm run build    # vite build, then the static generators, into dist/
+npm run test:e2e # Playwright layout + axe checks, against a fresh build
 npm run preview  # serve dist/ at the /portfolio/ base path
 ```
 
@@ -43,7 +44,7 @@ Node 24 is what the workflow pins; the build also runs on newer releases.
 
 ## Validating a change
 
-There is no test framework here, so a change is checked three ways:
+There is no application test framework, so a change is checked four ways:
 
 1. `npm run lint` — must pass.
 2. `npm run build` — must pass. The ">500 kB chunk" warning is expected and
@@ -54,6 +55,12 @@ There is no test framework here, so a change is checked three ways:
    resume PDF is missing from `dist/`, which is what catches a generator that
    half-ran while Vite still exited green. Run it alone with
    `npm run check:static`.
+4. `npm run test:e2e` — Playwright serves the built site and checks two things
+   the build cannot see: the featured bento rows still tile the twelve columns,
+   and axe finds no serious or critical accessibility violations. Run
+   `npm run build` first, and `npx playwright install chromium` once per
+   machine. On Linux where Playwright's browser lacks system libraries, set
+   `PLAYWRIGHT_CHROMIUM_PATH` to a working Chromium.
 
 ## Content
 
@@ -118,6 +125,11 @@ Node 24, `npm ci`, `npm run lint`, `npm run build`, upload `dist/`, then
 `vite.config.ts` sets `base: '/portfolio/'` to match the Pages subpath, which
 is also why `dist/index.html` opened straight off disk will not find its assets —
 use `npm run preview`.
+
+A separate QA workflow (`.github/workflows/qa.yml`) runs on pushes and pull
+requests: Node 24, `npm ci`, `npm run build`, install Playwright's Chromium,
+then `npm run test:e2e`. It checks the bento layout and axe accessibility and
+does not gate the deploy.
 
 ## Indexing
 

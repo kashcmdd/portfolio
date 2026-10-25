@@ -70,7 +70,7 @@ export const NowBuildingStrip: React.FC = () => {
 
         {recent.length > 0 && (
           <div className="mt-3 flex flex-col gap-2 border-t border-white/5 pt-3 sm:flex-row sm:items-center sm:gap-4">
-            <span className={`${LABEL} text-neutral-600`}>Recently</span>
+            <span className={`${LABEL} text-neutral-400`}>Recently</span>
 
             <ul className="flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-1.5 font-body text-xs">
               {recent.map((work) => (
@@ -85,7 +85,7 @@ export const NowBuildingStrip: React.FC = () => {
                   />
                   <span className="sr-only">{work.kind}: </span>
                   <span className="text-neutral-200">{work.title}</span>
-                  <span className="text-neutral-600">{work.date}</span>
+                  <span className="text-neutral-400">{work.date}</span>
                 </li>
               ))}
             </ul>

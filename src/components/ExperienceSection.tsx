@@ -71,7 +71,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ onSelectPr
                     <h3 className="text-xl sm:text-2xl font-body font-semibold text-white">
                       {entry.title}
                     </h3>
-                    <p className="text-xs font-body uppercase tracking-wider text-neutral-500 mt-0.5">
+                    <p className="text-xs font-body uppercase tracking-wider text-neutral-400 mt-0.5">
                       {entry.org}
                     </p>
                   </div>
