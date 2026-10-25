@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useMotionPref } from './MotionPrefProvider';
-import { isHalloweenSeason } from '../utils/seasonal';
 
 export interface VideoOption {
   id: string;
@@ -97,9 +96,9 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0 bg-[#0a0612]"
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0 bg-[#0a0a0a]"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-[#121820] via-[#0a0612] to-[#0f141c] z-0" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#121820] via-[#0a0a0a] to-[#0f141c] z-0" />
 
       {/* Under reduced motion the videos are not rendered at all; the gradient
           and the overlay below carry the hero on their own, and a still frame
@@ -124,8 +123,8 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
             onError={() => handleVideoError(index)}
             onLoadedData={() => handleVideoLoad(index)}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out transform-gpu ${
-              isHalloweenSeason() ? 'halloween-video ' : ''
-            }${isActive && !hasError ? 'opacity-100 z-[1]' : 'opacity-0 z-0'}`}
+              isActive && !hasError ? 'opacity-100 z-[1]' : 'opacity-0 z-0'
+            }`}
             style={{
               willChange: 'opacity',
               transform: 'translate3d(0,0,0)',
@@ -136,7 +135,7 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
 
       {/* Fallback gradient when videos fail */}
       {!hasActiveVideo && (
-        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#FF8C42]/20 via-[#B23A0F]/10 to-[#0a0612] animate-pulse" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#89AACC]/20 via-[#4E85BF]/10 to-[#0a0a0a] animate-pulse" />
       )}
 
       {showOverlayImage && (

@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { activateOnKey } from '../utils/keyboard';
-import { isHalloweenSeason } from '../utils/seasonal';
 
 interface LoadingScreenProps {
   onComplete: () => void;
 }
 
-const SEASONAL_WORDS = ["Haunt", "Carve", "Beware", "Summon"];
-const DEFAULT_WORDS = ["Design", "Create", "Inspire", "Build"];
+const ROTATING_WORDS = ["Design", "Create", "Inspire", "Build"];
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
-  const words = isHalloweenSeason() ? SEASONAL_WORDS : DEFAULT_WORDS;
   const [count, setCount] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
 
-  // The season does not change during a session, so the interval can close over
-  // the list chosen at mount.
   useEffect(() => {
     const wordInterval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % words.length);
+      setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
     }, 400);
     return () => clearInterval(wordInterval);
   }, []);
@@ -82,7 +77,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       role="button"
       tabIndex={0}
       aria-label="Enter the portfolio"
-      className="fixed inset-0 z-[9999] bg-[#0a0612] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FF8C42]"
+      className="fixed inset-0 z-[9999] bg-[#0a0a0a] text-white flex flex-col justify-between p-6 md:p-12 select-none overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#89AACC]"
     >
       <div className="flex items-center justify-between">
         <motion.div
@@ -100,7 +95,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           transition={{ duration: 0.3, delay: 0.05 }}
           className="text-xs text-neutral-500 uppercase tracking-[0.2em] font-body flex items-center gap-2"
         >
-          <span className="w-2 h-2 rounded-full bg-[#FF8C42] animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#89AACC] animate-pulse" />
           Enter if you dare
         </motion.div>
       </div>
@@ -108,14 +103,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       <div className="my-auto flex items-center justify-center text-center py-12">
         <AnimatePresence mode="wait">
           <motion.div
-            key={words[wordIndex]}
+            key={ROTATING_WORDS[wordIndex]}
             initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 0.95 }}
             exit={{ y: -15, opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white/90 tracking-tight font-bold"
           >
-            {words[wordIndex]}
+            {ROTATING_WORDS[wordIndex]}
           </motion.div>
         </AnimatePresence>
       </div>

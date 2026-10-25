@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type HlsType from 'hls.js';
 import { useMotionPref } from './MotionPrefProvider';
-import { isHalloweenSeason } from '../utils/seasonal';
 
 interface HlsVideoBackgroundProps {
   hlsSource?: string;
@@ -114,8 +113,8 @@ export const HlsVideoBackground: React.FC<HlsVideoBackgroundProps> = ({
           loop
           playsInline
           className={`absolute min-w-full min-h-full object-cover pointer-events-none transform-gpu ${
-            isHalloweenSeason() ? 'halloween-video ' : ''
-          }${flipVertical ? 'scale-y-[-1]' : ''} ${className}`}
+            flipVertical ? 'scale-y-[-1]' : ''
+          } ${className}`}
           style={style}
         />
       )}
