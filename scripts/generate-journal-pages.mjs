@@ -85,7 +85,7 @@ const SHARE_SCRIPT = `<script>
 </script>`;
 
 const cssFor = (prefix) => `
-  :root { color-scheme: dark; }
+  :root { color-scheme: dark; --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
   * { box-sizing: border-box; }
   @font-face {
     font-family: 'Inter';
@@ -100,6 +100,15 @@ const cssFor = (prefix) => `
     font-weight: 400;
     font-display: swap;
     src: url('${prefix}fonts/instrument-serif-italic-latin.woff2') format('woff2');
+  }
+  /* Bundled so code and small mono labels render identically everywhere,
+     including the headless-Chromium print used for the resume PDF. */
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('${prefix}fonts/jetbrains-mono-latin.woff2') format('woff2');
   }
   body {
     margin: 0;
@@ -186,7 +195,7 @@ const cssFor = (prefix) => `
     font-style: normal;
     font-size: .78rem;
     color: #8a8a8a;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
   }
   figure.code {
     margin: 28px 0;
@@ -204,7 +213,7 @@ const cssFor = (prefix) => `
   .toc summary {
     padding: 12px 18px;
     cursor: pointer;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -233,7 +242,7 @@ const cssFor = (prefix) => `
     margin: 0 0 28px;
   }
   .share-label {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: .1em;
@@ -284,7 +293,7 @@ const cssFor = (prefix) => `
     border: 1px solid rgba(255, 255, 255, .1);
     border-radius: 999px;
     background: rgba(255, 255, 255, .03);
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px;
     color: #b4b4b4;
   }
@@ -311,7 +320,7 @@ const cssFor = (prefix) => `
     padding: 8px 16px;
     border-bottom: 1px solid rgba(255, 255, 255, .1);
     background: rgba(255, 255, 255, .02);
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 10px;
     letter-spacing: .18em;
     text-transform: uppercase;
@@ -336,7 +345,7 @@ const cssFor = (prefix) => `
   .codebar .copy[data-copied] { color: #9ece6a; border-color: rgba(158, 206, 106, .4); }
   figure.code pre { margin: 0; padding: 16px; overflow-x: auto; }
   figure.code code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 13px;
     line-height: 1.65;
     color: #e5e5e5;
@@ -344,7 +353,7 @@ const cssFor = (prefix) => `
   }
   figure.code figcaption {
     padding: 0 16px 13px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px;
     color: #8a8a8a;
   }
@@ -356,7 +365,7 @@ const cssFor = (prefix) => `
   }
   figure.shot figcaption {
     margin-top: 8px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px;
     color: #8a8a8a;
   }
@@ -435,7 +444,7 @@ const cssFor = (prefix) => `
   }
   .decision dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; }
   .decision dt {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 10px;
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -447,7 +456,7 @@ const cssFor = (prefix) => `
      pretending to be, which a stack of paragraphs does not. */
   .uses dl { margin: 0; }
   .uses dt {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -468,7 +477,7 @@ const cssFor = (prefix) => `
     vertical-align: top;
   }
   table.archive th {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 10px;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -477,7 +486,7 @@ const cssFor = (prefix) => `
   }
   table.archive td { color: #c4c4c4; }
   table.archive .y {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     color: #FF8C42;
     white-space: nowrap;
   }
@@ -495,7 +504,7 @@ const cssFor = (prefix) => `
   }
   .stats b { display: block; font-size: 1.25rem; color: #fff; font-weight: 600; }
   .stats span {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: .12em;
@@ -511,7 +520,7 @@ const cssFor = (prefix) => `
     font-size: .92rem;
   }
   .commands .g {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px;
     letter-spacing: .08em;
     text-transform: uppercase;
@@ -532,7 +541,7 @@ const cssFor = (prefix) => `
     table.archive td::before {
       content: attr(data-label);
       display: block;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: var(--mono);
       font-size: 10px;
       letter-spacing: .16em;
       text-transform: uppercase;
@@ -1035,8 +1044,16 @@ const RESUME_CSS = `
     src: url('../fonts/instrument-serif-italic-latin.woff2') format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../fonts/jetbrains-mono-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
 
-  :root { --accent: #FF8C42; --line: rgba(255, 255, 255, .1); --muted: #9a9a9a; }
+  :root { --accent: #FF8C42; --line: rgba(255, 255, 255, .1); --muted: #9a9a9a; --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
   body {
     margin: 0;
     background: #0a0612;
@@ -1144,14 +1161,14 @@ const RESUME_CSS = `
   .project-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
   .project-head h3 { margin: 0; font-size: 17px; color: #fff; }
   .p-cat {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent);
     border: 1px solid rgba(137, 170, 204, .3); border-radius: 999px; padding: 2px 9px;
   }
   .p-desc { margin: 8px 0 0; color: #c8c8c8; font-size: 14px; }
   .p-tags { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
   .p-tag {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 11px; color: #b4b4b4;
     border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px;
   }
@@ -1366,7 +1383,7 @@ const NOT_FOUND_CSS = `
   p { margin: 0 0 28px; color: #a3a3a3; line-height: 1.6; }
   code.path {
     display: inline-block; margin-top: 4px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--mono);
     font-size: 12.5px; color: #FF8C42;
     background: rgba(137, 170, 204, .1);
     border: 1px solid rgba(137, 170, 204, .25);

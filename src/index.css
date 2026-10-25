@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "./fonts.css";
 
+/* Overrides Tailwind's default mono stack so `font-mono`, and the preflight
+   font for <code>/<pre>, resolve to the bundled JetBrains Mono instead of
+   whatever monospace the host happens to have. */
+@theme {
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
 @layer base {
   :root {
     --bg: 0 0% 4%;
