@@ -23,7 +23,7 @@ export const DecisionLog: React.FC<DecisionLogProps> = ({ onSelectEntry }) => {
   if (decisions.length === 0) return null;
 
   return (
-    <div className="mt-12 md:mt-16 rounded-[28px] border border-neutral-800 bg-[#150f22]/40 p-6 md:p-8">
+    <div className="mt-12 md:mt-16 rounded-[28px] border border-neutral-800 bg-[#141414]/40 p-6 md:p-8">
       <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.3em] mb-2">
         <span className="w-8 h-px bg-neutral-800" />
         <span>Engineering decisions</span>
@@ -39,7 +39,7 @@ export const DecisionLog: React.FC<DecisionLogProps> = ({ onSelectEntry }) => {
             <button
               type="button"
               onClick={() => onSelectEntry(entry)}
-              className="group w-full flex items-start gap-4 md:gap-6 py-4 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8C42] rounded-lg"
+              className="group w-full flex items-start gap-4 md:gap-6 py-4 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] rounded-lg"
             >
               <span className="font-mono text-xs text-neutral-400 pt-0.5 shrink-0 tabular-nums">
                 {String(idx + 1).padStart(2, '0')}
@@ -56,7 +56,7 @@ export const DecisionLog: React.FC<DecisionLogProps> = ({ onSelectEntry }) => {
                 </span>
                 <span className="mt-1 block text-xs md:text-sm font-body text-neutral-400 leading-relaxed">
                   Chose{' '}
-                  <span className="text-[#FF8C42]">{entry.decision?.chose}</span>
+                  <span className="text-[#89AACC]">{entry.decision?.chose}</span>
                   {' '}over{' '}
                   <span className="text-neutral-300">{entry.decision?.over}</span>.
                 </span>

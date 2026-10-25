@@ -929,7 +929,7 @@ if (match) openEntry(match[1]);`,
         language: "css",
         caption: "src/index.css — the whole palette change, in one rule",
         code: `.accent-gradient {
-  background: linear-gradient(90deg, #FF8C42 0%, #B23A0F 100%);
+  background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%);
 }`,
       },
       { type: "heading", text: "Recolour the footage, do not film new footage" },
@@ -1020,7 +1020,7 @@ export const explorationItemsData: ExplorationItem[] = [
 export const currentlyBuildingData: CurrentlyBuilding = {
   name: 'KashhCMD Portfolio',
   description:
-    'The Halloween recolour is live through October; the palette returns to blue on the first of November.',
+    'Layout and accessibility checks now run on every push; the seasonal recolour is off the calendar and the blue palette is back.',
   status: 'In progress',
 };
 
@@ -1029,6 +1029,11 @@ export const currentlyBuildingData: CurrentlyBuilding = {
  * changes worth a stranger's attention, newest first, and keep the dates real.
  */
 export const recentWorkData: RecentWork[] = [
+  {
+    date: 'Nov 2026',
+    title: 'Seasonal theme reverted',
+    kind: 'Refactor',
+  },
   {
     date: 'Oct 2026',
     title: 'Seasonal Halloween theme',

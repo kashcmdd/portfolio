@@ -57,14 +57,14 @@ const LEVELS = ['Expert', 'Advanced', 'Proficient'] as const;
 // Ordered strongest to weakest; the legend and the bar segments both read off
 // this list, so a new level only needs one entry here.
 const LEVEL_BAR: Record<(typeof LEVELS)[number], string> = {
-  Expert: 'bg-gradient-to-r from-[#FF8C42] to-[#B23A0F]',
-  Advanced: 'bg-[#B23A0F]/70',
+  Expert: 'bg-gradient-to-r from-[#89AACC] to-[#4E85BF]',
+  Advanced: 'bg-[#4E85BF]/70',
   Proficient: 'bg-white/20',
 };
 
 const LEVEL_DOT: Record<(typeof LEVELS)[number], string> = {
-  Expert: 'bg-[#FF8C42]',
-  Advanced: 'bg-[#B23A0F]',
+  Expert: 'bg-[#89AACC]',
+  Advanced: 'bg-[#4E85BF]',
   Proficient: 'bg-neutral-500',
 };
 
@@ -123,7 +123,7 @@ export const TechStackSection: React.FC = () => {
   };
 
   return (
-    <section id="stack" className="relative w-full bg-[#0a0612] text-white py-20 md:py-28 px-6 md:px-12 lg:px-16 overflow-hidden">
+    <section id="stack" className="relative w-full bg-[#0a0a0a] text-white py-20 md:py-28 px-6 md:px-12 lg:px-16 overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
         {/* Header */}
         <motion.div
@@ -152,7 +152,7 @@ export const TechStackSection: React.FC = () => {
             className="liquid-glass rounded-2xl p-3 border border-white/10 hover:border-white/20 transition-all flex items-center gap-3 cursor-pointer text-left self-start md:self-auto"
           >
             <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-              <Terminal className="w-4 h-4 text-[#FF8C42]" />
+              <Terminal className="w-4 h-4 text-[#89AACC]" />
             </div>
             <div>
               <div className="text-[10px] font-mono text-neutral-400 uppercase">STACK COMMAND</div>

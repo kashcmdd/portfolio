@@ -31,7 +31,7 @@ export const StatsSection: React.FC = () => {
   ];
 
   return (
-    <section className="relative w-full bg-[#0a0612] text-white py-16 px-6 md:px-12 lg:px-16 overflow-hidden border-y border-white/5">
+    <section className="relative w-full bg-[#0a0a0a] text-white py-16 px-6 md:px-12 lg:px-16 overflow-hidden border-y border-white/5">
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, idx) => {
@@ -46,7 +46,7 @@ export const StatsSection: React.FC = () => {
                 className="liquid-glass rounded-3xl p-6 border border-white/10 flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#FF8C42]">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#89AACC]">
                     <IconComp className="w-5 h-5" />
                   </div>
                   <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider">Metric 0{idx + 1}</span>
