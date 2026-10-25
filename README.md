@@ -39,7 +39,7 @@ npm run build    # vite build, then the static generators, into dist/
 npm run preview  # serve dist/ at the /portfolio/ base path
 ```
 
-Node 20 is what the workflow pins; the build also runs on newer releases.
+Node 24 is what the workflow pins; the build also runs on newer releases.
 
 ## Validating a change
 
@@ -111,7 +111,7 @@ static host, not in preview.
 ## Deployment
 
 `.github/workflows/deploy.yml` builds and deploys on every push to `main`:
-Node 20, `npm ci`, `npm run lint`, `npm run build`, upload `dist/`, then
+Node 24, `npm ci`, `npm run lint`, `npm run build`, upload `dist/`, then
 `actions/deploy-pages`. The site is served from GitHub Pages at
 `https://kashcmdd.github.io/portfolio/`.
 
