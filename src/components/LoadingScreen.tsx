@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { activateOnKey } from '../utils/keyboard';
+import { isHalloweenSeason } from '../utils/seasonal';
 
 interface LoadingScreenProps {
   onComplete: () => void;
 }
 
-const ROTATING_WORDS = ["Haunt", "Carve", "Beware", "Summon"];
+const SEASONAL_WORDS = ["Haunt", "Carve", "Beware", "Summon"];
+const DEFAULT_WORDS = ["Design", "Create", "Inspire", "Build"];
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
+  const words = isHalloweenSeason() ? SEASONAL_WORDS : DEFAULT_WORDS;
   const [count, setCount] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
 
+  // The season does not change during a session, so the interval can close over
+  // the list chosen at mount.
   useEffect(() => {
     const wordInterval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
+      setWordIndex((prev) => (prev + 1) % words.length);
     }, 400);
     return () => clearInterval(wordInterval);
   }, []);
@@ -103,14 +108,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       <div className="my-auto flex items-center justify-center text-center py-12">
         <AnimatePresence mode="wait">
           <motion.div
-            key={ROTATING_WORDS[wordIndex]}
+            key={words[wordIndex]}
             initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 0.95 }}
             exit={{ y: -15, opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white/90 tracking-tight font-bold"
           >
-            {ROTATING_WORDS[wordIndex]}
+            {words[wordIndex]}
           </motion.div>
         </AnimatePresence>
       </div>

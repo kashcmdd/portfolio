@@ -3,6 +3,7 @@ import { CinematicVideoBackground, VIDEO_SOURCES } from './CinematicVideoBackgro
 import { warriorDetails } from '../data/portfolioData';
 import { ArrowUpRight, Eye } from 'lucide-react';
 import { useMotionPref } from './MotionPrefProvider';
+import { isHalloweenSeason } from '../utils/seasonal';
 
 interface HeroSectionProps {
   onNavigateToWork: () => void;
@@ -105,21 +106,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     >
       <CinematicVideoBackground activeIndex={activeVideo} />
 
-      {/* Halloween ambience: fog, a breathing ember glow and corner cobwebs,
-          layered over the footage but under the copy. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] overflow-hidden">
-        <div className="fog" />
-        <div className="fog fog-b" />
-        <div className="hero-ember" />
-        <svg className="cobweb cobweb-tl" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1">
-          <path d="M0 0 L100 0 M0 0 L70 70 M0 0 L0 100 M0 0 L35 92 M0 0 L92 35" />
-          <path d="M20 0 Q16 16 0 20 M42 0 Q34 34 0 42 M64 0 Q52 52 0 64 M86 0 Q70 70 0 86" />
-        </svg>
-        <svg className="cobweb cobweb-tr" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1">
-          <path d="M0 0 L100 0 M0 0 L70 70 M0 0 L0 100 M0 0 L35 92 M0 0 L92 35" />
-          <path d="M20 0 Q16 16 0 20 M42 0 Q34 34 0 42 M64 0 Q52 52 0 64 M86 0 Q70 70 0 86" />
-        </svg>
-      </div>
+      {isHalloweenSeason() && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] overflow-hidden">
+          <div className="fog" />
+          <div className="fog fog-b" />
+          <div className="hero-ember" />
+          <svg className="cobweb cobweb-tl" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1">
+            <path d="M0 0 L100 0 M0 0 L70 70 M0 0 L0 100 M0 0 L35 92 M0 0 L92 35" />
+            <path d="M20 0 Q16 16 0 20 M42 0 Q34 34 0 42 M64 0 Q52 52 0 64 M86 0 Q70 70 0 86" />
+          </svg>
+          <svg className="cobweb cobweb-tr" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1">
+            <path d="M0 0 L100 0 M0 0 L70 70 M0 0 L0 100 M0 0 L35 92 M0 0 L92 35" />
+            <path d="M20 0 Q16 16 0 20 M42 0 Q34 34 0 42 M64 0 Q52 52 0 64 M86 0 Q70 70 0 86" />
+          </svg>
+        </div>
+      )}
 
       <div className="relative z-10 my-auto max-w-5xl px-4 sm:px-6 flex flex-col items-center w-full my-auto">
         <div className="blur-in opacity-0 translate-y-4 filter blur-md mb-4 sm:mb-6">

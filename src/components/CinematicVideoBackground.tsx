@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useMotionPref } from './MotionPrefProvider';
+import { isHalloweenSeason } from '../utils/seasonal';
 
 export interface VideoOption {
   id: string;
@@ -122,9 +123,9 @@ export const CinematicVideoBackground: React.FC<CinematicVideoBackgroundProps> =
             preload={isActive ? 'auto' : 'metadata'}
             onError={() => handleVideoError(index)}
             onLoadedData={() => handleVideoLoad(index)}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out transform-gpu halloween-video ${
-              isActive && !hasError ? 'opacity-100 z-[1]' : 'opacity-0 z-0'
-            }`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out transform-gpu ${
+              isHalloweenSeason() ? 'halloween-video ' : ''
+            }${isActive && !hasError ? 'opacity-100 z-[1]' : 'opacity-0 z-0'}`}
             style={{
               willChange: 'opacity',
               transform: 'translate3d(0,0,0)',

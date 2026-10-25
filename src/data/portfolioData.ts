@@ -1020,7 +1020,7 @@ export const explorationItemsData: ExplorationItem[] = [
 export const currentlyBuildingData: CurrentlyBuilding = {
   name: 'KashhCMD Portfolio',
   description:
-    'A seasonal Halloween recolour ships this month; the whole palette swaps back on the first of November.',
+    'The Halloween recolour is live through October; the palette returns to blue on the first of November.',
   status: 'In progress',
 };
 

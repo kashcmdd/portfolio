@@ -17,6 +17,7 @@ import { ContactFooter } from './components/ContactFooter';
 import { Analytics } from './components/Analytics';
 import { AnalyticsConsent } from './components/AnalyticsConsent';
 import { SpookyAtmosphere } from './components/SpookyAtmosphere';
+import { isHalloweenSeason } from './utils/seasonal';
 import { Project, JournalEntry } from './types';
 import { journalEntriesData } from './data/portfolioData';
 import NotFoundView from './components/NotFoundView';
@@ -260,7 +261,7 @@ export default function App() {
       <AnalyticsConsent />
 
       {/* Seasonal Halloween ambience — fixed, decorative, pointer-events-none */}
-      <SpookyAtmosphere />
+      {isHalloweenSeason() && <SpookyAtmosphere />}
 
       {/* 1. Loading Screen. The page renders underneath it, so fonts, the hero
           video and the first images are already in flight while the intro
