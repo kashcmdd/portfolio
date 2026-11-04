@@ -10,12 +10,12 @@ export interface VideoOption {
 export const VIDEO_SOURCES: VideoOption[] = [
   {
     id: 'golden-hour',
-    label: 'Witching Hour',
+    label: 'Golden Hour',
     url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081127_0992a171-d3c6-4978-8213-0ec5df8b6d63.mp4',
   },
   {
     id: 'still-water',
-    label: 'Black Water',
+    label: 'Still Water',
     url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4',
   },
   {
@@ -25,7 +25,7 @@ export const VIDEO_SOURCES: VideoOption[] = [
   },
   {
     id: 'quiet-dawn',
-    label: 'Blood Moon',
+    label: 'Quiet Dawn',
     url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4',
   },
 ];
