@@ -34,6 +34,7 @@ const ROOT_FILES = [
   'manifest.json',
   'sw.js',
   'KashhCMD-Resume.pdf',
+  'og-image.jpg',
 ];
 const ROUTE_DIRS = ['journal', 'projects', 'resume', 'uses'];
 
@@ -77,6 +78,23 @@ for (const group of ['journal', 'projects']) {
     .map((entry) => entry.name);
   if (pages.length === 0) failures.push(`${group}/ has no pages inside it`);
   await Promise.all(pages.map((page) => requireRoute(`${group}/${page}`)));
+
+  // A project without a raster social card shares as a blank rectangle on most
+  // platforms; SVG was the specific trap this check exists to keep shut.
+  if (group === 'projects') {
+    await Promise.all(
+      pages.map(async (page) => {
+        await requireFile(`og/projects/${page}.jpg`);
+        const html = await readFile(path.join(dist, group, page, 'index.html'), 'utf8').catch(
+          () => ''
+        );
+        const image = html.match(/property="og:image" content="([^"]+)"/)?.[1] ?? '';
+        if (!image || /\.svg(\?|$)/i.test(image)) {
+          failures.push(`projects/${page} has a non-raster og:image`);
+        }
+      })
+    );
+  }
 }
 
 // llms.txt is a hand-off to anything that reads text rather than HTML, so an
@@ -88,6 +106,9 @@ for (const group of ROUTE_DIRS) {
     failures.push(`llms.txt does not reference /${group}/`);
   }
 }
+
+const robots = await readFile(path.join(dist, 'robots.txt'), 'utf8').catch(() => '');
+if (!/^Sitemap:/m.test(robots)) failures.push('robots.txt has no Sitemap line');
 
 if (failures.length > 0) {
   console.error(`check-static-output: ${failures.length} problem(s) in dist/`);

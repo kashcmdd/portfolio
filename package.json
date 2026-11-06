@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "check:static": "node scripts/check-static-output.mjs",
+    "assets:og": "node scripts/generate-og-cards.mjs",
     "lint": "tsc --noEmit",
     "test:e2e": "playwright test"
   },

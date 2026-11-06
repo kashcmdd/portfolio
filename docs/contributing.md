@@ -78,12 +78,13 @@ block publishing an already-merged change.
 
 These look like gaps but are on purpose. Do not "fix" them:
 
-- **No test framework.** The generators plus `check-static-output` are the
-  safety net; see the validation loop above.
+- **No application test framework.** The generators plus `check-static-output`
+  cover the build itself; Playwright covers layout and accessibility.
 - **No `react-router`.** Navigation is hash anchors plus real generated static
   pages.
-- **No backend.** Comments are stored in `localStorage` in the visitor's own
-  browser and are never sent anywhere; analytics only loads after consent.
+- **No backend.** The contact form posts to Formspree and the Discord card
+  fetches from Lanyard only when a visitor asks; analytics loads only after
+  consent.
 - **No reaction or view counters.** There is no client persistence for social
   engagement.
 - **No light theme.** The design is dark-only; `<meta name="color-scheme" content="dark">`.

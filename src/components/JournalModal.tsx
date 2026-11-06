@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react';
 import { JournalEntry, JournalBlock } from '../types';
 import { X, Calendar, Clock, Tag, ExternalLink, ChevronDown, List, ArrowRight } from 'lucide-react';
-import { JournalComments } from './JournalComments';
 import { JournalCodeBlock } from './JournalCodeBlock';
 import { articleOutline, outlineSlugs } from '../../scripts/lib/journal-outline.mjs';
 import { journalEntriesData } from '../data/portfolioData';
@@ -362,9 +361,6 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                 </div>
               </div>
             )}
-
-            {/* Comments Section */}
-            <JournalComments entryId={entry.id} />
           </div>
 
           {/* Footer: the second way out stays reachable too */}
