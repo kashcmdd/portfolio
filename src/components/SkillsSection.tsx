@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
@@ -11,7 +11,85 @@ import {
   CalendarClock,
   TestTube,
   Film,
+  ChevronDown,
 } from 'lucide-react';
+
+interface SkillData {
+  id: string;
+  icon: React.ElementType;
+  tags: string[];
+  title: string;
+  body: string;
+}
+
+/**
+ * One skill card. On phones the body is clamped to three lines and a toggle
+ * reveals the rest, which keeps eight long cards from becoming an endless
+ * scroll; at md and above the copy is always open and the toggle disappears,
+ * so the desktop scan is unchanged.
+ */
+const SkillCard: React.FC<{ item: SkillData; index: number }> = ({ item, index }) => {
+  const [expanded, setExpanded] = useState(false);
+  const IconComp = item.icon;
+  const bodyId = `skill-${item.id}-body`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, delay: 0.2 + index * 0.12 }}
+      className="liquid-glass panel-accent rounded-[1.25rem] p-6 md:min-h-[350px] flex flex-col justify-between hover:bg-white/10 transition-all duration-300 group border border-white/10 hover:border-white/25"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="w-[44px] h-[44px] rounded-[0.75rem] liquid-glass flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
+          <IconComp className="h-5 w-5 text-white" />
+        </div>
+
+        <div className="flex flex-wrap justify-end gap-1 max-w-[70%]">
+          {item.tags.map((tag) => (
+            <span
+              key={tag}
+              className="liquid-glass rounded-full px-2.5 py-0.5 text-[10px] text-neutral-300 font-body whitespace-nowrap"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex-1" />
+
+      <div className="mt-6">
+        <h3 className="font-display italic text-white text-2xl sm:text-3xl tracking-tight leading-tight mb-2">
+          {item.title}
+        </h3>
+
+        <p
+          id={bodyId}
+          className={`text-xs sm:text-sm text-neutral-300 font-body font-light leading-relaxed ${
+            expanded ? '' : 'line-clamp-3'
+          } md:line-clamp-none`}
+        >
+          {item.body}
+        </p>
+
+        <button
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={bodyId}
+          onClick={() => setExpanded((value) => !value)}
+          className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[#89AACC] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] md:hidden"
+        >
+          {expanded ? 'Show less' : 'Read more'}
+          <ChevronDown
+            className={`h-3 w-3 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          />
+        </button>
+      </div>
+    </motion.div>
+  );
+};
 
 export const SkillsSection: React.FC = () => {
   const skills = [
@@ -118,53 +196,9 @@ export const SkillsSection: React.FC = () => {
 
         {/* Skill Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mb-6">
-          {skills.map((item, idx) => {
-            const IconComp = item.icon;
-            return (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.2 + idx * 0.12 }}
-                className="liquid-glass rounded-[1.25rem] p-6 min-h-[350px] flex flex-col justify-between hover:bg-white/10 transition-all duration-300 group border border-white/10 hover:border-white/25 shadow-2xl"
-              >
-                {/* Top row */}
-                <div className="flex items-start justify-between gap-3">
-                  {/* Left: 44x44 nested liquid-glass square */}
-                  <div className="w-[44px] h-[44px] rounded-[0.75rem] liquid-glass flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
-                    <IconComp className="h-5 w-5 text-white" />
-                  </div>
-
-                  {/* Right: small liquid-glass tags */}
-                  <div className="flex flex-wrap justify-end gap-1 max-w-[70%]">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="liquid-glass rounded-full px-2.5 py-0.5 text-[10px] text-neutral-300 font-body whitespace-nowrap"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Middle spacer */}
-                <div className="flex-1" />
-
-                {/* Bottom section */}
-                <div className="mt-6">
-                  <h3 className="font-display italic text-white text-2xl sm:text-3xl tracking-tight leading-tight mb-2">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-xs sm:text-sm text-neutral-300 font-body font-light leading-relaxed">
-                    {item.body}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
+          {skills.map((item, idx) => (
+            <SkillCard key={item.id} item={item} index={idx} />
+          ))}
         </div>
 
         {/* Footer info line */}

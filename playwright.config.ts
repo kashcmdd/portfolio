@@ -46,12 +46,12 @@ export default defineConfig({
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
-      testIgnore: /mobile-nav\.spec\.ts/,
+      testIgnore: /(mobile-nav|skills)\.spec\.ts/,
     },
     {
       name: 'mobile',
       use: { ...devices['iPhone 13'], browserName: 'chromium' },
-      testMatch: /(a11y|mobile-nav)\.spec\.ts/,
+      testMatch: /(a11y|mobile-nav|skills)\.spec\.ts/,
     },
   ],
 });
