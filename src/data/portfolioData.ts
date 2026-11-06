@@ -170,6 +170,19 @@ export const warriorDetails = {
   discord: "",
 };
 
+/**
+ * Discord presence card in the footer.
+ *
+ * Two opt-ins keep the site's privacy posture intact: the card is hidden when
+ * the id is empty, and nothing is requested until the visitor presses the
+ * button. The public Lanyard API only tracks accounts that have joined its
+ * Discord server (discord.gg/lanyard); otherwise it answers "user not
+ * monitored" and the card shows its unavailable state.
+ */
+export const discordPresenceData = {
+  userId: '1415420243836407878',
+} as const;
+
 export const projectsData: Project[] = [
   {
     id: "rainbow-leaderboard",
