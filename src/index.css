@@ -236,6 +236,35 @@
   scroll-behavior: auto !important;
 }
 
+/* ---- Rotating CTA ring ---------------------------------------------------
+   A conic gradient rotated by an animated registered angle, used by the primary
+   calls to action and the mobile menu button. The angle is a typed custom
+   property so the gradient itself animates; browsers without that support get
+   the static accent gradient below. The reduced-motion rules above stop the
+   spin without removing the ring. */
+@property --cta-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes cta-ring-spin {
+  to { --cta-angle: 360deg; }
+}
+
+.cta-ring {
+  background: conic-gradient(from var(--cta-angle), #89aacc, #4e85bf, #89aacc);
+  animation: cta-ring-spin 6s linear infinite;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.06);
+}
+
+@supports not (background: conic-gradient(from 0deg, red, blue)) {
+  .cta-ring {
+    background: linear-gradient(90deg, #89aacc, #4e85bf);
+    animation: none;
+  }
+}
+
 /* Printing a portfolio is a real thing to do - a recruiter prints it, or saves
    the page to PDF from the browser. The default print of a dark, animated,
    fixed-header site is close to unusable, so this switches to ink-friendly

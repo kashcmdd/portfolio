@@ -92,15 +92,16 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
             </p>
           </div>
 
-          <div className="hidden md:inline-flex relative group">
-            <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
-            <button
-              onClick={() => onSelectProject(projectsData[0])}
-              className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
-            >
-              <span>Explore All Case Studies</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-neutral-300" />
-            </button>
+          <div className="hidden md:inline-flex group">
+            <div className="cta-ring rounded-full p-[2px]">
+              <button
+                onClick={() => onSelectProject(projectsData[0])}
+                className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
+              >
+                <span>Explore All Case Studies</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-neutral-300" />
+              </button>
+            </div>
           </div>
         </motion.div>
 
