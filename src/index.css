@@ -265,6 +265,37 @@
   }
 }
 
+/* ---- Panel accents -------------------------------------------------------
+   A thin top highlight, a soft blue lift on hover and two faint corner
+   brackets, used on the stat and skill cards. The brackets are background
+   gradients rather than pseudo-elements because .liquid-glass already uses
+   ::before for its sheen; adding another ::before would overwrite it. */
+.panel-accent {
+  position: relative;
+  background-image:
+    linear-gradient(rgb(137 170 204 / 0.7), rgb(137 170 204 / 0.7)),
+    linear-gradient(rgb(137 170 204 / 0.7), rgb(137 170 204 / 0.7)),
+    linear-gradient(rgb(137 170 204 / 0.7), rgb(137 170 204 / 0.7)),
+    linear-gradient(rgb(137 170 204 / 0.7), rgb(137 170 204 / 0.7));
+  background-repeat: no-repeat;
+  background-size: 18px 1px, 1px 18px, 18px 1px, 1px 18px;
+  background-position:
+    12px 12px,
+    12px 12px,
+    calc(100% - 12px) calc(100% - 12px),
+    calc(100% - 12px) calc(100% - 12px);
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.1),
+    0 18px 50px -28px rgb(137 170 204 / 0.55);
+  transition: box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.panel-accent:hover {
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.18),
+    0 26px 60px -24px rgb(137 170 204 / 0.7);
+}
+
 /* Printing a portfolio is a real thing to do - a recruiter prints it, or saves
    the page to PDF from the browser. The default print of a dark, animated,
    fixed-header site is close to unusable, so this switches to ink-friendly

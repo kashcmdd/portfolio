@@ -43,7 +43,7 @@ export const StatsSection: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="liquid-glass rounded-3xl p-6 border border-white/10 flex flex-col justify-between"
+                className="liquid-glass panel-accent rounded-3xl p-6 border border-white/10 flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#89AACC]">
