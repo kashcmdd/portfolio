@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight, Search, Keyboard } from 'lucide-react';
 import { warriorDetails } from '../data/portfolioData';
+import { MobileMenu } from './MobileMenu';
 
 interface NavbarProps {
   activeSection: string;
@@ -127,52 +128,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden ml-2 p-1.5 rounded-full text-neutral-300 hover:text-white cursor-pointer"
           aria-label="Toggle Mobile Menu"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-navigation"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="pointer-events-auto absolute top-20 left-4 right-4 bg-[#141414]/95 backdrop-blur-2xl border border-white/15 rounded-3xl p-5 shadow-2xl flex flex-col gap-2 md:hidden">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onNavigate(item.id);
-              }}
-              className={`text-left text-sm font-medium py-2 px-4 rounded-xl font-body transition-colors ${
-                activeSection === item.id
-                  ? 'bg-white/15 text-white'
-                  : 'text-neutral-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              onOpenSearchModal();
-            }}
-            className="mt-2 w-full py-2.5 rounded-xl liquid-glass text-white font-semibold text-sm flex items-center justify-center gap-2 font-body"
-          >
-            <Search className="w-4 h-4" />
-            <span>Search</span>
-          </button>
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              onOpenContactModal();
-            }}
-            className="mt-2 w-full py-2.5 rounded-xl accent-gradient text-black font-semibold text-sm flex items-center justify-center gap-2 font-body"
-          >
-            <span>Let's Talk</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </button>
-        </div>
-      )}
+      <MobileMenu
+        open={mobileMenuOpen}
+        navItems={navItems}
+        activeSection={activeSection}
+        onClose={() => setMobileMenuOpen(false)}
+        onNavigate={onNavigate}
+        onOpenSearchModal={onOpenSearchModal}
+        onOpenContactModal={onOpenContactModal}
+      />
     </header>
   );
 };

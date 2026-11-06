@@ -143,15 +143,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </p>
 
         <div className="blur-in opacity-0 translate-y-4 filter blur-md flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-10 w-full px-2">
-          <div className="relative group w-full sm:w-auto">
-            <span className="absolute -inset-[2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity blur-[1px] animate-gradient-shift pointer-events-none" />
-            <button
-              onClick={onNavigateToWork}
-              className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-semibold px-7 py-3.5 bg-white text-black hover:bg-[#0a0a0a] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer font-body shadow-2xl min-h-[44px]"
-            >
-              <span>Explore Projects</span>
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </button>
+          <div className="group w-full sm:w-auto">
+            <div className="cta-ring w-full rounded-full p-[2px] sm:w-auto">
+              <button
+                onClick={onNavigateToWork}
+                className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-semibold px-7 py-3.5 bg-white text-black hover:bg-[#0a0a0a] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer font-body shadow-2xl min-h-[44px]"
+              >
+                <span>Explore Projects</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </button>
+            </div>
           </div>
 
           <div className="relative group w-full sm:w-auto">
@@ -180,7 +181,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     key={v.id}
                     onClick={() => handleSelectVideo(idx)}
                     disabled={isTransitioning}
-                    className={`px-3 py-1.5 rounded-full text-xs font-body font-medium transition-all duration-300 cursor-pointer whitespace-nowrap min-h-[36px] flex-1 sm:flex-initial ${
+                    className={`px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-body font-medium transition-all duration-300 cursor-pointer whitespace-nowrap min-h-[36px] flex-1 sm:flex-initial ${
                       isActive
                         ? 'bg-white text-black font-semibold shadow-md'
                         : 'text-neutral-300 hover:text-white hover:bg-white/10'
