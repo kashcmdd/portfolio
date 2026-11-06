@@ -93,6 +93,7 @@ run, followed by the assertion that they produced what they should:
 
 - `scripts/generate-journal-pages.mjs` — `/journal/` (index plus one page per
   article), `/projects/` (index plus one page per project), `/resume/`, `/uses/`,
+  `/privacy/`,
   `404.html`, `sitemap.xml` and `robots.txt`. Each generated page carries its own
   title, description, canonical, Open Graph and Twitter tags and JSON-LD, and code
   samples are highlighted with Prism during the same pass. Every route also gets a

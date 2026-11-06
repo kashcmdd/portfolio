@@ -35,7 +35,7 @@ function devStaticArtifacts(): Plugin {
     'KashhCMD-Resume.pdf',
     'llms.txt',
   ]);
-  const staticDirs = ['journal', 'projects', 'resume', 'uses'];
+  const staticDirs = ['journal', 'projects', 'resume', 'uses', 'privacy'];
   const contentTypes: Record<string, string> = {
     '.html': 'text/html; charset=utf-8',
     '.xml': 'application/xml; charset=utf-8',

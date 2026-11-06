@@ -56,7 +56,7 @@ const NewsletterSignup: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="flex-1 min-w-0 rounded-full bg-[#0f0f0f] border border-white/10 px-4 py-2.5 text-sm font-body text-white placeholder:text-neutral-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+              className="flex-1 min-w-0 rounded-full bg-[#0f0f0f] border border-white/10 px-4 py-2.5 text-sm font-body text-white placeholder:text-neutral-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
             />
             <button
               type="submit"
@@ -66,7 +66,7 @@ const NewsletterSignup: React.FC = () => {
               <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </form>
-          <p className="mt-3 text-[11px] font-body text-neutral-500 leading-relaxed">
+          <p className="mt-3 text-[11px] font-body text-neutral-400 leading-relaxed">
             Double opt-in - you will get one email asking you to confirm. Buttondown handles the
             list; unsubscribe from any issue.
           </p>
@@ -91,7 +91,7 @@ const NewsletterSignup: React.FC = () => {
               <span>GitHub</span>
             </a>
           </div>
-          <p className="mt-3 text-[11px] font-body text-neutral-500 leading-relaxed">
+          <p className="mt-3 text-[11px] font-body text-neutral-400 leading-relaxed">
             Email updates are not set up yet. Until they are, the feed and the profile are the
             places new work shows up first.
           </p>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { HlsVideoBackground } from './HlsVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
-import { ArrowUpRight, MessageSquare, BookOpen, FileDown, FileText, LayoutGrid, Compass, Rss } from 'lucide-react';
+import { ArrowUpRight, MessageSquare, BookOpen, FileDown, FileText, LayoutGrid, Compass, Rss, ShieldCheck } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { DiscordPresence } from './DiscordPresence';
 import { useMotionPref } from './MotionPrefProvider';
@@ -74,21 +74,21 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
         <div ref={marqueeRef} className="w-full overflow-hidden whitespace-nowrap mb-16 py-4 border-y border-white/10">
           <div className="marquee-inner inline-block flex items-center gap-8 font-display italic text-3xl sm:text-5xl text-neutral-400 font-normal">
             <span>BUILDING THE FUTURE</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
             <span>WEB DESIGN & DEV</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
             <span>DISCORD BOTS & UTILITIES</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
             <span>KASHHCMD PORTFOLIO '26</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
             <span>BUILDING THE FUTURE</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
             <span>WEB DESIGN & DEV</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
             <span>DISCORD BOTS & UTILITIES</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
             <span>KASHHCMD PORTFOLIO '26</span>
-            <span className="text-xs font-mono text-neutral-600">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
           </div>
         </div>
 
@@ -134,14 +134,14 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               className="group flex items-center gap-1.5 text-white hover:text-[#89AACC] transition-colors cursor-pointer"
             >
               <span className="font-display italic font-bold text-sm">{warriorDetails.name}</span>
-              <span className="text-[10px] text-neutral-500 font-mono">© 2026</span>
+              <span className="text-[10px] text-neutral-400 font-mono">© 2026</span>
             </button>
             <span className="text-neutral-700">•</span>
             <span>Crafted with care</span>
           </div>
 
           {/* Social Links */}
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <a
               href={`${import.meta.env.BASE_URL}projects/`}
               className="flex items-center gap-1.5 hover:text-white transition-colors"
@@ -185,6 +185,13 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               <Rss className="w-4 h-4" />
               <span>RSS</span>
             </a>
+            <a
+              href={`${import.meta.env.BASE_URL}privacy/`}
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Privacy</span>
+            </a>
             <button
               onClick={onOpenContactModal}
               className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
@@ -197,7 +204,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
 
         {/* Credits, the way the portfolios this one is measured against close:
             small, human, and specific about what it is made of. */}
-        <p className="mt-6 text-center text-[11px] font-body text-neutral-600">
+        <p className="mt-6 text-center text-[11px] font-body text-neutral-400">
           Designed and built by {warriorDetails.name} · React, TypeScript, Vite and Tailwind CSS ·
           Static pages generated at build time
         </p>

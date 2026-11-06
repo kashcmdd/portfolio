@@ -75,7 +75,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               onKeyDown={activateOnKey(() => onSelectJournal(entry))}
               role="button"
               tabIndex={0}
-              aria-label={`Read journal entry: ${entry.title}`}
+              aria-label={`Read journal entry: ${entry.category}, ${entry.readTime}, ${entry.title}, ${entry.date}`}
               className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 p-4 md:p-5 rounded-[28px] sm:rounded-full bg-[#141414]/50 hover:bg-[#141414] border border-neutral-800 hover:border-neutral-700 transition-all duration-300 cursor-pointer shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
             >
               {/* Image + Info */}

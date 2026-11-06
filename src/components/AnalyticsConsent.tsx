@@ -47,6 +47,12 @@ export const AnalyticsConsent: React.FC = () => {
               >
                 Decline
               </button>
+              <a
+                href={`${import.meta.env.BASE_URL}privacy/`}
+                className="ml-auto text-[11px] font-body text-neutral-400 underline decoration-white/20 underline-offset-2 transition-colors hover:text-white"
+              >
+                Privacy
+              </a>
             </div>
           </div>
           {/* Dismissed for now rather than answered, so the banner returns

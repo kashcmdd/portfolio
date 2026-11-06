@@ -123,7 +123,7 @@ const cssFor = (prefix) => `
      images in the "All projects" list render at their intrinsic width and push
      a horizontal scrollbar onto every phone. */
   img { max-width: 100%; height: auto; }
-  a { color: #89AACC; }
+  a { color: #89AACC; text-decoration: underline; text-underline-offset: 3px; }
   .top {
     max-width: 760px;
     margin: 0 auto;
@@ -133,7 +133,7 @@ const cssFor = (prefix) => `
     text-transform: uppercase;
     color: #8a8a8a;
   }
-  .top a { color: #89AACC; text-decoration: none; }
+  .top a { color: #89AACC; }
   main { max-width: 760px; margin: 0 auto; padding: 46px 24px 96px; }
   .meta {
     display: flex;
@@ -246,7 +246,7 @@ const cssFor = (prefix) => `
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: .1em;
-    color: #737373;
+    color: #8a8a8a;
   }
   .share-btn {
     display: inline-flex;
@@ -390,11 +390,8 @@ const cssFor = (prefix) => `
   }
   .more a:hover { color: #89AACC; }
   .more a span { color: #8a8a8a; font-size: .8rem; white-space: nowrap; }
-  .end { max-width: 760px; margin: 0 auto; padding: 0 24px 60px; color: #6a6a6a; font-size: .82rem; }
+  .end { max-width: 760px; margin: 0 auto; padding: 0 24px 60px; color: #8a8a8a; font-size: .82rem; }
   .end a { color: #8a8a8a; }
-  .comments-section { margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, .1); }
-  .comments-section h3 { margin: 0 0 8px; font-size: 1.1rem; color: #fff; }
-  .comments-notice { margin: 0; font-size: .82rem; color: #8a8a8a; font-style: italic; }
   .arch-summary { color: #c9c9c9; }
   .arch-details {
     margin: 14px 0 0;
@@ -924,10 +921,6 @@ function articlePage(entry, base, all) {
         ${renderBlocks(entry.content, { headingLevel: 2, rich: true }).join('\n        ')}
       </article>
       
-      <div class="comments-section">
-        <h3>Discussion</h3>
-        <p class="comments-notice">This is a static page, so it carries no comment form. Discussion lives in the app, where it is stored locally in your browser and never sent anywhere.</p>
-      </div>
       ${
         others.length
           ? `<nav class="more">
@@ -1451,6 +1444,142 @@ function notFoundPage(base) {
  * directory. The tooling list is read from the same tech data the site renders,
  * so it cannot advertise a tool the rest of the portfolio does not.
  */
+function privacyPage(base) {
+  const canonical = `${SITE_ORIGIN}${base}privacy/`;
+  return `<!doctype html>
+<html lang="en">
+  <head>${head({
+    title: 'Privacy',
+    description:
+      'What the KashhCMD portfolio sends, which third-party services it uses, and what it keeps on your device.',
+    canonical,
+    image: `${SITE_ORIGIN}${base}og-image.jpg`,
+    imageAlt: 'KashhCMD — Discord bots and web apps, built end to end.',
+    prefix: '../',
+    type: 'website',
+  })}
+    <style>${cssFor('../')}</style>
+  </head>
+  <body>
+    <div class="top"><a href="../">KashhCMD</a> / Privacy</div>
+    <main class="uses">
+      <h1>Privacy</h1>
+      <p class="sub">What this site sends, where it goes, and what stays on your device.</p>
+
+      <p>
+        No accounts, no advertising, no tracking cookies. The short version: analytics runs only
+        after you accept it, and every third-party service below is contacted only when you use the
+        feature that needs it.
+      </p>
+
+      <h2>Analytics</h2>
+      <p>
+        <a href="https://plausible.io/privacy" target="_blank" rel="noopener noreferrer">Plausible</a>
+        is loaded only after you press Accept. It records page views without cookies or personal
+        identifiers. Declining, or closing the banner, loads nothing. Your choice is kept in
+        <code>localStorage</code> so the banner knows not to ask again; clearing site data resets it.
+      </p>
+
+      <h2>Contact form</h2>
+      <p>
+        The contact form posts your name, email address and message to
+        <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Formspree</a>,
+        which forwards the message to me. Nothing is sent until you submit the form, and Formspree's
+        privacy policy applies to that transfer.
+      </p>
+
+      <h2>Discord status</h2>
+      <p>
+        The footer card stays inert until you press Show Discord status. That request goes to the
+        public <a href="https://api.lanyard.rest" target="_blank" rel="noopener noreferrer">Lanyard</a>
+        API, which returns your public Discord profile, status and current activity. The response is
+        cached in <code>sessionStorage</code> for 60 seconds. Nothing is requested on page load.
+      </p>
+
+      <h2>Newsletter</h2>
+      <p>
+        If the newsletter is enabled, subscribing posts your email address to
+        <a href="https://buttondown.com/privacy" target="_blank" rel="noopener noreferrer">Buttondown</a>.
+        It uses double opt-in and every issue carries an unsubscribe link. The form is currently
+        disabled.
+      </p>
+
+      <h2>Images, video and fonts</h2>
+      <p>
+        Fonts, the avatar, project screenshots and the social cards are served from this site. The
+        ambient video backgrounds stream from CloudFront and Mux, and journal cover images come from
+        Unsplash; those services see the request your browser makes for the media, as any host would.
+      </p>
+
+      <h2>On your device</h2>
+      <p>
+        <code>localStorage</code> holds your motion preference and analytics choice.
+        <code>sessionStorage</code> holds the 60-second Discord cache. There are no tracking cookies
+        and no account system. Clearing site data removes all of it.
+      </p>
+
+      <h2>Questions</h2>
+      <p>
+        The contact form is the quickest way to reach me:
+        <a href="${esc(`${base}#contact`)}">go to contact</a>.
+      </p>
+      <div class="links">
+        <a href="${esc(base)}">Portfolio</a>
+        <a href="${esc(`${base}journal/`)}">Journal</a>
+        <a href="${esc(`${base}uses/`)}">Uses</a>
+      </div>
+    </main>
+    <div class="end">
+      <a href="../">← Back to the portfolio</a>
+      Every page here is static HTML. No JavaScript, no server.
+    </div>
+  </body>
+</html>
+`;
+}
+
+function privacyMarkdown(base) {
+  return `# Privacy
+
+> What the KashhCMD portfolio sends, which third-party services it uses, and what it keeps on your device.
+
+No accounts, no advertising, no tracking cookies. Analytics runs only after you accept it, and
+every third-party service is contacted only when you use the feature that needs it.
+
+## Analytics
+
+Plausible loads only after you press Accept. It records page views without cookies or personal
+identifiers. Declining or closing the banner loads nothing. The choice is kept in localStorage.
+
+## Contact form
+
+The form posts your name, email address and message to Formspree, which forwards it. Nothing is
+sent until you submit the form.
+
+## Discord status
+
+The footer card stays inert until you press Show Discord status. That request goes to the public
+Lanyard API and the response is cached in sessionStorage for 60 seconds.
+
+## Newsletter
+
+If enabled, subscribing posts your email address to Buttondown (double opt-in, unsubscribe in
+every issue). The form is currently disabled.
+
+## Media
+
+Fonts, the avatar, project screenshots and social cards are served from this site. Ambient video
+streams from CloudFront and Mux; journal covers come from Unsplash.
+
+## On your device
+
+localStorage holds the motion preference and analytics choice. sessionStorage holds the Discord
+cache. There are no tracking cookies and no account system.
+
+Canonical: ${absUrl(base, 'privacy/')}
+`;
+}
+
 function usesPage({ skills, details }, base) {
   const canonical = `${SITE_ORIGIN}${base}uses/`;
   const namesIn = (category) => skills.filter((s) => s.category === category).map((s) => s.name);
@@ -1516,7 +1645,7 @@ function usesPage({ skills, details }, base) {
     </main>
     <div class="end">
       <a href="../">← Back to the portfolio</a>
-      A · Every page here is static HTML. No JavaScript, no server.
+      Every page here is static HTML. No JavaScript, no server.
     </div>
   </body>
 </html>
@@ -1541,6 +1670,7 @@ function sitemapXml(base, entries, projects = []) {
     })),
     { loc: `${SITE_ORIGIN}${base}resume/`, lastmod: today, priority: '0.6' },
     { loc: `${SITE_ORIGIN}${base}uses/`, lastmod: today, priority: '0.6' },
+    { loc: `${SITE_ORIGIN}${base}privacy/`, lastmod: today, priority: '0.3' },
   ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -1755,6 +1885,7 @@ function llmsTxt({ details, entries, projects, base }) {
     '## Pages',
     `- [Resume](${absUrl(base, 'resume/')})`,
     `- [Uses](${absUrl(base, 'uses/')})`,
+    `- [Privacy](${absUrl(base, 'privacy/')})`,
     `- [Journal index](${absUrl(base, 'journal/')})`,
     `- [Projects index](${absUrl(base, 'projects/')})`,
     '',
@@ -1854,6 +1985,14 @@ try {
     );
     console.log(`  uses/  colophon for ${warriorDetails.name}`);
   }
+
+  // The privacy page does not depend on the content data, so it is written
+  // outside the skills/projects branch.
+  const privacy = path.join(dist, 'privacy');
+  await mkdir(privacy, { recursive: true });
+  await writeFile(path.join(privacy, 'index.html'), privacyPage(base));
+  await writeFile(path.join(privacy, 'index.md'), privacyMarkdown(base));
+  console.log(`  privacy/  third-party and on-device data disclosure`);
 
   await writeFile(
     path.join(dist, 'llms.txt'),

@@ -9,6 +9,7 @@ import { SmartImage } from './SmartImage';
 import ShareBar from './ShareBar';
 import { articleUrl } from '../utils/share';
 import { useFocusTrap } from '../utils/useFocusTrap';
+import { useBackgroundInert } from '../utils/useBackgroundInert';
 
 const renderBlock = (block: JournalBlock, key: number, slug: string | null) => {
   switch (block.type) {
@@ -59,7 +60,7 @@ const renderBlock = (block: JournalBlock, key: number, slug: string | null) => {
         >
           <p>{block.text}</p>
           {block.attribution && (
-            <footer className="mt-2 text-xs not-italic font-mono text-neutral-500">
+            <footer className="mt-2 text-xs not-italic font-mono text-neutral-400">
               — {block.attribution}
             </footer>
           )}
@@ -76,7 +77,7 @@ const renderBlock = (block: JournalBlock, key: number, slug: string | null) => {
               className="w-full rounded-2xl border border-white/10"
             />
           {block.caption && (
-            <figcaption className="mt-2 text-[11px] font-mono text-neutral-500">
+            <figcaption className="mt-2 text-[11px] font-mono text-neutral-400">
               {block.caption}
             </figcaption>
           )}
@@ -105,6 +106,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
   onSelectEntry,
 }) => {
   const bodyRef = useRef<HTMLDivElement>(null);
+  useBackgroundInert(Boolean(entry));
   const dialogRef = useFocusTrap<HTMLDivElement>(Boolean(entry));
   const [progress, setProgress] = useState(0);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -246,7 +248,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-auto flex items-center gap-1.5 rounded-full liquid-glass px-3 py-1 hover:bg-white/20 transition-colors text-white"
-                aria-label="Open this post as a full page in a new tab"
+                aria-label="Read full page (opens in a new tab)"
               >
                 <ExternalLink className="w-3 h-3 text-[#89AACC]" />
                 Read full page
@@ -296,7 +298,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                               : 'text-neutral-400 hover:bg-white/5 hover:text-neutral-200'
                           }`}
                         >
-                          <span className="font-mono text-[10px] text-neutral-600 tabular-nums">
+                          <span className="font-mono text-[10px] text-neutral-400 tabular-nums">
                             {String(i + 1).padStart(2, '0')}
                           </span>
                           {heading.text}
@@ -336,7 +338,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
             {/* Read next */}
             {related.length > 0 && (
               <div className="mt-10 border-t border-white/10 pt-6">
-                <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+                <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                   Read next
                 </h3>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -347,14 +349,14 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                       onClick={() => onSelectEntry(item)}
                       className="group flex flex-col gap-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-left transition-colors hover:border-[#89AACC]/40 hover:bg-white/[0.05] cursor-pointer"
                     >
-                      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+                      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                         {item.category}
                         <span className="text-neutral-700" aria-hidden="true">&middot;</span>
                         {item.readTime}
                       </span>
                       <span className="flex items-start justify-between gap-2 text-sm leading-snug text-white">
                         {item.title}
-                        <ArrowRight className="mt-0.5 w-4 h-4 shrink-0 text-neutral-600 transition-transform group-hover:translate-x-0.5 group-hover:text-[#89AACC]" />
+                        <ArrowRight className="mt-0.5 w-4 h-4 shrink-0 text-neutral-400 transition-transform group-hover:translate-x-0.5 group-hover:text-[#89AACC]" />
                       </span>
                     </button>
                   ))}
