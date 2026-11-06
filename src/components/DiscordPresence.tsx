@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { discordPresenceData } from '../data/portfolioData';
+import { DiscordMark } from './DiscordMark';
 
 const CACHE_TTL_MS = 60_000;
 
@@ -82,13 +83,6 @@ const activityLabel = (data: LanyardData): string | null => {
   const verb = ACTIVITY_VERBS[activity.type] ?? 'Doing';
   return `${verb} ${activity.name}`;
 };
-
-/** Discord's mark, inline so the card adds no icon dependency. */
-const DiscordMark: React.FC<{ className?: string }> = ({ className = 'h-4 w-4' }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
-    <path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.25a18.3 18.3 0 0 0-5.49 0 12.6 12.6 0 0 0-.62-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.22-1.99a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13c.13-.1.25-.2.37-.3a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01c.12.1.25.2.37.3a.08.08 0 0 1-.01.13 12.3 12.3 0 0 1-1.87.89.08.08 0 0 0-.04.11c.36.7.77 1.36 1.22 1.99a.08.08 0 0 0 .09.03 19.8 19.8 0 0 0 6-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.41 0-1.33.96-2.41 2.16-2.41 1.21 0 2.18 1.09 2.16 2.41 0 1.33-.96 2.41-2.16 2.41zm7.97 0c-1.18 0-2.16-1.08-2.16-2.41 0-1.33.96-2.41 2.16-2.41 1.21 0 2.18 1.09 2.16 2.41 0 1.33-.95 2.41-2.16 2.41z" />
-  </svg>
-);
 
 /**
  * Opt-in Discord presence. The public Lanyard API is contacted only after the

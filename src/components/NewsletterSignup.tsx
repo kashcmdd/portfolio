@@ -28,16 +28,15 @@ const NewsletterSignup: React.FC = () => {
     <div className="w-full max-w-xl mx-auto rounded-[28px] border border-white/10 bg-white/[0.03] p-6 md:p-8 text-left">
       <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.25em] mb-2">
         <Mail className="w-3.5 h-3.5" />
-        <span>Stay in the loop</span>
+        <span>{isLive ? 'Stay in the loop' : 'Follow along'}</span>
       </div>
-
-      <p className="text-sm font-body font-light text-neutral-300 mb-5">
-        Occasional notes when something ships - a new project, a journal entry worth reading. No
-        schedule, no filler.
-      </p>
 
       {isLive ? (
         <>
+          <p className="text-sm font-body font-light text-neutral-300 mb-5">
+            Occasional notes when something ships - a new project, a journal entry worth reading.
+            No schedule, no filler.
+          </p>
           <form
             action={`https://buttondown.com/api/emails/embed-subscribe/${username}`}
             method="post"
@@ -73,6 +72,9 @@ const NewsletterSignup: React.FC = () => {
         </>
       ) : (
         <>
+          <p className="text-sm font-body font-light text-neutral-300 mb-5">
+            New work shows up first in the RSS feed and on GitHub.
+          </p>
           <div className="flex flex-wrap gap-2">
             <a
               href={`${import.meta.env.BASE_URL}rss.xml`}
@@ -91,10 +93,6 @@ const NewsletterSignup: React.FC = () => {
               <span>GitHub</span>
             </a>
           </div>
-          <p className="mt-3 text-[11px] font-body text-neutral-400 leading-relaxed">
-            Email updates are not set up yet. Until they are, the feed and the profile are the
-            places new work shows up first.
-          </p>
         </>
       )}
     </div>

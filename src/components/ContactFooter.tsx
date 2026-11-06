@@ -4,6 +4,7 @@ import { warriorDetails } from '../data/portfolioData';
 import { ArrowUpRight, MessageSquare, BookOpen, FileDown, FileText, LayoutGrid, Compass, Rss, ShieldCheck } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { DiscordPresence } from './DiscordPresence';
+import { DiscordMark } from './DiscordMark';
 import { useMotionPref } from './MotionPrefProvider';
 
 interface ContactFooterProps {
@@ -191,6 +192,15 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             >
               <ShieldCheck className="w-4 h-4" />
               <span>Privacy</span>
+            </a>
+            <a
+              href={warriorDetails.discord}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <DiscordMark className="w-4 h-4" />
+              <span>Discord</span>
             </a>
             <button
               onClick={onOpenContactModal}

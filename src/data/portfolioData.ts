@@ -167,7 +167,7 @@ export const warriorDetails = {
   bio: "I'm KashhCMD, a web designer and Discord bot developer who enjoys building modern digital experiences. My journey into programming started with curiosity and has grown into a passion for creating websites, applications, and tools that are both visually appealing and highly functional.",
   philosophy: "I believe that every line of code should have a purpose. I aim to write clean, maintainable, and scalable code while focusing on performance, accessibility, and user experience. Rather than simply making something work, I strive to create products that feel polished, intuitive, and enjoyable to use.",
   roles: ["Web Dev", "Discord Bot Dev"],
-  discord: "",
+  discord: "https://discord.com/users/1415420243836407878",
 };
 
 /**
@@ -1033,7 +1033,7 @@ export const explorationItemsData: ExplorationItem[] = [
 export const currentlyBuildingData: CurrentlyBuilding = {
   name: 'KashhCMD Portfolio',
   description:
-    'Layout and accessibility checks now run on every push; the seasonal recolour is off the calendar and the blue palette is back.',
+    'Refreshed share cards, a privacy page and a full-screen mobile menu are live; the staged major dependency upgrades are next.',
   status: 'In progress',
 };
 
@@ -1042,6 +1042,21 @@ export const currentlyBuildingData: CurrentlyBuilding = {
  * changes worth a stranger's attention, newest first, and keep the dates real.
  */
 export const recentWorkData: RecentWork[] = [
+  {
+    date: 'Nov 2026',
+    title: 'Opt-in Discord presence',
+    kind: 'Feature',
+  },
+  {
+    date: 'Nov 2026',
+    title: 'Expandable skill cards',
+    kind: 'Feature',
+  },
+  {
+    date: 'Nov 2026',
+    title: 'Full-screen mobile menu',
+    kind: 'Feature',
+  },
   {
     date: 'Nov 2026',
     title: 'Seasonal theme reverted',
