@@ -697,6 +697,9 @@ const projectsIndexJsonLd = (projects, base) =>
 // no JavaScript, so a recruiter can paste a link and it just works.
 function projectPage(project, base, all) {
   const canonical = `${SITE_ORIGIN}${base}projects/${project.id}/`;
+  // SVG placeholders are fine in the page, but social crawlers do not render
+  // SVG previews, so each project gets a raster 1200x630 card instead.
+  const ogImage = `${SITE_ORIGIN}${base}og/projects/${project.id}.jpg`;
   const others = all.filter((p) => p.id !== project.id);
   const highlights = project.highlights || [
     'Asynchronous event loops & high-speed REST endpoints',
@@ -733,12 +736,14 @@ function projectPage(project, base, all) {
     <meta property="og:title" content="${esc(project.title)}" />
     <meta property="og:description" content="${esc(project.subtitle)}" />
     <meta property="og:url" content="${esc(canonical)}" />
-    <meta property="og:image" content="${esc(socialImage(project.image))}" />
+    <meta property="og:image" content="${esc(ogImage)}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="${esc(project.title)}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${esc(project.title)}" />
     <meta name="twitter:description" content="${esc(project.subtitle)}" />
-    <meta name="twitter:image" content="${esc(socialImage(project.image))}" />
+    <meta name="twitter:image" content="${esc(ogImage)}" />
     <meta name="twitter:image:alt" content="${esc(project.title)}" />
     <style>${cssFor('../../')}</style>
     <script type="application/ld+json">${projectJsonLd(project, canonical)}</script>
@@ -1557,10 +1562,11 @@ ${urls
 // robots.txt invites crawlers rather than blocking them. The sitemap is
 // referenced from the pages themselves. Kept ASCII so the file reads the same in
 // every tool that touches it.
-const robotsTxt = () => `# Production build - open to indexing.
+const robotsTxt = (base) => `# Production build - open to indexing.
 # Mirrors the index, follow meta in index.html and on every generated page.
 User-agent: *
 Allow: /
+Sitemap: ${SITE_ORIGIN}${base}sitemap.xml
 `;
 
 /**
@@ -1859,7 +1865,7 @@ try {
     })
   );
 
-  await writeFile(path.join(dist, 'robots.txt'), robotsTxt());
+  await writeFile(path.join(dist, 'robots.txt'), robotsTxt(base));
   await writeFile(path.join(dist, '404.html'), notFoundPage(base));
   console.log(`  404.html  static-host not-found page -> dist/`);
   await writeFile(

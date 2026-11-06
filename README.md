@@ -37,6 +37,7 @@ npm run dev      # dev server on http://localhost:3001
 npm run lint     # tsc --noEmit — the type check CI runs
 npm run build    # vite build, then the static generators, into dist/
 npm run test:e2e # Playwright layout + axe checks, against a fresh build
+npm run assets:og # regenerate the committed social preview cards
 npm run preview  # serve dist/ at the /portfolio/ base path
 ```
 

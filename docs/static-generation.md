@@ -107,6 +107,24 @@ wrapper, and the same data read from `portfolioData.ts`. The fallback is plainer
 but always builds on a machine with no browser. The logged line states which
 path was taken.
 
+## `scripts/generate-og-cards.mjs`
+
+Not part of `npm run build`: the cards are committed assets, because a social
+preview changes far less often than the site and a browser is not guaranteed on
+every machine that builds it. Regenerate after changing a project, the palette
+or the tagline:
+
+```bash
+npx playwright install chromium   # once per machine
+npm run assets:og
+```
+
+It writes `public/og-image.jpg` (the site card) and one
+`public/og/projects/<id>.jpg` per project at 1200x630, rendering the text with
+the bundled fonts. The script's project list mirrors `portfolioData.ts`;
+`check-static-output` fails when a project page has no card, so a new project
+cannot ship without one.
+
 ## `scripts/check-static-output.mjs`
 
 Writes nothing. It reads `dist/` and fails the build when the output is
@@ -117,12 +135,16 @@ here.
 It asserts:
 
 - Root files exist: `index.html`, `404.html`, `sitemap.xml`, `robots.txt`,
-  `rss.xml`, `llms.txt`, `manifest.json`, `sw.js`, `KashhCMD-Resume.pdf`.
+  `rss.xml`, `llms.txt`, `manifest.json`, `sw.js`, `KashhCMD-Resume.pdf`,
+  `og-image.jpg`.
 - Each of `journal/`, `projects/`, `resume/`, `uses/` has a non-empty
   `index.html` and `index.md`.
 - Every subdirectory of `journal/` and `projects/` has a non-empty `index.html`
   and `index.md`, and each group has at least one page. The set is walked from
   disk, not from a hard-coded list, so adding a project needs no edit here.
+- Every project has a raster `og/projects/<id>.jpg` and its page's `og:image`
+  is not an SVG — social crawlers do not render SVG previews.
+- `robots.txt` carries a `Sitemap:` line.
 - `llms.txt` is non-empty and references `/journal/`, `/projects/`, `/resume/`
   and `/uses/`.
 
@@ -210,6 +232,7 @@ dist/
   404.html  sitemap.xml  robots.txt  rss.xml  llms.txt
   manifest.json  sw.js  KashhCMD-Resume.pdf
   og-image.jpg  favicon.svg  apple-touch-icon.png
+  og/projects/<id>.jpg           # committed social cards
   fonts/  assets/                # assets/ is Vite's hashed bundle
   journal/index.html  journal/index.md
   journal/<id>/index.html  journal/<id>/index.md

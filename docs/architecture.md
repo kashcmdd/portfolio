@@ -193,9 +193,9 @@ is recorded. `AnalyticsConsent` shows a banner until a decision is stored. Both
 read and write through `src/utils/analyticsConsent.ts`, which keeps
 `localStorage` as the source of truth and dispatches an event so a mid-session
 accept takes effect without a reload. The tri-state matters: `null` is "never
-asked" (show the banner), distinct from a stored decline. This is the only
-client persistence on the site besides the motion preference and locally stored
-journal comments; there are no reaction or view counters.
+asked" (show the banner), distinct from a stored decline. The only other client
+persistence is the motion preference and the 60-second Discord presence cache;
+there are no reaction or view counters.
 
 ## PWA
 
@@ -206,7 +206,7 @@ service-worker cache names. See [`static-generation.md`](static-generation.md).
 
 ## Component inventory
 
-All 34 files under `src/components/`, grouped by how they are reached:
+All 35 files under `src/components/`, grouped by how they are reached:
 
 - **Composed by `App` (14):** `LoadingScreen`, `Navbar`, `HeroSection`,
   `NowBuildingStrip`, `AboutSection`, `SkillsSection`, `SelectedWorksSection`,
@@ -214,11 +214,12 @@ All 34 files under `src/components/`, grouped by how they are reached:
   `ExplorationsSection`, `StatsSection`, `TestimonialsSection`, `ContactFooter`.
 - **Lazy dialogs (5):** `ProjectModal`, `JournalModal`, `ContactModal`,
   `SearchModal`, `ShortcutsModal`.
-- **Supporting components (15):** `MotionPrefProvider` (root, in `main.tsx`),
+- **Supporting components (16):** `MotionPrefProvider` (root, in `main.tsx`),
   `Analytics`, `AnalyticsConsent`, `SmartImage`, `HlsVideoBackground`,
   `CinematicVideoBackground`, `ArchitectureDiagram`, `DecisionLog`,
   `SkillsRadar`, `NewsletterSignup`, `DemoPlayer`, `JournalCodeBlock`,
-  `JournalComments`, `ShareBar`, `NotFoundView`.
+  `ShareBar`, `NotFoundView`, `MobileMenu` (opened by `Navbar`),
+  `DiscordPresence` (rendered by `ContactFooter`).
 
 ## Local development behaviour that is deliberate
 
