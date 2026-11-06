@@ -267,10 +267,11 @@ export default function App() {
 
       {!unknownRoute && (
         <>
-          {/* First tab stop on the page. A keyboard user would otherwise have to
-              Tab through the whole navigation to reach the content, which on a
-              page this long is most of a minute of key presses. */}
-          <a
+          <div id="page-content">
+            {/* First tab stop on the page. A keyboard user would otherwise have to
+                Tab through the whole navigation to reach the content, which on a
+                page this long is most of a minute of key presses. */}
+            <a
             href="#main"
             className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:rounded-full focus:bg-[#89AACC] focus:px-5 focus:py-2.5 focus:text-sm focus:font-medium focus:text-black"
           >
@@ -335,6 +336,7 @@ export default function App() {
             onOpenContactModal={() => setContactModalOpen(true)}
             onNavigateTop={() => handleNavigate('hero')}
           />
+          </div>
 
           {/* Modals. Each is lazy and only mounted while it has something to
               show, so a closed dialog costs nothing after its chunk is warmed. */}

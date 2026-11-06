@@ -25,7 +25,7 @@ than shipping absolute links to the wrong project.
 ## `scripts/generate-journal-pages.mjs`
 
 The largest script. It writes a real HTML page for every journal entry, every
-project, and the index / resume / uses / 404 / sitemap / robots routes.
+project, and the index / resume / uses / privacy / 404 / sitemap / robots routes.
 
 What it writes under `dist/`:
 
@@ -37,6 +37,7 @@ What it writes under `dist/`:
 | `projects/<id>/index.html`, `projects/<id>/index.md` | One per project |
 | `resume/index.html`, `resume/index.md` | Skills-based resume |
 | `uses/index.html`, `uses/index.md` | Colophon |
+| `privacy/index.html`, `privacy/index.md` | Privacy and third-party disclosure |
 | `404.html` | Static-host not-found page |
 | `sitemap.xml` | Route list written for crawlers |
 | `robots.txt` | `User-agent: *` / `Allow: /`, mirroring the `index, follow` meta |
@@ -52,7 +53,7 @@ from `outlineSlugs`/`articleOutline`, so the links cannot point at headings that
 do not exist.
 
 It exits with `no journal entries loaded` if `journalEntriesData` is empty.
-Projects, resume and uses are written only when the corresponding data exists
+Projects, resume and uses are written only when the corresponding data exists; the privacy page is data-independent.
 (`projectsData.length`, and `techSkillsData.length && warriorDetails`).
 Journal and project ids are normalised with `slug()` before use, so they are
 safe as URL segments and directory names.
@@ -137,7 +138,7 @@ It asserts:
 - Root files exist: `index.html`, `404.html`, `sitemap.xml`, `robots.txt`,
   `rss.xml`, `llms.txt`, `manifest.json`, `sw.js`, `KashhCMD-Resume.pdf`,
   `og-image.jpg`.
-- Each of `journal/`, `projects/`, `resume/`, `uses/` has a non-empty
+- Each of `journal/`, `projects/`, `resume/`, `uses/`, `privacy/` has a non-empty
   `index.html` and `index.md`.
 - Every subdirectory of `journal/` and `projects/` has a non-empty `index.html`
   and `index.md`, and each group has at least one page. The set is walked from
@@ -145,8 +146,8 @@ It asserts:
 - Every project has a raster `og/projects/<id>.jpg` and its page's `og:image`
   is not an SVG — social crawlers do not render SVG previews.
 - `robots.txt` carries a `Sitemap:` line.
-- `llms.txt` is non-empty and references `/journal/`, `/projects/`, `/resume/`
-  and `/uses/`.
+- `llms.txt` is non-empty and references `/journal/`, `/projects/`, `/resume/`,
+  `/uses/` and `/privacy/`.
 
 On failure it prints one line per problem and exits `1`. It runs automatically
 at the end of `npm run build`, and alone as `npm run check:static` after a build.
@@ -216,7 +217,7 @@ unknown path with the SPA shell. The `devStaticArtifacts` plugin in
 - Paths are resolved and confined to `dist/` (a resolved-prefix check), and the
   served files are limited to a known set (`rss.xml`, `sitemap.xml`,
   `robots.txt`, `404.html`, `KashhCMD-Resume.pdf`, `llms.txt`) plus the
-  `journal/`, `projects/`, `resume/` and `uses/` directories.
+  `journal/`, `projects/`, `resume/`, `uses/` and `privacy/` directories.
 - Generation is deferred until the first matching request and remembered, so
   starting the dev server stays fast. Editing anything under `scripts/` or
   `portfolioData.ts` invalidates the cached result; the next request regenerates
@@ -240,6 +241,7 @@ dist/
   projects/<id>/index.html  projects/<id>/index.md
   resume/index.html  resume/index.md
   uses/index.html  uses/index.md
+  privacy/index.html  privacy/index.md
   <public/ images>
 ```
 

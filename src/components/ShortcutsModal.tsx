@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Keyboard } from 'lucide-react';
 import { useFocusTrap } from '../utils/useFocusTrap';
+import { useBackgroundInert } from '../utils/useBackgroundInert';
 
 interface ShortcutsModalProps {
   isOpen: boolean;
@@ -36,6 +37,7 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose 
     };
   }, [isOpen, onClose]);
 
+  useBackgroundInert(isOpen);
   const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
 
   if (!isOpen) return null;

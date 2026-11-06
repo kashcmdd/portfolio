@@ -12,6 +12,7 @@ import {
 import { entryPlainText } from '../utils/journalText';
 import { useMotionPref } from './MotionPrefProvider';
 import { useFocusTrap } from '../utils/useFocusTrap';
+import { useBackgroundInert } from '../utils/useBackgroundInert';
 
 type ResultType =
   | 'project'
@@ -92,6 +93,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const { pref, toggle } = useMotionPref();
+  useBackgroundInert(isOpen);
   const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
 
   // Article bodies are indexed once. Doing it per keystroke would re-walk every

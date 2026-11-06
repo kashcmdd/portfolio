@@ -28,7 +28,9 @@ const STATIC_ASSETS = [
   `${BASE}index.html`,
   `${BASE}manifest.json`,
   `${BASE}favicon.svg`,
-  `${BASE}apple-touch-icon.png`
+  `${BASE}apple-touch-icon.png`,
+  `${BASE}icon-192.png`,
+  `${BASE}icon-512.png`
 ];
 
 // Install event - cache static assets

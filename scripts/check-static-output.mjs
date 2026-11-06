@@ -36,7 +36,7 @@ const ROOT_FILES = [
   'KashhCMD-Resume.pdf',
   'og-image.jpg',
 ];
-const ROUTE_DIRS = ['journal', 'projects', 'resume', 'uses'];
+const ROUTE_DIRS = ['journal', 'projects', 'resume', 'uses', 'privacy'];
 
 const failures = [];
 const exists = (file) => access(file).then(() => true, () => false);

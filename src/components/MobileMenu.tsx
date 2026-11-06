@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { ArrowUpRight, Github, Search, X } from 'lucide-react';
 import { warriorDetails } from '../data/portfolioData';
 import { useFocusTrap } from '../utils/useFocusTrap';
+import { useBackgroundInert } from '../utils/useBackgroundInert';
 import { useMotionPref } from './MotionPrefProvider';
 
 interface MobileMenuItem {
@@ -43,6 +44,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onOpenContactModal,
 }) => {
   const { reduced } = useMotionPref();
+  useBackgroundInert(open);
   const dialogRef = useFocusTrap<HTMLDivElement>(open);
 
   // Close the panel, then run the action once React has restored the body
@@ -123,6 +125,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                       key={item.id}
                       type="button"
                       onClick={() => afterClose(() => onNavigate(item.id))}
+                      aria-current={isActive ? 'location' : undefined}
                       initial={reduced ? false : { opacity: 0, y: 18 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={
@@ -138,7 +141,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                     >
                       <span>{item.label}</span>
                       <ArrowUpRight
-                        className={`h-5 w-5 ${isActive ? 'text-[#89AACC]' : 'text-neutral-600'}`}
+                        className={`h-5 w-5 ${isActive ? 'text-[#89AACC]' : 'text-neutral-400'}`}
                       />
                     </motion.button>
                   );

@@ -9,6 +9,7 @@ import { ShareBar } from './ShareBar';
 import { projectUrl } from '../utils/share';
 import { safeHref } from '../utils/url';
 import { useFocusTrap } from '../utils/useFocusTrap';
+import { useBackgroundInert } from '../utils/useBackgroundInert';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -20,6 +21,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   onClose,
 }) => {
   const bodyRef = useRef<HTMLDivElement>(null);
+  useBackgroundInert(Boolean(project));
   const dialogRef = useFocusTrap<HTMLDivElement>(Boolean(project));
   const [demoPlayerOpen, setDemoPlayerOpen] = useState(false);
 

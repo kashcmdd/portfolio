@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { warriorDetails } from '../data/portfolioData';
 import { X, Sparkles, Github, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useFocusTrap } from '../utils/useFocusTrap';
+import { useBackgroundInert } from '../utils/useBackgroundInert';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -51,6 +52,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
     };
   }, [isOpen, onClose]);
 
+  useBackgroundInert(isOpen);
   const dialogRef = useFocusTrap<HTMLDivElement>(isOpen);
 
   const handleSubmit = async (event: React.FormEvent) => {

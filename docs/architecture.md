@@ -85,7 +85,7 @@ There is no `react-router`. Two mechanisms stand in:
   back/forward, and `openJournal`/`closeJournal` push and pop a history entry so
   closing returns rather than leaving a stale hash.
 - **`isUnknownRoute()`** decides whether to render the app or `NotFoundView`.
-  The generated route prefixes (`journal/`, `projects/`, `resume/`, `uses/`) are
+  The generated route prefixes (`journal/`, `projects/`, `resume/`, `uses/`, `privacy/`) are
   whitelisted so real static routes still resolve; only a genuinely unknown path
   shows the not-found view. This matters on hosts that fall back to
   `index.html` instead of serving `dist/404.html` — see the README's "Static
@@ -175,6 +175,7 @@ interface MotionPrefValue {
 | File | Export(s) | Purpose |
 | --- | --- | --- |
 | `useFocusTrap.ts` | `useFocusTrap<T>(active)` | Traps Tab inside a dialog and restores focus on close |
+| `useBackgroundInert.ts` | `useBackgroundInert(active)` | Marks `#page-content` inert and `aria-hidden` while a dialog or the mobile menu is open |
 | `share.ts` | `SITE_ORIGIN`, `BASE_PATH`, `articleUrl`, `projectUrl`, `resumeUrl`, `shareTargets` | Absolute share URLs and X/LinkedIn intent links |
 | `url.ts` | `safeHref` | Scheme allow-list for content-supplied links |
 | `keyboard.ts` | `activateOnKey` | Enter/Space activation for click-only card elements |

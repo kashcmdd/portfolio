@@ -76,6 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
+                aria-current={isActive ? 'location' : undefined}
                 className={`text-xs sm:text-sm font-medium rounded-full px-3.5 py-1.5 transition-all cursor-pointer font-body ${
                   isActive
                     ? 'text-white bg-white/15 shadow-sm'

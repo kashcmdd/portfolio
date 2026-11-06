@@ -161,7 +161,7 @@ const nebulaArchitecture: Architecture = {
 export const warriorDetails = {
   name: "KashhCMD",
   title: "Web Designer & Discord Bot Developer",
-  avatarUrl: "https://github.com/kashcmdd.png",
+  avatarUrl: asset("avatar.jpg"),
   githubUrl: "https://github.com/kashcmdd",
   githubHandle: "kashcmdd",
   bio: "I'm KashhCMD, a web designer and Discord bot developer who enjoys building modern digital experiences. My journey into programming started with curiosity and has grown into a passion for creating websites, applications, and tools that are both visually appealing and highly functional.",

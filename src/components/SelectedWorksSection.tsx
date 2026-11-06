@@ -190,7 +190,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 onKeyDown={activateOnKey(() => onSelectProject(project))}
                 role="button"
                 tabIndex={0}
-                aria-label={`Open case study: ${project.title}`}
+                aria-label={`${project.category}: ${project.title} — open case study`}
                 className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] ${project.aspectRatio}`}
               >
                     {/* Background Image */}
@@ -235,7 +235,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 </div>
 
                 {/* Hover Backdrop Overlay with Glass & Pill */}
-                <div className="absolute inset-0 bg-black/75 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-6 sm:p-8 z-20">
+                <div aria-hidden="true" className="absolute inset-0 bg-black/75 backdrop-blur-md opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-6 sm:p-8 z-20">
                   <div className="flex justify-between items-start">
                     <span className="liquid-glass px-3 py-1 rounded-full text-xs font-body text-neutral-300">
                       {project.category}
