@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowUpRight, Github, Search, X } from 'lucide-react';
 import { warriorDetails } from '../data/portfolioData';
+import { DiscordMark } from './DiscordMark';
 import { useFocusTrap } from '../utils/useFocusTrap';
 import { useBackgroundInert } from '../utils/useBackgroundInert';
 import { useMotionPref } from './MotionPrefProvider';
@@ -159,16 +160,28 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                 Search
               </button>
 
-              <a
-                href={warriorDetails.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
-              >
-                <Github className="h-4 w-4" />
-                GitHub
-              </a>
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href={warriorDetails.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onClose}
+                  className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+                >
+                  <Github className="h-4 w-4" />
+                  GitHub
+                </a>
+                <a
+                  href={warriorDetails.discord}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onClose}
+                  className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
+                >
+                  <DiscordMark className="h-4 w-4" />
+                  Discord
+                </a>
+              </div>
 
               <div className="cta-ring rounded-full p-[2px]">
                 <button

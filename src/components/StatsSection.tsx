@@ -1,32 +1,32 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ShieldCheck, Code, Zap, Award } from 'lucide-react';
+import { Layers, Bot, Terminal, Trophy } from 'lucide-react';
 
 export const StatsSection: React.FC = () => {
   const stats = [
     {
-      icon: ShieldCheck,
-      value: "100%",
-      label: "Self-Taught Engineering",
-      description: "Driven by passion, curiosity, and relentless practical building.",
+      icon: Layers,
+      value: "6",
+      label: "Deep Case Studies",
+      description: "Long-form write-ups on the systems, choices and trade-offs behind each build.",
     },
     {
-      icon: Code,
-      value: "20+",
-      label: "Digital Projects Built",
-      description: "Full-stack apps, Discord frameworks, APIs, and UI libraries.",
+      icon: Bot,
+      value: "70+",
+      label: "Nebula AI Tools",
+      description: "A DeepSeek-backed tool layer that can read and change a live Discord server.",
     },
     {
-      icon: Zap,
-      value: "10k+",
-      label: "Discord Community Users",
-      description: "Bots and infrastructure serving active users in real-time.",
+      icon: Terminal,
+      value: "25+",
+      label: "Music Bot Commands",
+      description: "Queue, filters, lyrics, playlists and tiered playback behind one Lavalink pipeline.",
     },
     {
-      icon: Award,
-      value: "99.9%",
-      label: "Target System Uptime",
-      description: "Architected with error boundaries, logging, and process monitors.",
+      icon: Trophy,
+      value: "41",
+      label: "Hand-Built Rank Icons",
+      description: "The full Bronze-to-Champion ladder, drawn as SVG for the Rainbow Leaderboard.",
     },
   ];
 
