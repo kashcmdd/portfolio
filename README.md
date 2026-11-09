@@ -38,6 +38,7 @@ npm run lint     # tsc --noEmit — the type check CI runs
 npm run build    # vite build, then the static generators, into dist/
 npm run test:e2e # Playwright layout + axe checks, against a fresh build
 npm run assets:og # regenerate the committed social preview cards
+npm run assets:covers # regenerate the three architecture project covers
 npm run preview  # serve dist/ at the /portfolio/ base path
 ```
 
@@ -54,7 +55,8 @@ There is no application test framework, so a change is checked four ways:
 3. The build's final step asserts the generated output. `scripts/check-static-output.mjs`
    fails the build if any route, `.md` mirror, `sitemap.xml`, `llms.txt` or the
    resume PDF is missing from `dist/`, which is what catches a generator that
-   half-ran while Vite still exited green. Run it alone with
+   half-ran while Vite still exited green. It also enforces the first-paint
+   budget by gzipping the assets `index.html` references. Run it alone with
    `npm run check:static`.
 4. `npm run test:e2e` — Playwright serves the built site and checks two things
    the build cannot see: the featured bento rows still tile the twelve columns,

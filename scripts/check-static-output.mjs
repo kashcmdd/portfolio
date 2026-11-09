@@ -15,6 +15,7 @@
  * `npm run check:static` after a build.
  */
 import { access, readdir, readFile, stat } from 'node:fs/promises';
+import { gzipSync } from 'node:zlib';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -70,6 +71,15 @@ await Promise.all(ROUTE_DIRS.map(requireRoute));
 // Each journal entry and project is its own subdirectory, so the set is walked
 // from disk rather than from a hardcoded list that would rot the moment a
 // project is added.
+const manifest = JSON.parse(
+  await readFile(path.join(dist, 'manifest.json'), 'utf8').catch(() => '{}')
+);
+const base = (manifest.start_url ?? '/').replace(/\/$/, '');
+// Turns "/portfolio/scriptforge-cover.jpg" into "scriptforge-cover.jpg" without
+// assuming the base path, which is the value most likely to change with a host.
+const fromSiteRoot = (src) =>
+  base && src.startsWith(`${base}/`) ? src.slice(base.length + 1) : src.replace(/^\//, '');
+
 for (const group of ['journal', 'projects']) {
   const dir = path.join(dist, group);
   if (!(await exists(dir))) continue;
@@ -92,6 +102,11 @@ for (const group of ['journal', 'projects']) {
         if (!image || /\.svg(\?|$)/i.test(image)) {
           failures.push(`projects/${page} has a non-raster og:image`);
         }
+        // The page itself embeds the cover as a root-relative banner. The social
+        // card can exist while that file is renamed, so resolve it against the
+        // manifest's base and assert it landed in dist/.
+        const banner = html.match(/<img class="banner" src="([^"]+)"/)?.[1] ?? '';
+        if (banner) await requireFile(fromSiteRoot(banner));
       })
     );
   }
@@ -110,10 +125,52 @@ for (const group of ROUTE_DIRS) {
 const robots = await readFile(path.join(dist, 'robots.txt'), 'utf8').catch(() => '');
 if (!/^Sitemap:/m.test(robots)) failures.push('robots.txt has no Sitemap line');
 
+// First-paint budget. The journal has a post about cutting 59% of the bundle,
+// and without an assertion the next dependency quietly puts it back. The set is
+// read from index.html rather than hardcoded, so a vendor chunk added to the
+// initial load is measured here without an edit. Lazy chunks — hls, prism and
+// the dialogs — are not referenced there and so are deliberately not counted.
+const kB = (bytes) => `${(bytes / 1024).toFixed(1)} kB`;
+const ENTRY_BUDGET = 50 * 1024;
+const CSS_BUDGET = 16 * 1024;
+const FIRST_PAINT_BUDGET = 210 * 1024;
+
+const indexHtml = await readFile(path.join(dist, 'index.html'), 'utf8').catch(() => '');
+const initialAssets = [
+  ...new Set(
+    [...indexHtml.matchAll(/(?:src|href)="[^"]*\/assets\/([^"?]+\.(?:js|css))"/g)].map((match) => match[1])
+  ),
+];
+
+let firstPaint = 0;
+for (const asset of initialAssets) {
+  const file = path.join(dist, 'assets', asset);
+  if (!(await exists(file))) {
+    failures.push(`index.html references missing assets/${asset}`);
+    continue;
+  }
+  const size = gzipSync(await readFile(file)).length;
+  firstPaint += size;
+  if (/^index-.*\.js$/.test(asset) && size > ENTRY_BUDGET) {
+    failures.push(`entry JS ${kB(size)} exceeds the ${kB(ENTRY_BUDGET)} budget`);
+  }
+  if (/^index-.*\.css$/.test(asset) && size > CSS_BUDGET) {
+    failures.push(`CSS ${kB(size)} exceeds the ${kB(CSS_BUDGET)} budget`);
+  }
+}
+if (initialAssets.length === 0) failures.push('index.html references no built assets');
+if (firstPaint > FIRST_PAINT_BUDGET) {
+  failures.push(
+    `first paint is ${kB(firstPaint)} gzip, over the ${kB(FIRST_PAINT_BUDGET)} budget`
+  );
+}
+
 if (failures.length > 0) {
   console.error(`check-static-output: ${failures.length} problem(s) in dist/`);
   for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
 
-console.log('check-static-output: dist/ is complete.');
+console.log(
+  `check-static-output: dist/ is complete (first paint ${kB(firstPaint)} gzip, budget ${kB(FIRST_PAINT_BUDGET)}).`
+);
