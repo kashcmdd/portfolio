@@ -113,8 +113,16 @@ them when editing.
   `experiencePeriods`.
 - **Images in `public/` go through `asset()`.** `asset(file)` prepends
   `import.meta.env.BASE_URL`, because a string in this module is a runtime
-  `<img src>` the bundler never rewrites. Remote URLs (Unsplash) are used
-  verbatim.
+  `<img src>` the bundler never rewrites. Every image is local: journal covers
+  and exploration stills were downloaded from Unsplash once and are served from
+  this site, so a page load makes no third-party image request.
+- **Journal covers ship with a square thumbnail.** `thumb` is the 240px crop the
+  homepage list uses; the full `image` is the 1200×630 banner and social card.
+  Omitting `thumb` falls back to the banner, which is correct but heavier.
+- **Three project covers are generated from `architecture`.** ScriptForge, the
+  music bot and Nebula have no screenshot, so `npm run assets:covers` renders
+  their layers into `public/<id>-cover.jpg`. The script names those ids
+  explicitly; a new project without a screenshot needs an entry there.
 - **Architecture nodes and edges are traceable.** The file's own comment is
   explicit: every node and edge must come from the project's description, tags
   or highlights. Edges point from a lower `layer` index to a higher one.
