@@ -82,10 +82,9 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
                 <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shrink-0 border border-white/10">
                   <SmartImage
-                    src={entry.image}
+                    src={entry.thumb ?? entry.image}
                     alt={entry.title}
                     ratio="1 / 1"
-                    sizes="56px"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>

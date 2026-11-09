@@ -126,6 +126,22 @@ the bundled fonts. The script's project list mirrors `portfolioData.ts`;
 `check-static-output` fails when a project page has no card, so a new project
 cannot ship without one.
 
+## `scripts/generate-project-covers.mjs`
+
+Also committed rather than built, for the same reason. Three projects have no
+screenshot — ScriptForge, the music bot and Nebula — so their covers are drawn
+from their own `architecture` data: real layer names and component chips, not
+invented detail.
+
+```bash
+npm run assets:covers
+```
+
+It writes `public/<id>-cover.jpg` at 1600x900 and is capped at three ids on
+purpose; Melon has a real screenshot and keeps it. The artwork stays inside a
+centred 1120x780 safe area, because the same file is cropped to 16/10, 4/3 and
+1200x630 by the cards and the social preview.
+
 ## `scripts/check-static-output.mjs`
 
 Writes nothing. It reads `dist/` and fails the build when the output is
@@ -144,10 +160,16 @@ It asserts:
   and `index.md`, and each group has at least one page. The set is walked from
   disk, not from a hard-coded list, so adding a project needs no edit here.
 - Every project has a raster `og/projects/<id>.jpg` and its page's `og:image`
-  is not an SVG — social crawlers do not render SVG previews.
+  is not an SVG — social crawlers do not render SVG previews. The page banner
+  image next to it is resolved against the manifest base and must exist too.
 - `robots.txt` carries a `Sitemap:` line.
 - `llms.txt` is non-empty and references `/journal/`, `/projects/`, `/resume/`,
   `/uses/` and `/privacy/`.
+- **First paint stays inside its budget.** The set of JS and CSS files is read
+  from `index.html` (entry, modulepreloads, stylesheet), gzipped from disk and
+  summed. The current budgets are 50 kB entry JS, 16 kB CSS and 210 kB combined;
+  the combined figure is printed on every build. Lazy chunks (`hls`, `prism`,
+  the dialogs) are not referenced by `index.html` and are not counted.
 
 On failure it prints one line per problem and exits `1`. It runs automatically
 at the end of `npm run build`, and alone as `npm run check:static` after a build.

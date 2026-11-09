@@ -54,6 +54,12 @@ export interface JournalEntry {
   readTime: string;
   category: string;
   image: string;
+  /**
+   * Square crop for the homepage list, where the cover is shown at 56px. Without
+   * it the browser would fetch the full 1200px banner for a thumbnail. Falls
+   * back to `image` when unset.
+   */
+  thumb?: string;
   content: JournalBlock[];
   /**
    * Set on entries that are really a record of a choice rather than a tutorial.

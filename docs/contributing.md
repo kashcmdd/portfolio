@@ -38,8 +38,9 @@ four ways:
 3. **The build's final step** (`scripts/check-static-output.mjs`) asserts the
    generated output. It fails the build when a route, `.md` mirror,
    `sitemap.xml`, `llms.txt` or the resume PDF is missing from `dist/`, which is
-   what catches a generator that half-ran while Vite still exited green. Run it
-   alone with `npm run check:static` after a build.
+   what catches a generator that half-ran while Vite still exited green. It also
+   gzips the assets `index.html` references and fails if first paint crosses its
+   budget. Run it alone with `npm run check:static` after a build.
 4. **`npm run test:e2e`** (after a build) drives the preview server with
    Playwright. It asserts that the featured bento rows tile the twelve columns
    without holes, and that axe reports no serious or critical accessibility

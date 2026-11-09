@@ -198,7 +198,6 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                       src={project.image}
                       alt={project.title}
                       ratio={RATIOS[project.aspectRatio] || '4 / 3'}
-                      sizes="(min-width: 768px) 58vw, 100vw"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
 
