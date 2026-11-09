@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Rss, Github, ArrowUpRight } from 'lucide-react';
+import { Mail, Rss, ArrowUpRight } from 'lucide-react';
+import { GithubMark } from './BrandMarks';
 import { warriorDetails } from '../data/portfolioData';
 
 /**
@@ -89,7 +90,7 @@ const NewsletterSignup: React.FC = () => {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-body text-neutral-200 hover:text-white hover:border-white/25 transition-colors"
             >
-              <Github className="w-3.5 h-3.5" />
+              <GithubMark className="w-3.5 h-3.5" />
               <span>GitHub</span>
             </a>
           </div>

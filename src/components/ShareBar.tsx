@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, Copy, Linkedin, Share2 } from 'lucide-react';
+import { Check, Copy, Share2 } from 'lucide-react';
+import { LinkedinMark } from './BrandMarks';
 import { shareTargets } from '../utils/share';
 
 interface ShareBarProps {
@@ -72,7 +73,7 @@ export const ShareBar: React.FC<ShareBarProps> = ({ url, title, className = '' }
         rel="noopener noreferrer"
         className={buttonClass}
       >
-        <Linkedin className="w-3.5 h-3.5" aria-hidden="true" />
+        <LinkedinMark className="w-3.5 h-3.5" />
         <span className="sr-only">Share {title} on LinkedIn</span>
       </a>
 

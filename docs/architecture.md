@@ -208,7 +208,7 @@ service-worker cache names. See [`static-generation.md`](static-generation.md).
 
 ## Component inventory
 
-All 36 files under `src/components/`, grouped by how they are reached:
+All 37 files under `src/components/`, grouped by how they are reached:
 
 - **Composed by `App` (14):** `LoadingScreen`, `Navbar`, `HeroSection`,
   `NowBuildingStrip`, `AboutSection`, `SkillsSection`, `SelectedWorksSection`,
@@ -216,12 +216,13 @@ All 36 files under `src/components/`, grouped by how they are reached:
   `ExplorationsSection`, `StatsSection`, `TestimonialsSection`, `ContactFooter`.
 - **Lazy dialogs (5):** `ProjectModal`, `JournalModal`, `ContactModal`,
   `SearchModal`, `ShortcutsModal`.
-- **Supporting components (17):** `MotionPrefProvider` (root, in `main.tsx`),
+- **Supporting components (18):** `MotionPrefProvider` (root, in `main.tsx`),
   `Analytics`, `AnalyticsConsent`, `SmartImage`, `HlsVideoBackground`,
   `CinematicVideoBackground`, `ArchitectureDiagram`, `DecisionLog`,
   `SkillsRadar`, `NewsletterSignup`, `DemoPlayer`, `JournalCodeBlock`,
   `ShareBar`, `NotFoundView`, `MobileMenu` (opened by `Navbar`),
-  `DiscordPresence` (rendered by `ContactFooter`), `DiscordMark`.
+  `DiscordPresence` (rendered by `ContactFooter`), `DiscordMark`, `BrandMarks`
+  (GitHub and LinkedIn marks, since Lucide 1 dropped brand icons).
 
 ## Local development behaviour that is deliberate
 
