@@ -212,7 +212,7 @@ export const projectsData: Project[] = [
     subtitle: "Controller-Script Hub for Streaming Devices",
     outcome: "Turns risky, manual device-script edits into versioned, conflict-safe changes a whole team can make.",
     description: "A Next.js controller-script hub: device & script management, transactional script editing with conflict-safe versions, self-serve accounts with session invalidation and account deletion, CSRF-protected APIs, a GPC script parser, and 75 unit + end-to-end tests.",
-    image: asset("scriptforge-placeholder.svg"),
+    image: asset("scriptforge-cover.jpg"),
     tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "SQLite", "Vitest"],
     githubUrl: "https://github.com/kashcmdd/scriptforge",
     featured: true,
@@ -238,7 +238,7 @@ export const projectsData: Project[] = [
     subtitle: "Multi-Source Music Bot with Web Dashboard, Premium Tiers & Docker Deploys",
     outcome: "One bot across three streaming sources, configured from a dashboard and deployed with a single Docker command.",
     description: "A full-featured Discord music bot covering YouTube, Spotify and SoundCloud playback through a Lavalink-backed audio pipeline, with 25+ slash commands covering queue management, playback filters, lyrics and saved playlists. Adds a three-tier permission model (Free / Pro / VIP) that gates queue depth, volume ceiling, seek, autoplay and a 24/7 voice mode, enforced by both DJ-role checks and per-guild tier overrides. Ships with an OAuth2 web dashboard for remote configuration and a Docker image for one-command deployment.",
-    image: asset("discord-music-bot-placeholder.svg"),
+    image: asset("discord-music-bot-cover.jpg"),
     tags: ["Node.js", "Discord.js", "Lavalink", "yt-dlp", "ffmpeg", "Docker"],
     githubUrl: "https://github.com/kashcmdd/discord-music-bot",
     featured: true,
@@ -325,7 +325,7 @@ export const projectsData: Project[] = [
     subtitle: "AI-Operable Discord Bot on a Reproducible Red-DiscordBot Deployment",
     outcome: "Turns running a server into a conversation: mention the bot and it reads or changes the server itself, with every action gated on the requester's own Discord permissions.",
     description: "A self-hosted Discord bot built on Red-DiscordBot, split across two repositories — a reproducible deployment layer (a pinned Red dependency rather than a fork, scripted install, cog selection, backups, updates and branding) and a set of original cogs. The centrepiece is a DeepSeek-backed cog that gives the model 70+ tools, so it can read live server state (roles, channels, members, the audit log) and act on it: create, rename, reorder and delete channels and roles, set permission overwrites, kick, ban, timeout and prune members, post and edit embeds, and manage webhooks, emojis, stickers, AutoMod rules, scheduled events, threads and voice state, plus self-assignable role menus posted as buttons. It also reads image attachments (vision) and posts automatic welcome messages. Every action is checked against the requester's permissions at execution time rather than the bot's, applied with role-hierarchy rules, and logged.",
-    image: asset("nebula-placeholder.svg"),
+    image: asset("nebula-cover.jpg"),
     tags: ["Python", "Red-DiscordBot", "discord.py", "DeepSeek", "Tool Calling", "PowerShell", "Windows"],
     githubUrl: "https://github.com/kashcmdd/nebula",
     repoUrl: "https://github.com/kashcmdd/nebula-cogs",
@@ -451,7 +451,8 @@ export const journalEntriesData: JournalEntry[] = [
       chose: "A decay floor at the current rank, linear and capped",
       over: "Decaying towards zero on a fixed daily subtraction",
     },
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80",
+    image: asset("journal-cover-elo-decay.jpg"),
+    thumb: asset("journal-thumb-elo-decay.jpg"),
     content: [
       {
         type: "paragraph",
@@ -548,7 +549,8 @@ decay = min(days_inactive * settings.decay_per_day, settings.max_decay)`,
       chose: "Lazy-loading the 594 kB HLS parser on demand",
       over: "A single static import paid for by every visitor",
     },
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    image: asset("journal-cover-bundle-splitting.jpg"),
+    thumb: asset("journal-thumb-bundle-splitting.jpg"),
     content: [
       {
         type: "paragraph",
@@ -656,7 +658,8 @@ const { default: Hls } = await import('hls.js');`,
       chose: "SQLite for the single-node app, Postgres for the bot",
       over: "Reaching for one database everywhere",
     },
-    image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80",
+    image: asset("journal-cover-sqlite-postgres.jpg"),
+    thumb: asset("journal-thumb-sqlite-postgres.jpg"),
     content: [
       {
         type: "paragraph",
@@ -720,7 +723,8 @@ const { default: Hls } = await import('hls.js');`,
       chose: "A static, build-time URL scheme with no client router",
       over: "A runtime router that has to reinvent the base path",
     },
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+    image: asset("journal-cover-base-paths.jpg"),
+    thumb: asset("journal-thumb-base-paths.jpg"),
     content: [
       {
         type: "paragraph",
@@ -830,7 +834,8 @@ if (match) openEntry(match[1]);`,
       chose: "A six-member typed block union rendered by the site itself",
       over: "Markdown plus three dependencies to render it",
     },
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+    image: asset("journal-cover-content-model.jpg"),
+    thumb: asset("journal-thumb-content-model.jpg"),
     content: [
       {
         type: "paragraph",
@@ -926,7 +931,8 @@ if (match) openEntry(match[1]);`,
       chose: "A branch that swaps the accent ramp globally",
       over: "A themed component layer with a second design system",
     },
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80",
+    image: asset("journal-cover-elo-decay.jpg"),
+    thumb: asset("journal-thumb-seasonal-theme.jpg"),
     content: [
       {
         type: "paragraph",
@@ -983,42 +989,42 @@ export const explorationItemsData: ExplorationItem[] = [
     id: "exp-1",
     title: "Cybernetic HUD UI",
     category: "Experimental Interface",
-    image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80",
+    image: asset("exploration-exp-1.jpg"),
     description: "Futuristic telemetry HUD with animated data streams and reactive ambient lighting."
   },
   {
     id: "exp-2",
     title: "Bot Orchestration Nodes",
     category: "Infrastructure Visualizer",
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+    image: asset("exploration-exp-2.jpg"),
     description: "Interactive node graph visualizing WebSocket payload distribution across distributed clusters."
   },
   {
     id: "exp-3",
     title: "Liquid Glass Dashboard",
     category: "UI System",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    image: asset("exploration-exp-3.jpg"),
     description: "Deep dark theme dashboard featuring frosted acrylic panels and gradient glow highlights."
   },
   {
     id: "exp-4",
     title: "REST Endpoint Inspector",
     category: "Developer Tooling",
-    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    image: asset("exploration-exp-4.jpg"),
     description: "Lightweight API benchmarking and JSON inspector utility built for quick backend debugging."
   },
   {
     id: "exp-5",
     title: "Aetheria Audio Visualizer",
     category: "Canvas Physics",
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+    image: asset("exploration-exp-5.jpg"),
     description: "Real-time frequency audio synthesizer reacting to microphone inputs with fluid particles."
   },
   {
     id: "exp-6",
     title: "Minimalist Terminal Portfolio",
     category: "CLI Interface",
-    image: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=800&q=80",
+    image: asset("exploration-exp-6.jpg"),
     description: "Interactive shell environment in the browser with custom command parsing and ASCII art."
   },
 ];

@@ -40,7 +40,7 @@ const PROJECTS = [
     title: 'ScriptForge',
     category: 'Full-Stack Web App',
     subtitle: 'Controller-script hub with conflict-safe versions and self-serve accounts.',
-    image: 'scriptforge-placeholder.svg',
+    image: 'scriptforge-cover.jpg',
     tags: ['Next.js', 'React', 'TypeScript', 'SQLite'],
   },
   {
@@ -48,7 +48,7 @@ const PROJECTS = [
     title: 'Discord Music Bot',
     category: 'Discord Bot Development',
     subtitle: 'Three streaming sources, a Lavalink pipeline and a web dashboard.',
-    image: 'discord-music-bot-placeholder.svg',
+    image: 'discord-music-bot-cover.jpg',
     tags: ['Node.js', 'Discord.js', 'Lavalink', 'Docker'],
   },
   {
@@ -72,7 +72,7 @@ const PROJECTS = [
     title: 'Nebula',
     category: 'Self-Hosted Bot Platform',
     subtitle: 'An AI-operable Discord bot on a reproducible Red-DiscordBot deployment.',
-    image: 'nebula-placeholder.svg',
+    image: 'nebula-cover.jpg',
     tags: ['Python', 'Red-DiscordBot', 'DeepSeek', 'Tool Calling'],
   },
 ];

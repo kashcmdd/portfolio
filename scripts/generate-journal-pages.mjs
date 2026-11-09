@@ -18,15 +18,13 @@ import { PRISM_TOKEN_CSS } from './lib/prism.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_ORIGIN = 'https://kashcmdd.github.io';
 
-// Unsplash URLs arrive at w=800; social cards want 1200x630. Project images are
-// build-time assets that stay root-relative (asset() bakes the base path in at
-// import time), and social crawlers reject relative URLs, so those get promoted
-// to the canonical origin here. Sources that are already absolute — Unsplash and
-// the site og-image — pass through untouched.
+// Journal covers and project screenshots are build-time assets that stay
+// root-relative (asset() bakes the base path in at import time), and social
+// crawlers reject relative URLs, so those get promoted to the canonical origin
+// here. Any source that is already absolute passes through untouched.
 const socialImage = (image) => {
-  const sized = (image || '').replace('w=800', 'w=1200&h=630');
-  if (!sized || /^https?:\/\//i.test(sized)) return sized;
-  return `${SITE_ORIGIN}${sized}`;
+  if (!image || /^https?:\/\//i.test(image)) return image;
+  return `${SITE_ORIGIN}${image}`;
 };
 
 // The article pages live at /journal/<id>/ and the index at /journal/, so each
@@ -390,6 +388,73 @@ const cssFor = (prefix) => `
   }
   .more a:hover { color: #89AACC; }
   .more a span { color: #8a8a8a; font-size: .8rem; white-space: nowrap; }
+
+  /* The journal index is an archive, not a list of links: each row carries the
+     subtitle the entry already ships in its data, so a visitor can choose an
+     article without opening it. The rows are plain anchors so the whole card is
+     one target, and the focus ring is on the anchor rather than the heading. */
+  .archive-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 0 0 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+  .rss-link {
+    color: #89AACC;
+    text-decoration: none;
+    border: 1px solid rgba(137, 170, 204, .35);
+    border-radius: 999px;
+    padding: 7px 14px;
+    white-space: nowrap;
+  }
+  .rss-link:hover { background: rgba(137, 170, 204, .1); border-color: rgba(137, 170, 204, .6); }
+  .archive { border-top: 1px solid rgba(255, 255, 255, .1); }
+  .archive a {
+    display: block;
+    padding: 26px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    color: inherit;
+    text-decoration: none;
+    border-radius: 10px;
+  }
+  .archive a:hover { background: rgba(255, 255, 255, .02); }
+  .archive a:focus-visible { outline: 2px solid #89AACC; outline-offset: 2px; }
+  .archive .entry-cat {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #89AACC;
+  }
+  .archive h2 {
+    margin: 8px 0 6px;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 1.12;
+    color: #f5f5f5;
+  }
+  .archive a:hover h2 { color: #89AACC; }
+  .archive p { margin: 0 0 12px; color: #b9b9b9; font-size: .96rem; line-height: 1.5; }
+  .archive .entry-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+  @media (max-width: 620px) {
+    .archive h2 { font-size: 1.45rem; }
+    .archive a { padding: 22px 2px; }
+  }
   .end { max-width: 760px; margin: 0 auto; padding: 0 24px 60px; color: #8a8a8a; font-size: .82rem; }
   .end a { color: #8a8a8a; }
   .arch-summary { color: #c9c9c9; }
@@ -558,6 +623,7 @@ const head = ({ title, description, canonical, image, imageAlt, prefix, type = '
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0a0a0a" />
     <link rel="canonical" href="${esc(canonical)}" />
+    <link rel="alternate" type="application/rss+xml" title="KashhCMD Journal RSS Feed" href="${prefix}rss.xml" />
     <link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg" />
     <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png" />
     <meta property="og:type" content="${type}" />
@@ -998,11 +1064,20 @@ function indexPage(all, base) {
     <main>
       <h1>Journal</h1>
       <p class="sub">Articles on algorithms, performance and architecture — written from code that ships.</p>
-      <nav class="more">
+      <div class="archive-tools">
+        <span>${all.length} article${all.length === 1 ? '' : 's'}</span>
+        <a class="rss-link" href="../rss.xml">Subscribe via RSS</a>
+      </div>
+      <nav class="archive" aria-label="Articles">
         ${all
           .map(
             (e) =>
-              `<a href="./${esc(e.id)}/">${esc(e.title)}<span>${esc(e.date)} · ${esc(e.readTime)}</span></a>`
+              `<a href="./${esc(e.id)}/">
+          <span class="entry-cat">${esc(e.category)}</span>
+          <h2>${esc(e.title)}</h2>
+          <p>${esc(e.subtitle)}</p>
+          <span class="entry-meta">${esc(e.date)} · ${esc(e.readTime)}</span>
+        </a>`
           )
           .join('\n        ')}
       </nav>
@@ -1506,9 +1581,9 @@ function privacyPage(base) {
 
       <h2>Images, video and fonts</h2>
       <p>
-        Fonts, the avatar, project screenshots and the social cards are served from this site. The
-        ambient video backgrounds stream from CloudFront and Mux, and journal cover images come from
-        Unsplash; those services see the request your browser makes for the media, as any host would.
+        Fonts, the avatar, project covers, journal covers and the social cards are served from this
+        site. The ambient video backgrounds stream from CloudFront and Mux; those services see the
+        request your browser makes for the video, as any host would.
       </p>
 
       <h2>On your device</h2>
@@ -1568,8 +1643,8 @@ every issue). The form is currently disabled.
 
 ## Media
 
-Fonts, the avatar, project screenshots and social cards are served from this site. Ambient video
-streams from CloudFront and Mux; journal covers come from Unsplash.
+Fonts, the avatar, project covers, journal covers and social cards are served from this site. Ambient
+video streams from CloudFront and Mux.
 
 ## On your device
 
@@ -1802,7 +1877,7 @@ function journalIndexMarkdown(all, base) {
     all
       .map((e) => `- [${e.title}](${absUrl(base, `journal/${e.id}/`)}): ${e.subtitle}`)
       .join('\n') +
-    '\n'
+    `\n\nFeed: ${absUrl(base, 'rss.xml')}\n`
   );
 }
 

@@ -159,8 +159,9 @@ interface MotionPrefValue {
 ## Media
 
 - `SmartImage` wraps `<img>` with intrinsic `width`/`height` (to avoid layout
-  shift), lazy/eager loading, and a shimmer placeholder. It only builds a
-  `srcset` for Unsplash URLs that already carry `&w=`.
+  shift), lazy/eager loading, and a shimmer placeholder. Every image is a local
+  file, so it ships a plain `src`; journal rows use the 240px `thumb` instead of
+  the full banner.
 - `HlsVideoBackground` uses an `IntersectionObserver` (`rootMargin: 200px`) to
   start playback only when visible, imports `hls.js` dynamically, plays HLS
   natively on Safari, and falls back to the MP4 `fallbackSource`. It never starts
