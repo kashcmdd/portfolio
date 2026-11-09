@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { warriorDetails } from '../data/portfolioData';
-import { X, Sparkles, Github, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { X, Sparkles, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { GithubMark } from './BrandMarks';
 import { useFocusTrap } from '../utils/useFocusTrap';
 import { useBackgroundInert } from '../utils/useBackgroundInert';
 
@@ -141,7 +142,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
 
           <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10 text-center flex flex-col items-center gap-3">
             <div className="w-12 h-12 rounded-full accent-gradient flex items-center justify-center text-black font-bold shadow-lg">
-              <Github className="w-6 h-6" />
+              <GithubMark className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-display italic text-white">@{warriorDetails.githubHandle}</h3>
             <p className="text-xs text-neutral-300 font-body max-w-sm leading-relaxed">
@@ -154,7 +155,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
                 rel="noopener noreferrer"
                 className="liquid-glass-strong rounded-full py-2.5 px-5 text-xs font-semibold text-white hover:bg-white/20 transition-colors flex items-center gap-2"
               >
-                <Github className="w-3.5 h-3.5" />
+                <GithubMark className="w-3.5 h-3.5" />
                 Open profile
               </a>
               <button
