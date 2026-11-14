@@ -19,9 +19,8 @@ Shapes are declared in `src/types.ts`. Editing that data and running
 | `projectsData` | `Project[]` | Work grid, timeline, project pages, resume, search |
 | `experienceData` | `ExperienceEntry[]` | Experience timeline, project index periods, search |
 | `testimonialsData` | `Testimonial[]` | Testimonials section (empty until quotes exist) |
-| `techSkillsData` | `TechSkill[]` | Tech grid, `SkillsRadar`, resume, uses, search |
+| `techSkillsData` | `TechSkill[]` | Tech grid, resume, uses, search |
 | `journalEntriesData` | `JournalEntry[]` | Journal section, modal, article pages, RSS, mirrors, search |
-| `explorationItemsData` | `ExplorationItem[]` | Explorations gallery, search |
 | `currentlyBuildingData` | `CurrentlyBuilding` | "Currently building" strip |
 | `recentWorkData` | `RecentWork[]` | Dated changelog beside the current work |
 
@@ -96,7 +95,7 @@ export interface Architecture {
 > the Unix epoch as the RSS `pubDate`.
 
 Other declared types: `TechSkill` (`name`, `category`, `icon`, `level`,
-`description`), `ExplorationItem`, `CurrentlyBuilding`, `RecentWork`,
+`description`), `CurrentlyBuilding`, `RecentWork`,
 `ProjectStat`, `ProjectCommand`, `ExperienceEntry`, `Testimonial`, `ArchNode`,
 `ArchEdge`, `ArchLayer`.
 
@@ -113,9 +112,8 @@ them when editing.
   `experiencePeriods`.
 - **Images in `public/` go through `asset()`.** `asset(file)` prepends
   `import.meta.env.BASE_URL`, because a string in this module is a runtime
-  `<img src>` the bundler never rewrites. Every image is local: journal covers
-  and exploration stills were downloaded from Unsplash once and are served from
-  this site, so a page load makes no third-party image request.
+  `<img src>` the bundler never rewrites. Every image is local: journal covers were
+  downloaded from Unsplash once and are served from this site, so a page load makes no third-party image request.
 - **Journal covers ship with a square thumbnail.** `thumb` is the 240px crop the
   homepage list uses; the full `image` is the 1200×630 banner and social card.
   Omitting `thumb` falls back to the banner, which is correct but heavier.
@@ -134,8 +132,8 @@ them when editing.
   that generic filler reads as filler.
 - **`testimonialsData` ships empty on purpose.** `TestimonialsSection` returns
   `null` until it is populated, so there is no invented praise to delete later.
-- **`decision` is opt-in.** Only journal entries with a `decision` appear in
-  `DecisionLog` and the article's decision card.
+- **`decision` is opt-in.** Only journal entries with a `decision` show the
+  chose/over line on their row and the article's decision card.
 
 ## Journal and architecture renderers that must stay in sync
 

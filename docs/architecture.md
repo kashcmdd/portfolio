@@ -46,15 +46,14 @@ nav target):
 
 | Component | `id` | Notes |
 | --- | --- | --- |
-| `HeroSection` | `hero` | `CinematicVideoBackground` + HLS |
+| `HeroSection` | `hero` | Drawn `.atelier-field` + GSAP reveal |
 | `NowBuildingStrip` | — | The one "currently building" line |
 | `AboutSection` | `about` | |
-| `SkillsSection` | `skills` | Capability cards; HLS background |
+| `SkillsSection` | `skills` | Capability cards |
 | `SelectedWorksSection` | `work` | Bento grid; opens `ProjectModal` |
 | `ExperienceSection` | `experience` | Timeline derived from projects |
-| `TechStackSection` | `stack` | Tech grid + `SkillsRadar` |
-| `JournalSection` | `journal` | Entry list + `DecisionLog` |
-| `ExplorationsSection` | `explorations` | Gallery |
+| `TechStackSection` | `stack` | Tech grid |
+| `JournalSection` | `journal` | Entry list; each row carries its chose/over decision |
 | `StatsSection` | — | Key metrics |
 | `TestimonialsSection` | `testimonials` | Renders `null` while empty |
 | `ContactFooter` | `contact` | Footer, contact, `NewsletterSignup` |
@@ -166,8 +165,9 @@ interface MotionPrefValue {
   start playback only when visible, imports `hls.js` dynamically, plays HLS
   natively on Safari, and falls back to the MP4 `fallbackSource`. It never starts
   when motion is reduced.
-- `CinematicVideoBackground` (used by the hero) rotates through
-  `VIDEO_SOURCES`; the hero reads those sources too.
+- The hero draws its field in CSS (`.atelier-field`) instead of loading a
+  video: one linear wash of light from above plus a vignette. No third-party
+  media is fetched for the first screen.
 
 ## Utilities
 
@@ -213,13 +213,12 @@ All 37 files under `src/components/`, grouped by how they are reached:
 - **Composed by `App` (14):** `LoadingScreen`, `Navbar`, `HeroSection`,
   `NowBuildingStrip`, `AboutSection`, `SkillsSection`, `SelectedWorksSection`,
   `ExperienceSection`, `TechStackSection`, `JournalSection`,
-  `ExplorationsSection`, `StatsSection`, `TestimonialsSection`, `ContactFooter`.
+  `StatsSection`, `TestimonialsSection`, `ContactFooter`.
 - **Lazy dialogs (5):** `ProjectModal`, `JournalModal`, `ContactModal`,
   `SearchModal`, `ShortcutsModal`.
 - **Supporting components (18):** `MotionPrefProvider` (root, in `main.tsx`),
   `Analytics`, `AnalyticsConsent`, `SmartImage`, `HlsVideoBackground`,
-  `CinematicVideoBackground`, `ArchitectureDiagram`, `DecisionLog`,
-  `SkillsRadar`, `NewsletterSignup`, `DemoPlayer`, `JournalCodeBlock`,
+  `ArchitectureDiagram`, `NewsletterSignup`, `DemoPlayer`, `JournalCodeBlock`,
   `ShareBar`, `NotFoundView`, `MobileMenu` (opened by `Navbar`),
   `DiscordPresence` (rendered by `ContactFooter`), `DiscordMark`, `BrandMarks`
   (GitHub and LinkedIn marks, since Lucide 1 dropped brand icons).

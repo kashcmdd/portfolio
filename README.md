@@ -2,7 +2,7 @@
 
 # KashhCMD Portfolio
 
-A cinematic dark portfolio: liquid glass visuals, GSAP and Motion animation, HLS video backgrounds, a typed technical journal, and project case studies that exist as real HTML as well as in-app modals.
+A dark portfolio with a drawn, light-from-above hero, liquid glass surfaces, GSAP and Motion animation, a typed technical journal, and project case studies that exist as real HTML as well as in-app modals.
 
 **Published to GitHub Pages.** Pushing to `main` builds and deploys the site at
 `https://kashcmdd.github.io/portfolio/` — see [Deployment](#deployment).
@@ -76,7 +76,7 @@ src/data/portfolioData.ts
 Identity and links (`warriorDetails`), projects (including their architecture
 diagrams, bot command surfaces and outcome copy), the experience timeline
 (`experienceData`, derived from the projects so it cannot drift), journal entries
-(including their decision logs), the tech grid, explorations, testimonials
+(including their decision logs), the tech grid, testimonials
 (`testimonialsData`, empty until real quotes exist — the section hides itself),
 the "currently building" line and the dated changelog beneath it.
 The shape of each of those is declared in `src/types.ts`.
