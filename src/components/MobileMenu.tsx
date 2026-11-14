@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUpRight, Search, X } from 'lucide-react';
+import { ArrowDown, Search, X } from 'lucide-react';
 import { GithubMark } from './BrandMarks';
 import { warriorDetails } from '../data/portfolioData';
 import { DiscordMark } from './DiscordMark';
@@ -128,12 +128,12 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                       type="button"
                       onClick={() => afterClose(() => onNavigate(item.id))}
                       aria-current={isActive ? 'location' : undefined}
-                      initial={reduced ? false : { opacity: 0, y: 18 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={reduced ? false : { y: 18 }}
+                      animate={{ y: 0 }}
                       transition={
                         reduced
                           ? { duration: 0 }
-                          : { duration: 0.45, delay: 0.12 + index * 0.06, ease: 'easeOut' }
+                          : { duration: 0.35, delay: 0.06 + index * 0.03, ease: [0.16, 1, 0.3, 1] }
                       }
                       className={`flex items-center justify-between rounded-2xl px-4 py-3 text-left font-body text-2xl font-medium tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] ${
                         isActive
@@ -142,7 +142,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                       }`}
                     >
                       <span>{item.label}</span>
-                      <ArrowUpRight
+                      <ArrowDown
                         className={`h-5 w-5 ${isActive ? 'text-[#89AACC]' : 'text-neutral-400'}`}
                       />
                     </motion.button>
@@ -190,8 +190,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                   onClick={() => afterClose(onOpenContactModal)}
                   className="flex w-full items-center justify-center gap-2 rounded-full bg-[#0a0a0a] px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC]"
                 >
-                  <span>Let's Talk</span>
-                  <ArrowUpRight className="h-4 w-4" />
+                  <span>Contact</span>
                 </button>
               </div>
             </div>

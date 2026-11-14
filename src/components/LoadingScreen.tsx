@@ -108,7 +108,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             animate={{ y: 0, opacity: 0.95 }}
             exit={{ y: -15, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white/90 tracking-tight font-bold"
+            className="text-4xl md:text-6xl lg:text-7xl font-display italic text-white/90 tracking-tight"
           >
             {ROTATING_WORDS[wordIndex]}
           </motion.div>
@@ -121,7 +121,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             Initializing digital environment...
           </div>
 
-          <div className="text-6xl md:text-8xl lg:text-9xl font-display text-white tabular-nums leading-none tracking-tighter ml-auto font-bold">
+          <div className="text-6xl md:text-8xl lg:text-9xl font-display text-white tabular-nums leading-none tracking-tighter ml-auto">
             {String(count).padStart(3, '0')}
           </div>
         </div>

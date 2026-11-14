@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T06:05:00Z",
+  "title": "Design System: KashhCMD Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "oxide-black": {
+        "role": "neutral",
+        "displayName": "Oxide Black",
+        "canonical": "#0a0a0a",
+        "tonalRamp": [
+          "#050505",
+          "#0a0a0a",
+          "#141414",
+          "#1f1f1f",
+          "#2b2b2b",
+          "#3d3d3d",
+          "#5c5c5c",
+          "#878787"
+        ]
+      },
+      "oxide-surface": {
+        "role": "neutral",
+        "displayName": "Oxide Surface",
+        "canonical": "#141414",
+        "tonalRamp": [
+          "#0d0d0d",
+          "#141414",
+          "#1b1b1b",
+          "#232323",
+          "#2e2e2e",
+          "#3b3b3b",
+          "#565656",
+          "#7d7d7d"
+        ]
+      },
+      "oxide-raised": {
+        "role": "neutral",
+        "displayName": "Oxide Raised",
+        "canonical": "#121212",
+        "tonalRamp": [
+          "#0c0c0c",
+          "#121212",
+          "#191919",
+          "#212121",
+          "#2c2c2c",
+          "#3a3a3a",
+          "#545454",
+          "#7a7a7a"
+        ]
+      },
+      "oxide-stroke": {
+        "role": "neutral",
+        "displayName": "Oxide Stroke",
+        "canonical": "#1f1f1f",
+        "tonalRamp": [
+          "#141414",
+          "#1b1b1b",
+          "#1f1f1f",
+          "#272727",
+          "#323232",
+          "#404040",
+          "#5a5a5a",
+          "#808080"
+        ]
+      },
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#f5f5f5",
+        "tonalRamp": [
+          "#1a1a1a",
+          "#3a3a3a",
+          "#5c5c5c",
+          "#7d7d7d",
+          "#a1a1a1",
+          "#c4c4c4",
+          "#e0e0e0",
+          "#f5f5f5"
+        ]
+      },
+      "bone-muted": {
+        "role": "neutral",
+        "displayName": "Bone Muted",
+        "canonical": "#878787",
+        "tonalRamp": [
+          "#1c1c1c",
+          "#333333",
+          "#4a4a4a",
+          "#616161",
+          "#787878",
+          "#8f8f8f",
+          "#a6a6a6",
+          "#bdbdbd"
+        ]
+      },
+      "steel": {
+        "role": "primary",
+        "displayName": "Steel Blue",
+        "canonical": "#4e85bf",
+        "tonalRamp": [
+          "#0e1a26",
+          "#16283a",
+          "#1f3a52",
+          "#2a4f6d",
+          "#376688",
+          "#4e85bf",
+          "#7fa9d3",
+          "#b3cde5"
+        ]
+      },
+      "steel-light": {
+        "role": "primary",
+        "displayName": "Steel Light",
+        "canonical": "#89aacc",
+        "tonalRamp": [
+          "#101c27",
+          "#1b2d3d",
+          "#274158",
+          "#355a76",
+          "#4b789c",
+          "#6e9bbd",
+          "#89aacc",
+          "#bcd2e4"
+        ]
+      },
+      "bone-pure": {
+        "role": "neutral",
+        "displayName": "Bone Pure",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#1a1a1a",
+          "#3d3d3d",
+          "#616161",
+          "#858585",
+          "#a8a8a8",
+          "#c7c7c7",
+          "#e3e3e3",
+          "#ffffff"
+        ]
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "canonical": "rgba(255,255,255,0.15)",
+        "tonalRamp": [
+          "#0f0f0f",
+          "#1c1c1c",
+          "#292929",
+          "#363636",
+          "#434343",
+          "#515151",
+          "#5e5e5e",
+          "#6b6b6b"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero statements only, one per page, always Instrument Serif."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section openings and case-study titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles, modal headings, journal titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose and descriptions at a 65\u201375ch measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase, tracked eyebrows, metadata, nav and buttons."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "Dense metadata and captions; the 10\u201311px floor."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Code, dimensions and technical readouts."
+      },
+      "nano": {
+        "displayName": "Nano",
+        "purpose": "Dense-data floor: timestamps and counters only."
+      },
+      "fine": {
+        "displayName": "Fine",
+        "purpose": "Dense secondary copy that is not a label."
+      }
+    },
+    "shadows": [
+      {
+        "name": "lift",
+        "value": "0 8px 32px rgba(0,0,0,0.5)",
+        "purpose": "Dialogs, menus and mobile sheets that must detach from the page."
+      },
+      {
+        "name": "top-light",
+        "value": "inset 0 1px 1px rgba(255,255,255,0.1)",
+        "purpose": "Every glass surface; makes the pane read as lit from above."
+      },
+      {
+        "name": "ring",
+        "value": "0 0 0 1px rgb(255 255 255 / 0.06)",
+        "purpose": "Outer definition for the CTA ring."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state",
+        "value": "300ms ease",
+        "purpose": "Border and shadow transitions on hover and focus."
+      },
+      {
+        "name": "cta-spin",
+        "value": "6s linear infinite",
+        "purpose": "The conic CTA ring; replaced by a static gradient under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pill control for the main action on a surface.",
+      "html": "<button class=\"ds-btn-primary\">VIEW PROJECT</button>",
+      "css": ".ds-btn-primary { background: hsl(var(--surface)); color: hsl(var(--text)); font-family: Inter, system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 9999px; transition: border-color 300ms ease, background 300ms ease; } .ds-btn-primary:hover { background: #1f1f1f; border-color: rgba(255,255,255,0.25); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #89aacc, 0 0 0 4px #0a0a0a; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary pill for a quieter action beside the primary.",
+      "html": "<button class=\"ds-btn-ghost\">ALL PROJECTS</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #878787; font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 400; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 9999px; transition: color 300ms ease, border-color 300ms ease; } .ds-btn-ghost:hover { color: hsl(var(--text)); border-color: rgba(255,255,255,0.25); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px #89aacc, 0 0 0 4px #0a0a0a; }"
+    },
+    {
+      "name": "Liquid Glass Panel",
+      "kind": "card",
+      "refersTo": "panel-glass",
+      "description": "The recurring translucent surface for cards and dialogs.",
+      "html": "<div class=\"ds-panel\"><p class=\"ds-panel-title\">Rainbow Leaderboard</p><p class=\"ds-panel-body\">A Discord leaderboard with a real API and a public dashboard.</p></div>",
+      "css": ".ds-panel { background: rgba(255,255,255,0.03); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.1); padding: 24px; color: hsl(var(--text)); font-family: Inter, system-ui, sans-serif; } .ds-panel-title { font-family: 'Instrument Serif', serif; font-size: 1.75rem; line-height: 1.1; margin: 0 0 8px; } .ds-panel-body { color: #878787; font-size: 0.9375rem; line-height: 1.6; margin: 0; }"
+    },
+    {
+      "name": "Navigation Pill",
+      "kind": "nav",
+      "refersTo": "panel-glass",
+      "description": "Centred floating glass pill holding the primary links.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-link-active\" href=\"#work\">WORK</a><a class=\"ds-nav-link\" href=\"#journal\">JOURNAL</a><a class=\"ds-nav-link\" href=\"#contact\">CONTACT</a></nav>",
+      "css": ".ds-nav { display: inline-flex; align-items: center; gap: 4px; padding: 6px; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 9999px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.1); font-family: Inter, system-ui, sans-serif; } .ds-nav-link { color: #878787; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; padding: 8px 14px; border-radius: 9999px; transition: color 300ms ease; } .ds-nav-link:hover { color: hsl(var(--text)); } .ds-nav-link-active { color: hsl(var(--text)); } .ds-nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px #89aacc; }"
+    },
+    {
+      "name": "Eyebrow Label",
+      "kind": "custom",
+      "refersTo": "typography.label",
+      "description": "The uppercase tracked label that opens a section.",
+      "html": "<p class=\"ds-eyebrow\">SELECTED WORK</p>",
+      "css": ".ds-eyebrow { color: #878787; font-family: Inter, system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; margin: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Night Atelier",
+    "overview": "A studio at night: black walls, one lamp, work laid out on the bench. The site is quiet and dark on purpose so the work and the typography carry everything. There is no decorative colour, no illustration, no second accent competing for attention \u2014 only a near-black field, bone-white text, and a single steel blue that appears when something needs focus. The density is editorial rather than dashboard: large serif display type, generous vertical rhythm, and surfaces that read as glass panes lit from above.",
+    "keyCharacteristics": [
+      "Near-black monochrome field with a single functional steel accent",
+      "Serif display voice against a neutral sans body and mono labels",
+      "Liquid-glass surfaces: hairline borders, inset top light, slight blur",
+      "Pill geometry for controls, soft-cornered panels for content",
+      "Slow, ambient motion; reduced-motion honoured everywhere"
+    ],
+    "rules": [
+      {
+        "name": "The One Blue Rule",
+        "body": "Steel appears on \u22642% of any screen, and only as a state signal: focus, the CTA ring, an active marker. If it starts reading as a theme colour, it has been used too much.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Fill Rule",
+        "body": "There is no coloured block, gradient background or tinted section. Depth comes from light and layering, not from fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Serif-Only-For-Voice Rule",
+        "body": "Instrument Serif is for display and editorial emphasis. It never sets body copy, labels, form values or navigation.",
+        "section": "typography"
+      },
+      {
+        "name": "The Light-From-Above Rule",
+        "body": "A glass surface always gets its inset top highlight. Without it the surface flattens into a grey box.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Ambient-Only Rule",
+        "body": "Shadows are ambient and soft. No hard, directional or coloured shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the field near-black and let type and imagery carry the page.",
+      "Do use the steel accent only for focus, the CTA ring, and active state.",
+      "Do apply the inset top highlight to every glass surface.",
+      "Do keep controls pill-shaped and content panels at 16\u201324px.",
+      "Do honour prefers-reduced-motion: no blur or parallax motion when it is set."
+    ],
+    "donts": [
+      "Don't introduce a second accent colour, gradient text or tinted sections.",
+      "Don't set body copy or UI labels in Instrument Serif.",
+      "Don't use hard or coloured shadows, or stack multiple elevation levels at once.",
+      "Don't fill selected chips or buttons with steel; states are borders and light.",
+      "Don't add sharp-cornered containers or heavy borders."
+    ]
+  }
+}

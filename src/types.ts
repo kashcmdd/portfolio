@@ -80,13 +80,7 @@ export interface TechSkill {
   description: string;
 }
 
-export interface ExplorationItem {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  description: string;
-}
+
 
 /**
  * Architecture diagrams (#19).

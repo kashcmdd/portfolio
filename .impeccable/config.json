@@ -1,0 +1,28 @@
+{
+  "buildPath": "comp",
+  "detector": {
+    "ignoreRules": [
+      "italic-serif-display",
+      "kicker-above-heading",
+      "hero-eyebrow-chip",
+      "pulsing-dot",
+      "nested-cards",
+      "undersized-ui-text"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-14T05:57:11.053Z",
+        "reason": "Body sans of the design system, documented in DESIGN.md (The Serif-Only-For-Voice Rule)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument serif",
+        "createdAt": "2026-11-14T05:57:11.064Z",
+        "reason": "Display serif of the design system, documented in DESIGN.md"
+      }
+    ]
+  }
+}

@@ -129,10 +129,10 @@ export const ContactModal: React.FC<ContactModalProps> = ({
             <div>
               <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-widest mb-1">
                 <Sparkles className="w-3.5 h-3.5 text-[#89AACC]" />
-                <span>Get in Touch</span>
+                <span>Contact</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-display italic text-white">
-                Let's build something <span className="accent-text-gradient">exceptional</span>
+                Let's build something <span className="accent-text">exceptional</span>
               </h2>
               <p className="text-xs sm:text-sm font-body font-light text-neutral-300 mt-1">
                 Web projects, Discord bots, or just a question — GitHub is where I'm quickest to reach.

@@ -46,7 +46,7 @@ test('journal dialog', async ({ page }) => {
 
 test('contact dialog', async ({ page }) => {
   await openLanding(page);
-  await page.getByRole('button', { name: 'Say hi' }).click();
+  await page.getByRole('banner').getByRole('button', { name: 'Contact' }).click();
   await expect(page.getByRole('dialog', { name: 'Get in touch' })).toBeVisible();
   await expectNoBlocking(page);
 });

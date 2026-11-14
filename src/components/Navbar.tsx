@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight, Search, Keyboard } from 'lucide-react';
+import { Menu, X, Search, Keyboard } from 'lucide-react';
 import { warriorDetails } from '../data/portfolioData';
 import { MobileMenu } from './MobileMenu';
 
@@ -119,15 +119,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onOpenContactModal}
             className="relative inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium rounded-full px-4 py-1.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
           >
-            <span>Say hi</span>
-            <ArrowUpRight className="w-3.5 h-3.5 text-neutral-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <span>Contact</span>
           </button>
         </div>
 
         {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden ml-2 p-1.5 rounded-full text-neutral-300 hover:text-white cursor-pointer"
+          className="md:hidden ml-2 p-3 rounded-full text-neutral-300 hover:text-white cursor-pointer"
           aria-label="Toggle Mobile Menu"
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-navigation"

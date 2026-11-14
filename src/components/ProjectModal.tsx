@@ -100,7 +100,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                 <span className="liquid-glass px-3 py-1 rounded-full text-xs font-body text-neutral-300 inline-block mb-1">
                   {project.category}
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-display italic text-white font-bold">
+                <h2 className="text-2xl sm:text-3xl font-display italic text-white">
                   {project.title}
                 </h2>
               </div>

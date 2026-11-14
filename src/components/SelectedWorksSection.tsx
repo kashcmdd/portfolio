@@ -98,7 +98,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 onClick={() => onSelectProject(projectsData[0])}
                 className="relative inline-flex items-center gap-2 rounded-full text-xs font-medium px-5 py-2.5 bg-[#141414] text-white hover:bg-[#1f1f1f] border border-white/10 transition-colors cursor-pointer font-body"
               >
-                <span>Explore All Case Studies</span>
+                <span>Open the featured case study</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-neutral-300" />
               </button>
             </div>
@@ -191,7 +191,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 role="button"
                 tabIndex={0}
                 aria-label={`${project.category}: ${project.title} — open case study`}
-                className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] ${project.aspectRatio}`}
+                className={`${colClass} group relative bg-[#141414] border border-neutral-800/80 rounded-3xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:border-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#89AACC] ${project.aspectRatio} md:aspect-auto ${isHero ? 'md:h-[520px]' : 'md:h-[420px]'}`}
               >
                     {/* Background Image */}
                     <SmartImage
@@ -201,18 +201,9 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
 
-                {/* Halftone radial pattern overlay */}
-                <div
-                  className="absolute inset-0 opacity-25 mix-blend-multiply pointer-events-none"
-                  style={{
-                    backgroundImage:
-                      'radial-gradient(circle, #000 1px, transparent 1px)',
-                    backgroundSize: '4px 4px',
-                  }}
-                />
 
                 {/* Always-visible subtle bottom dark gradient for title accessibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent pointer-events-none" />
 
                 {/* Default Bottom Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex items-end justify-between gap-4 z-10 transition-opacity duration-300 group-hover:opacity-20">

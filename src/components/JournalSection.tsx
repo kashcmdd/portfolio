@@ -5,7 +5,6 @@ import { journalEntriesData } from '../data/portfolioData';
 import { ArrowUpRight, BookOpen } from 'lucide-react';
 import { activateOnKey } from '../utils/keyboard';
 import { SmartImage } from './SmartImage';
-import { DecisionLog } from './DecisionLog';
 
 interface JournalSectionProps {
   onSelectJournal: (entry: JournalEntry) => void;
@@ -97,6 +96,12 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                   <h3 className="text-base sm:text-lg font-body font-medium text-white group-hover:text-neutral-200 transition-colors line-clamp-1">
                     {entry.title}
                   </h3>
+                  {entry.decision && (
+                    <p className="mt-1 text-[11px] font-body text-neutral-400 line-clamp-1">
+                      <span className="text-[#89AACC]">{entry.decision.chose}</span> over{' '}
+                      <span className="text-neutral-300">{entry.decision.over}</span>
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -113,7 +118,6 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
           ))}
         </div>
 
-        <DecisionLog onSelectEntry={onSelectJournal} />
       </div>
     </section>
   );

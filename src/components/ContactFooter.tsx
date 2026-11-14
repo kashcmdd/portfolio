@@ -75,21 +75,21 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
         <div ref={marqueeRef} className="w-full overflow-hidden whitespace-nowrap mb-16 py-4 border-y border-white/10">
           <div className="marquee-inner inline-block flex items-center gap-8 font-display italic text-3xl sm:text-5xl text-neutral-400 font-normal">
             <span>BUILDING THE FUTURE</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
             <span>WEB DESIGN & DEV</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
             <span>DISCORD BOTS & UTILITIES</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
             <span>KASHHCMD PORTFOLIO '26</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
             <span>BUILDING THE FUTURE</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
             <span>WEB DESIGN & DEV</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
             <span>DISCORD BOTS & UTILITIES</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
             <span>KASHHCMD PORTFOLIO '26</span>
-            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">✦</span>
+            <span aria-hidden="true" className="text-xs font-mono text-neutral-500">·</span>
           </div>
         </div>
 
@@ -107,7 +107,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
           </div>
 
           <h2 className="text-4xl sm:text-6xl md:text-7xl font-display italic text-white tracking-tight leading-tight max-w-3xl mb-8">
-            Let's build something <span className="accent-text-gradient font-bold">remarkable</span> together.
+            Let's build something <span className="accent-text font-bold">remarkable</span> together.
           </h2>
 
           {/* Email button with gradient hover border ring */}
@@ -117,7 +117,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               onClick={onOpenContactModal}
               className="relative inline-flex items-center gap-3 text-base sm:text-lg font-body font-medium rounded-full px-8 py-4 bg-white text-black hover:bg-[#0a0a0a] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer shadow-2xl"
             >
-              <span>Say Hello</span>
+              <span>Contact</span>
               <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
           </div>
@@ -134,7 +134,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               onClick={onNavigateTop}
               className="group flex items-center gap-1.5 text-white hover:text-[#89AACC] transition-colors cursor-pointer"
             >
-              <span className="font-display italic font-bold text-sm">{warriorDetails.name}</span>
+              <span className="font-display italic text-sm">{warriorDetails.name}</span>
               <span className="text-[10px] text-neutral-400 font-mono">© 2026</span>
             </button>
             <span className="text-neutral-700">•</span>

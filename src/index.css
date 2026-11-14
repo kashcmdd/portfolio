@@ -57,10 +57,10 @@
     background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%);
   }
 
-  .accent-text-gradient {
-    background: linear-gradient(90deg, #89AACC 0%, #4E85BF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  /* Solid steel, not gradient text: the system has no gradient fill
+     (DESIGN.md, The No-Fill Rule). */
+  .accent-text {
+    color: #89AACC;
   }
 
   .animate-scroll-down {
@@ -122,7 +122,24 @@
   }
 }
 
-/* Liquid Glass Utilities - High FPS Hardware-Accelerated */
+/* The hero field: one soft light from above on a near-black room, drawn in
+   CSS rather than filmed. Replaces the 13.7 MB third-party clip. */
+.atelier-field {
+  background:
+    linear-gradient(180deg, rgba(137, 170, 204, 0.10) 0%, rgba(137, 170, 204, 0.03) 22%, transparent 52%),
+    linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 58%, #070707 100%);
+}
+.atelier-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(90% 70% at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* Liquid Glass — components layer, so utility positioning on the same
+   element (absolute/fixed) wins. Unlayered here, `position: relative` beat
+   every dialog's close button (critique P1). */
+@layer components {
 .liquid-glass {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(6px);
@@ -132,7 +149,8 @@
   position: relative;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
-  will-change: opacity, transform;
+  /* No will-change: translate3d already promotes the layer, and holding the
+     hint at rest costs memory on every glass surface (audit P2). */
 }
 
 .liquid-glass::before {
@@ -163,7 +181,8 @@
   position: relative;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
-  will-change: opacity, transform;
+  /* No will-change: translate3d already promotes the layer, and holding the
+     hint at rest costs memory on every glass surface (audit P2). */
 }
 
 .liquid-glass-strong::before {
@@ -183,6 +202,8 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+}
+
 }
 
 /* Low-power optimization for small mobile devices */

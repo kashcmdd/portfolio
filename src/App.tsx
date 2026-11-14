@@ -11,7 +11,6 @@ import { TestimonialsSection } from './components/TestimonialsSection';
 import { TechStackSection } from './components/TechStackSection';
 import { JournalSection } from './components/JournalSection';
 import { NowBuildingStrip } from './components/NowBuildingStrip';
-import { ExplorationsSection } from './components/ExplorationsSection';
 import { StatsSection } from './components/StatsSection';
 import { ContactFooter } from './components/ContactFooter';
 import { Analytics } from './components/Analytics';
@@ -297,16 +296,16 @@ export default function App() {
 
             <NowBuildingStrip />
 
+            {/* Selected Works (Bento Grid) */}
+            <SelectedWorksSection
+              onSelectProject={(project) => setSelectedProject(project)}
+            />
+
             {/* About Developer Section */}
             <AboutSection />
 
             {/* Skills Section */}
             <SkillsSection />
-
-            {/* Selected Works (Bento Grid) */}
-            <SelectedWorksSection
-              onSelectProject={(project) => setSelectedProject(project)}
-            />
 
             {/* Experience timeline — self-directed work, newest first */}
             <ExperienceSection
@@ -320,9 +319,6 @@ export default function App() {
             <JournalSection
               onSelectJournal={openJournal}
             />
-
-            {/* Explorations Gallery */}
-            <ExplorationsSection />
 
             {/* Key Metrics / Stats */}
             <StatsSection />

@@ -5,7 +5,6 @@ import {
   projectsData,
   journalEntriesData,
   techSkillsData,
-  explorationItemsData,
   experienceData,
   warriorDetails,
 } from '../data/portfolioData';
@@ -18,7 +17,6 @@ type ResultType =
   | 'project'
   | 'journal'
   | 'skill'
-  | 'exploration'
   | 'experience'
   | 'action'
   | 'nav'
@@ -48,10 +46,6 @@ const TYPE_BADGES: Record<ResultType, { letter: string; className: string }> = {
     letter: 'S',
     className: 'bg-white/10 border border-white/20 text-neutral-300',
   },
-  exploration: {
-    letter: 'E',
-    className: 'bg-neutral-700/60 border border-neutral-500/40 text-neutral-200',
-  },
   experience: {
     letter: 'X',
     className: 'bg-[#89AACC]/20 border border-[#89AACC]/30 text-[#89AACC]',
@@ -77,7 +71,6 @@ const SECTION_LINKS: { id: string; label: string }[] = [
   { id: 'experience', label: 'Go to Experience' },
   { id: 'stack', label: 'Go to Stack' },
   { id: 'journal', label: 'Go to Journal' },
-  { id: 'explorations', label: 'Go to Explorations' },
   { id: 'contact', label: 'Go to Contact' },
 ];
 
@@ -409,25 +402,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
       }
     });
 
-    explorationItemsData.forEach((item) => {
-      const titleMatch = matches(item.title.toLowerCase());
-      const descMatch = matches(item.description.toLowerCase());
-      const categoryMatch = matches(item.category.toLowerCase());
-
-      if (titleMatch || descMatch || categoryMatch) {
-        scored.push({
-          score: (titleMatch ? 6 : 0) + (descMatch ? 2 : 0) + (categoryMatch ? 1.5 : 0),
-          result: {
-            type: 'exploration',
-            title: item.title,
-            description: item.description,
-            url: `#explorations`,
-            category: item.category,
-          },
-        });
-      }
-    });
-
     // Highest score first. Array.prototype.sort is stable, so equal scores keep
     // their insertion order, which preserves the old type grouping as a
     // tie-break.
@@ -507,7 +481,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
                 ))}
                 <div className="p-4">
                   <p className="mb-2 text-center text-neutral-400 font-body text-sm">
-                    Or search projects, journal, skills and explorations
+                    Or search projects, journal, skills and experience
                   </p>
                   <div className="flex flex-wrap justify-center gap-2">
                     {['React', 'TypeScript', 'Discord', 'Performance', 'Database'].map((suggestion) => (

@@ -20,7 +20,7 @@ export const AboutSection: React.FC = () => {
             <span>ABOUT THE DEVELOPER</span>
           </div>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-display italic text-white tracking-tight">
-            Curious by nature, <span className="accent-text-gradient">driven by code</span>.
+            Curious by nature, <span className="accent-text">driven by code</span>.
           </h2>
         </motion.div>
 
@@ -66,15 +66,15 @@ export const AboutSection: React.FC = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-center">
               <div className="liquid-glass rounded-2xl p-3 border border-white/10">
-                <div className="text-lg sm:text-2xl font-display italic text-white font-bold">Self-Taught</div>
+                <div className="text-lg sm:text-2xl font-display italic text-white">Self-Taught</div>
                 <div className="text-[11px] font-body text-neutral-400 mt-0.5">Continuous Learning</div>
               </div>
               <div className="liquid-glass rounded-2xl p-3 border border-white/10">
-                <div className="text-lg sm:text-2xl font-display italic text-white font-bold">Web & Bots</div>
+                <div className="text-lg sm:text-2xl font-display italic text-white">Web & Bots</div>
                 <div className="text-[11px] font-body text-neutral-400 mt-0.5">Two Fronts</div>
               </div>
               <div className="liquid-glass rounded-2xl p-3 border border-white/10 col-span-2 sm:col-span-1">
-                <div className="text-lg sm:text-2xl font-display italic text-white font-bold">Design-Focused</div>
+                <div className="text-lg sm:text-2xl font-display italic text-white">Design-Focused</div>
                 <div className="text-[11px] font-body text-neutral-400 mt-0.5">UI & Polish</div>
               </div>
             </div>

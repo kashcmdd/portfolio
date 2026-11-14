@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CinematicVideoBackground, VIDEO_SOURCES } from './CinematicVideoBackground';
 import { warriorDetails } from '../data/portfolioData';
-import { ArrowUpRight, Eye } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { useMotionPref } from './MotionPrefProvider';
 
 interface HeroSectionProps {
@@ -16,8 +15,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onOpenContactModal,
 }) => {
   const [roleIndex, setRoleIndex] = useState(0);
-  const [activeVideo, setActiveVideo] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const heroRef = useRef<HTMLDivElement | null>(null);
   const { reduced } = useMotionPref();
 
@@ -88,22 +85,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     };
   }, [reduced]);
 
-  const handleSelectVideo = (index: number) => {
-    if (index === activeVideo || isTransitioning) return;
-    setIsTransitioning(true);
-    setActiveVideo(index);
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 1000);
-  };
-
   return (
     <section
       id="hero"
       ref={heroRef}
       className="relative w-full min-h-screen bg-[#0a0a0a] text-white overflow-hidden flex flex-col justify-between items-center text-center select-none pt-24 pb-8 md:pb-12"
     >
-      <CinematicVideoBackground activeIndex={activeVideo} />
+      {/* The field is drawn, not filmed: one soft light from above on a near-black
+          room (DESIGN.md, The Night Atelier). It replaces a 13.7 MB third-party
+          clip, keeps the first screen's contrast at ~18:1, and cannot move under
+          the type. */}
+      <div aria-hidden className="atelier-field absolute inset-0" />
 
       <div className="relative z-10 my-auto max-w-5xl px-4 sm:px-6 flex flex-col items-center w-full my-auto">
         <div className="blur-in opacity-0 translate-y-4 filter blur-md mb-4 sm:mb-6">
@@ -123,15 +115,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </div>
 
-        <h1 className="name-reveal opacity-0 translate-y-10 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display italic leading-[0.9] tracking-tight text-white mb-4 sm:mb-6 font-bold drop-shadow-2xl">
+        <h1 className="name-reveal opacity-0 translate-y-10 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display italic leading-[0.9] tracking-tight text-white mb-4 sm:mb-6 drop-shadow-2xl">
           {warriorDetails.name}
         </h1>
 
-        <div className="blur-in opacity-0 translate-y-4 filter blur-md text-base sm:text-xl md:text-2xl text-neutral-200 font-body font-light mb-4 sm:mb-6 max-w-2xl">
+        <div className="blur-in opacity-0 translate-y-4 filter blur-md text-base sm:text-xl md:text-2xl text-neutral-200 font-body font-light mb-4 sm:mb-6 max-w-2xl min-h-[3.5rem] sm:min-h-[2.5rem] flex items-center justify-center">
           A{' '}
           <span
             key={roleIndex}
-            className="font-display italic text-white font-semibold animate-role-fade-in inline-block px-1 accent-text-gradient"
+            className="font-display italic text-white font-semibold animate-role-fade-in inline-block px-1 accent-text"
           >
             {ROLES[roleIndex]}
           </span>{' '}
@@ -150,7 +142,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-semibold px-7 py-3.5 bg-white text-black hover:bg-[#0a0a0a] hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer font-body shadow-2xl min-h-[44px]"
               >
                 <span>Explore Projects</span>
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
               </button>
             </div>
           </div>
@@ -161,39 +153,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               onClick={onOpenContactModal}
               className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full text-xs sm:text-sm font-medium px-7 py-3.5 border border-white/20 bg-[#0a0a0a]/80 backdrop-blur-md text-white hover:border-white/40 transition-all duration-300 transform hover:scale-105 cursor-pointer font-body min-h-[44px]"
             >
-              <span>Get in Touch</span>
+              <span>Contact</span>
             </button>
           </div>
         </div>
 
-        <div className="blur-in opacity-0 translate-y-4 filter blur-md w-full max-w-xl">
-          <div className="liquid-glass rounded-full p-1.5 border border-white/15 bg-black/40 backdrop-blur-xl flex items-center justify-between gap-1 shadow-2xl overflow-x-auto">
-            <div className="hidden sm:flex items-center gap-1.5 pl-3 pr-1 text-[10px] font-mono text-neutral-400 uppercase tracking-wider shrink-0">
-              <Eye className="w-3.5 h-3.5 text-[#89AACC]" />
-              <span>ATMOSPHERE</span>
-            </div>
-
-            <div className="flex items-center justify-between w-full sm:w-auto gap-1">
-              {VIDEO_SOURCES.map((v, idx) => {
-                const isActive = activeVideo === idx;
-                return (
-                  <button
-                    key={v.id}
-                    onClick={() => handleSelectVideo(idx)}
-                    disabled={isTransitioning}
-                    className={`px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-body font-medium transition-all duration-300 cursor-pointer whitespace-nowrap min-h-[36px] flex-1 sm:flex-initial ${
-                      isActive
-                        ? 'bg-white text-black font-semibold shadow-md'
-                        : 'text-neutral-300 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    {v.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

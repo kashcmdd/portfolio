@@ -26,7 +26,7 @@ import {
   Check,
   Copy,
 } from 'lucide-react';
-import SkillsRadar, { LEVEL_SCORE } from './SkillsRadar';
+import { LEVEL_SCORE } from './SkillsRadar';
 
 const iconMap: Record<string, React.ElementType> = {
   Code2,
@@ -164,7 +164,6 @@ export const TechStackSection: React.FC = () => {
           </button>
         </motion.div>
 
-        <SkillsRadar skills={techSkillsData} />
 
         {/* Proficiency breakdown: one stacked bar per category, click to filter */}
         <motion.div
@@ -267,9 +266,6 @@ export const TechStackSection: React.FC = () => {
                   <div className="w-10 h-10 rounded-xl liquid-glass flex items-center justify-center shrink-0 text-white group-hover:scale-110 transition-transform">
                     <IconComponent className="w-5 h-5 text-neutral-200" />
                   </div>
-                  <span className="text-[10px] font-body uppercase tracking-wider text-neutral-400 bg-white/5 px-2.5 py-1 rounded-full border border-white/5">
-                    {skill.level}
-                  </span>
                 </div>
 
                 <h3 className="text-base font-body font-semibold text-white mb-1">

@@ -2,7 +2,6 @@ import {
   Project,
   JournalEntry,
   TechSkill,
-  ExplorationItem,
   CurrentlyBuilding,
   RecentWork,
   Architecture,
@@ -984,50 +983,7 @@ if (match) openEntry(match[1]);`,
   },
 ];
 
-export const explorationItemsData: ExplorationItem[] = [
-  {
-    id: "exp-1",
-    title: "Cybernetic HUD UI",
-    category: "Experimental Interface",
-    image: asset("exploration-exp-1.jpg"),
-    description: "Futuristic telemetry HUD with animated data streams and reactive ambient lighting."
-  },
-  {
-    id: "exp-2",
-    title: "Bot Orchestration Nodes",
-    category: "Infrastructure Visualizer",
-    image: asset("exploration-exp-2.jpg"),
-    description: "Interactive node graph visualizing WebSocket payload distribution across distributed clusters."
-  },
-  {
-    id: "exp-3",
-    title: "Liquid Glass Dashboard",
-    category: "UI System",
-    image: asset("exploration-exp-3.jpg"),
-    description: "Deep dark theme dashboard featuring frosted acrylic panels and gradient glow highlights."
-  },
-  {
-    id: "exp-4",
-    title: "REST Endpoint Inspector",
-    category: "Developer Tooling",
-    image: asset("exploration-exp-4.jpg"),
-    description: "Lightweight API benchmarking and JSON inspector utility built for quick backend debugging."
-  },
-  {
-    id: "exp-5",
-    title: "Aetheria Audio Visualizer",
-    category: "Canvas Physics",
-    image: asset("exploration-exp-5.jpg"),
-    description: "Real-time frequency audio synthesizer reacting to microphone inputs with fluid particles."
-  },
-  {
-    id: "exp-6",
-    title: "Minimalist Terminal Portfolio",
-    category: "CLI Interface",
-    image: asset("exploration-exp-6.jpg"),
-    description: "Interactive shell environment in the browser with custom command parsing and ASCII art."
-  },
-];
+
 
 /**
  * The one line of work in progress shown under the hero. This is the only field

@@ -53,7 +53,7 @@ export const StatsSection: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className="text-4xl sm:text-5xl font-display italic text-white font-bold tracking-tight mb-1 accent-text-gradient">
+                  <div className="text-4xl sm:text-5xl font-display italic text-white tracking-tight mb-1 accent-text">
                     {stat.value}
                   </div>
                   <div className="text-sm font-body font-semibold text-white mb-1">
