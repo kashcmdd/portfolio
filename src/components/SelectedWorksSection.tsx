@@ -80,7 +80,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
           className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
         >
           <div>
-            <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.3em] mb-2">
+            <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.22em] mb-2">
               <span className="w-8 h-px bg-neutral-800" />
               <span>SELECTED WORK</span>
             </div>
@@ -271,7 +271,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
           {(project.demoUrl || project.codePenId || project.codeSandboxId) && (
             <div className="absolute top-3 right-3 flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-green-500/60" title="Interactive Demo Available"></div>
-              <span className="text-[10px] font-mono text-neutral-500">Live Demo</span>
+              <span className="text-[11px] font-mono text-neutral-500">Live Demo</span>
             </div>
           )}
                 </div>

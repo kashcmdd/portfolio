@@ -15,7 +15,7 @@ export const AboutSection: React.FC = () => {
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="flex flex-col gap-3 mb-12"
         >
-          <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.3em]">
+          <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.22em]">
             <span className="w-8 h-px bg-neutral-800" />
             <span>ABOUT THE DEVELOPER</span>
           </div>

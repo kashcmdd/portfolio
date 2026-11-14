@@ -84,7 +84,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="text-xs text-neutral-500 uppercase tracking-[0.3em] font-body"
+          className="text-xs text-neutral-500 uppercase tracking-[0.22em] font-body"
         >
           KashhCMD Portfolio
         </motion.div>

@@ -26,7 +26,7 @@ const KIND_DOTS: Record<RecentWork['kind'], string> = {
 
 // Both rows share one label column, so the description and the changelog start
 // at the same x instead of the second row looking indented by accident.
-const LABEL = 'flex shrink-0 items-center gap-2 font-mono text-[10px] uppercase tracking-widest sm:w-44';
+const LABEL = 'flex shrink-0 items-center gap-2 font-mono text-[11px] uppercase tracking-widest sm:w-44';
 
 export const NowBuildingStrip: React.FC = () => {
   const item = currentlyBuildingData;
@@ -50,7 +50,7 @@ export const NowBuildingStrip: React.FC = () => {
           </p>
 
           {item.status && (
-            <span className="shrink-0 self-start rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400 sm:self-auto">
+            <span className="shrink-0 self-start rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-neutral-400 sm:self-auto">
               {item.status}
             </span>
           )}

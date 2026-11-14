@@ -134,7 +134,7 @@ export const TechStackSection: React.FC = () => {
           className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
         >
           <div>
-            <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.3em] mb-2">
+            <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.22em] mb-2">
               <span className="w-8 h-px bg-neutral-800" />
               <span>TECHNOLOGIES & TOOLS</span>
             </div>
@@ -155,7 +155,7 @@ export const TechStackSection: React.FC = () => {
               <Terminal className="w-4 h-4 text-[#89AACC]" />
             </div>
             <div>
-              <div className="text-[10px] font-mono text-neutral-400 uppercase">STACK COMMAND</div>
+              <div className="text-[11px] font-mono text-neutral-400 uppercase">STACK COMMAND</div>
               <div className="text-xs font-mono text-white flex items-center gap-1.5">
                 <span>npm i react express discord.js...</span>
                 {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5 text-neutral-400" />}
@@ -181,7 +181,7 @@ export const TechStackSection: React.FC = () => {
               {LEVELS.map((level) => (
                 <span
                   key={level}
-                  className="flex items-center gap-1.5 text-[10px] font-body text-neutral-400"
+                  className="flex items-center gap-1.5 text-[11px] font-body text-neutral-400"
                 >
                   <span className={`w-2 h-2 rounded-full ${LEVEL_DOT[level]}`} />
                   {level}
@@ -279,10 +279,10 @@ export const TechStackSection: React.FC = () => {
                     is not comparable at a glance across 21 cards; a bar is. */}
                 <div className="mt-4 pt-3 border-t border-white/5">
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] font-body uppercase tracking-wider text-neutral-500">
+                    <span className="text-[11px] font-body uppercase tracking-wider text-neutral-500">
                       {skill.level}
                     </span>
-                    <span className="text-[10px] font-body tabular-nums text-neutral-500">
+                    <span className="text-[11px] font-body tabular-nums text-neutral-500">
                       {LEVEL_SCORE[skill.level] ?? 0}
                     </span>
                   </div>

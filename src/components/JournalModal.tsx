@@ -274,7 +274,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                   onClick={() => setShowToc((open) => !open)}
                   aria-expanded={showToc}
                   aria-controls="journal-toc"
-                  className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-neutral-400 transition-colors hover:text-white hover:bg-white/10 cursor-pointer"
+                  className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-mono uppercase tracking-widest text-neutral-400 transition-colors hover:text-white hover:bg-white/10 cursor-pointer"
                 >
                   <List className="w-3 h-3 text-[#89AACC]" />
                   Contents
@@ -298,7 +298,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                               : 'text-neutral-400 hover:bg-white/5 hover:text-neutral-200'
                           }`}
                         >
-                          <span className="font-mono text-[10px] text-neutral-400 tabular-nums">
+                          <span className="font-mono text-[11px] text-neutral-400 tabular-nums">
                             {String(i + 1).padStart(2, '0')}
                           </span>
                           {heading.text}
@@ -338,7 +338,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
             {/* Read next */}
             {related.length > 0 && (
               <div className="mt-10 border-t border-white/10 pt-6">
-                <h3 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                <h3 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-neutral-400">
                   Read next
                 </h3>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -349,7 +349,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                       onClick={() => onSelectEntry(item)}
                       className="group flex flex-col gap-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-left transition-colors hover:border-[#89AACC]/40 hover:bg-white/[0.05] cursor-pointer"
                     >
-                      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                      <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-neutral-400">
                         {item.category}
                         <span className="text-neutral-700" aria-hidden="true">&middot;</span>
                         {item.readTime}

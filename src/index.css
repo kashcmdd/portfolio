@@ -28,6 +28,20 @@
     touch-action: manipulation;
   }
 
+  /* Typography defaults: balance the display lines, let prose break naturally
+     (kills the single-word tails the detector reports), and give body copy a
+     little more leading than the browser default on a dark surface. */
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  body {
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
   /* One visible focus ring for anything that does not draw its own. It lives in
      the base layer on purpose: components that style focus with a Tailwind ring
      also set `outline-none`, and a layered utility beats a base rule, so those

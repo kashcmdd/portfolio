@@ -135,7 +135,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               className="group flex items-center gap-1.5 text-white hover:text-[#89AACC] transition-colors cursor-pointer"
             >
               <span className="font-display italic text-sm">{warriorDetails.name}</span>
-              <span className="text-[10px] text-neutral-400 font-mono">© 2026</span>
+              <span className="text-[11px] text-neutral-400 font-mono">© 2026</span>
             </button>
             <span className="text-neutral-700">•</span>
             <span>Crafted with care</span>

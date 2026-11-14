@@ -28,7 +28,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ onSelectPr
           transition={{ duration: 1.0, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-12"
         >
-          <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.3em] mb-2">
+          <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.22em] mb-2">
             <span className="w-8 h-px bg-neutral-800" />
             <span>EXPERIENCE</span>
           </div>

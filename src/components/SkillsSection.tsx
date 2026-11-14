@@ -50,7 +50,7 @@ const SkillCard: React.FC<{ item: SkillData; index: number }> = ({ item, index }
           {item.tags.map((tag) => (
             <span
               key={tag}
-              className="liquid-glass rounded-full px-2.5 py-0.5 text-[10px] text-neutral-300 font-body whitespace-nowrap"
+              className="liquid-glass rounded-full px-2.5 py-0.5 text-[11px] text-neutral-300 font-body whitespace-nowrap"
             >
               {tag}
             </span>
@@ -174,7 +174,7 @@ export const SkillsSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-xs font-body text-neutral-400 mb-6 uppercase tracking-[0.3em] font-medium flex items-center gap-2"
+            className="text-xs font-body text-neutral-400 mb-6 uppercase tracking-[0.22em] font-medium flex items-center gap-2"
           >
               <span className="w-8 h-px bg-neutral-700" />
               SKILLS & WHAT I DO

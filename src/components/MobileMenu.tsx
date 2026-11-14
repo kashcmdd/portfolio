@@ -105,7 +105,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
           <div className="relative flex h-full flex-col px-6 pb-8 pt-6">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-400">
+              <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-neutral-400">
                 {warriorDetails.githubHandle} / Menu
               </span>
               <button

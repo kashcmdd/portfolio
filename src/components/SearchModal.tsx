@@ -455,7 +455,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
           <div className="max-h-[60vh] overflow-y-auto">
             {query.trim() === '' ? (
               <div className="p-2">
-                <p className="px-4 pt-3 pb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-600">
+                <p className="px-4 pt-3 pb-1 font-mono text-[11px] uppercase tracking-widest text-neutral-600">
                   Commands
                 </p>
                 {results.map((result, index) => (
@@ -467,7 +467,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
                     }`}
                   >
                     <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 font-bold text-[10px] ${TYPE_BADGES[result.type].className}`}
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 font-bold text-[11px] ${TYPE_BADGES[result.type].className}`}
                     >
                       {TYPE_BADGES[result.type].letter}
                     </div>
@@ -538,13 +538,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSho
                           {result.tags && result.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}
-                              className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-neutral-400 font-body"
+                              className="text-[11px] px-2 py-0.5 rounded-full bg-white/10 text-neutral-400 font-body"
                             >
                               {tag}
                             </span>
                           ))}
                           {result.date && (
-                            <span className="text-[10px] text-neutral-500 flex items-center gap-1 font-body">
+                            <span className="text-[11px] text-neutral-500 flex items-center gap-1 font-body">
                               <Clock className="w-3 h-3" />
                               {result.date}
                             </span>

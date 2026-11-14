@@ -183,7 +183,7 @@ export const DiscordPresence: React.FC = () => {
         </div>
       )}
 
-      <p className="text-[10px] text-neutral-400">Fetched from Lanyard only when you ask.</p>
+      <p className="text-[11px] text-neutral-400">Fetched from Lanyard only when you ask.</p>
     </div>
   );
 };

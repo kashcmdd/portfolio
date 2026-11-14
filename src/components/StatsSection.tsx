@@ -49,7 +49,7 @@ export const StatsSection: React.FC = () => {
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#89AACC]">
                     <IconComp className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider">Metric 0{idx + 1}</span>
+                  <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">Metric 0{idx + 1}</span>
                 </div>
 
                 <div>

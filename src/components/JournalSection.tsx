@@ -25,7 +25,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
           className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
         >
           <div>
-            <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.3em] mb-2">
+            <div className="flex items-center gap-2 text-xs font-body text-neutral-400 uppercase tracking-[0.22em] mb-2">
               <span className="w-8 h-px bg-neutral-800" />
               <span>JOURNAL & THOUGHTS</span>
             </div>
@@ -88,7 +88,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                   />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 text-[10px] font-body uppercase text-neutral-400 tracking-wider mb-1">
+                  <div className="flex items-center gap-2 text-[11px] font-body uppercase text-neutral-400 tracking-wider mb-1">
                     <span className="text-[#89AACC] font-semibold">{entry.category}</span>
                     <span aria-hidden="true">&middot;</span>
                     <span>{entry.readTime}</span>
