@@ -16,7 +16,7 @@ import { ContactFooter } from './components/ContactFooter';
 import { Analytics } from './components/Analytics';
 import { AnalyticsConsent } from './components/AnalyticsConsent';
 import { Project, JournalEntry } from './types';
-import { journalEntriesData } from './data/portfolioData';
+import { journalEntriesData, projectsData } from './data/portfolioData';
 import NotFoundView from './components/NotFoundView';
 
 // Every dialog only ever opens on an interaction, so none of them belongs in
@@ -45,6 +45,16 @@ const entryIdFromHash = (): string | null => {
 
 const entryForId = (id: string | null): JournalEntry | null =>
   (id && journalEntriesData.find((entry) => entry.id === id)) || null;
+
+// A project modal is shareable too: #project/<id> opens it on load and the
+// static page at projects/<id>/ stays the canonical link for crawlers.
+const projectIdFromHash = (): string | null => {
+  const match = window.location.hash.match(/^#project\/([a-z0-9-]+)$/);
+  return match ? match[1] : null;
+};
+
+const projectForId = (id: string | null): Project | null =>
+  (id && projectsData.find((project) => project.id === id)) || null;
 
 // Static hosts serve 404.html for unknown paths, but plenty of hosts are
 // configured to fall back to index.html instead, which would boot this app at
@@ -76,6 +86,7 @@ export default function App() {
   // True only while a journal hash was pushed by this app, so that closing the
   // modal can go back instead of leaving a stale entry in the history stack.
   const pushedJournalHash = useRef(false);
+  const pushedProjectHash = useRef(false);
 
   // Stable so the loading screen's counter effect cannot be restarted by a
   // re-render passing a fresh callback identity mid-count.
@@ -127,15 +138,45 @@ export default function App() {
     }
   }, [isLoading]);
 
+  // Deep link on first load: #project/<id> opens the case study.
+  useEffect(() => {
+    if (isLoading) return;
+    const project = projectForId(projectIdFromHash());
+    if (project && !selectedProject) {
+      setSelectedProject(project);
+      requestAnimationFrame(() => {
+        document.getElementById('work')?.scrollIntoView({ behavior: 'auto' });
+      });
+    }
+  }, [isLoading]);
+
   // Back, forward and manual URL edits all arrive as hashchange.
   useEffect(() => {
     const onHashChange = () => {
       pushedJournalHash.current = false;
+      pushedProjectHash.current = false;
       setSelectedJournal(entryForId(entryIdFromHash()));
+      setSelectedProject(projectForId(projectIdFromHash()));
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
+
+  const openProject = (project: Project) => {
+    setSelectedProject(project);
+    history.pushState(null, '', `#project/${project.id}`);
+    pushedProjectHash.current = true;
+  };
+
+  const closeProject = () => {
+    if (pushedProjectHash.current) {
+      pushedProjectHash.current = false;
+      history.back();
+      return;
+    }
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    setSelectedProject(null);
+  };
 
   const openJournal = (entry: JournalEntry) => {
     setSelectedJournal(entry);
@@ -298,7 +339,7 @@ export default function App() {
 
             {/* Selected Works (Bento Grid) */}
             <SelectedWorksSection
-              onSelectProject={(project) => setSelectedProject(project)}
+              onSelectProject={openProject}
             />
 
             {/* About Developer Section */}
@@ -309,7 +350,7 @@ export default function App() {
 
             {/* Experience timeline — self-directed work, newest first */}
             <ExperienceSection
-              onSelectProject={(project) => setSelectedProject(project)}
+              onSelectProject={openProject}
             />
 
             {/* Tech Stack & Skills */}
@@ -340,7 +381,7 @@ export default function App() {
             <Suspense fallback={null}>
               <ProjectModal
                 project={selectedProject}
-                onClose={() => setSelectedProject(null)}
+                onClose={closeProject}
               />
             </Suspense>
           )}

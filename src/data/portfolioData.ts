@@ -930,7 +930,7 @@ if (match) openEntry(match[1]);`,
       chose: "A branch that swaps the accent ramp globally",
       over: "A themed component layer with a second design system",
     },
-    image: asset("journal-cover-elo-decay.jpg"),
+    image: asset("journal-cover-seasonal-theme.jpg"),
     thumb: asset("journal-thumb-seasonal-theme.jpg"),
     content: [
       {
